@@ -21,3 +21,17 @@
   white-space: nowrap;
   border: 0;
 }
+
+@media (prefers-color-scheme: dark) {
+  files-dropzone {
+    --dropzone-border-color: var(--border);
+    --dropzone-border-color-hover: var(--focus);
+    --dropzone-border-color-dragover: var(--focus);
+    --dropzone-background-color: var(--background-alt);
+    --dropzone-background-color-hover: var(--background);
+    --dropzone-background-color-dragover: var(--background);
+    --dropzone-text-color: var(--text-main);
+    --dropzone-text-color-hover: var(--text-main);
+    --dropzone-text-color-dragover: var(--text-main);
+  }
+}

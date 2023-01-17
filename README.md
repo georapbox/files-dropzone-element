@@ -40,44 +40,50 @@ import './node_modules/@georapbox/files-dropzone-element/dist/files-dropzone-def
 ### Markup
 
 ```html
-<!-- TODO -->
-<files-dropzone></files-dropzone>
+<files-dropzone accept="image/*,.docx,application/pdf"></files-dropzone>
 ```
 
 ### Style
 
-By default, the component comes with basic styling. However, You can customise the styles of the various elements of the component using the `::part()` CSS pseudo-elements provided for this purpose.
+By default, the component comes with basic styling. However, You can customise the styles of the various elements of the component using the `::part()` CSS pseudo-elements provided for this purpose. See the [CSS Parts](#css-parts) section.
 
 ## API
 
 ### Properties
 | Name | Reflects | Type | Required | Default | Description |
 | ---- | -------- | ---- | -------- | ------- | ----------- |
-<!-- TODO -->
+| `accept`<sup>1</sup> | ✓ | String | - | `null` | A string containing one or more of unique file type specifiers, separated by commas. |
+| `disabled` | ✓ | Boolean | - | `false` | Disables the dropzone. |
 
-<sup>1</sup> Changing any of these properties/attributes may not always guarantee the desired result, because they all depend on the camera hardware support. For example, `zoom=3` might not result to the camera to zoom if the camera hardware does not support zooming. Using `getTrackCapabilities()` and `getTrackSettings()` can prove helpful to check the campera hardware support.
-
-### Slots
-
-| Name | Description |
-| ---- | ----------- |
-<!-- TODO -->
-
-#### Slots usage examples
-
-<!-- TODO -->
+<sup>1</sup> Each unique file type specifier may take one of the following forms:
+- A valid case-insensitive filename extension, starting with a period (".") character. For example: `.jpg`, `.pdf`, or `.doc`.
+- A valid MIME type string, with no extensions.
+- A string to match any file of a specific type. For example: `image/*` for image files, `audio/*` for audio files, etc.
+- Any comination of the above. For example: `image/*,.docx,application/pdf`
 
 ### CSS Parts
 
 | Name | Description |
 | ---- | ----------- |
-<!-- TODO -->
+| `dropzone` | The dropzone area. |
+| `dropzone--dragover` | The state of the dropzone when dragging over it. |
 
-### Methods
+### CSS Custom Properties
 
-| Name | Type | Description | Arguments |
-| ---- | ---- | ----------- | --------- |
-<!-- TODO -->
+| Name | Description | Default |
+| ---- | ----------- | ------- |
+| `--dropzone-border-radius` | The border radius of the dropzone area. | `0.25rem` |
+| `--dropzone-border-width` | The border width of the dropzone area. | `2px` |
+| `--dropzone-border-style` | The border style of the dropzone area. | `dashed` |
+| `--dropzone-border-color` | The border color of the dropzone area. | `#71717a` |
+| `--dropzone-border-color-hover` | The border color of the dropzone area in hover state. | `#38bdf8` |
+| `--dropzone-border-color-dragover` | The border color of the dropzone area in dragover state. | `#38bdf8` |
+| `--dropzone-background-color` | The background color of the dropzone area. | `#ffffff` |
+| `--dropzone-background-color-hover` | The background color of the dropzone area in hover state. | `#f9f9f9` |
+| `--dropzone-background-color-dragover` | The background color of the dropzone area in dragover state. | `#f9f9f9` |
+| `--dropzone-text-color` | The text color of the dropzone area. | `#71717a` |
+| `--dropzone-text-color-hover` | The text color of the dropzone area in hover state. | `#71717a` |
+| `--dropzone-text-color-dragover` | The text color of the dropzone area in dragover state. | `#71717a` |
 
 ### Events
 
