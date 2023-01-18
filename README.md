@@ -54,6 +54,9 @@ By default, the component comes with basic styling. However, You can customise t
 | ---- | -------- | ---- | -------- | ------- | ----------- |
 | `accept`<sup>1</sup> | ✓ | String | - | `null` | A string containing one or more of unique file type specifiers, separated by commas. |
 | `disabled` | ✓ | Boolean | - | `false` | Disables the dropzone. |
+| `noClick`<br>*`no-click`* | ✓ | Boolean | `false` | If set, disables the ability to select files by clicking on the dropzone area. |
+|`noDrag`<br>*`no-drag`*| ✓ | Boolean | `false` | If set, disables drag 'n' drop. |
+| `noKeyboard`<br>*`no-keyboard`* | ✓ | Boolean | `false` | If set, disables the ability to select files using the SPACE/ENTER keys and also disables the ability to focus on the element using the keyboard. |
 
 <sup>1</sup> Each unique file type specifier may take one of the following forms:
 - A valid case-insensitive filename extension, starting with a period (".") character. For example: `.jpg`, `.pdf`, or `.doc`.
@@ -81,9 +84,9 @@ By default, the component comes with basic styling. However, You can customise t
 | `--dropzone-background-color` | The background color of the dropzone area. | `#ffffff` |
 | `--dropzone-background-color-hover` | The background color of the dropzone area in hover state. | `#f9f9f9` |
 | `--dropzone-background-color-dragover` | The background color of the dropzone area in dragover state. | `#f9f9f9` |
-| `--dropzone-text-color` | The text color of the dropzone area. | `#71717a` |
-| `--dropzone-text-color-hover` | The text color of the dropzone area in hover state. | `#71717a` |
-| `--dropzone-text-color-dragover` | The text color of the dropzone area in dragover state. | `#71717a` |
+| `--dropzone-text-color` | The text color of the dropzone area. | `#3f3f46` |
+| `--dropzone-text-color-hover` | The text color of the dropzone area in hover state. | `#3f3f46` |
+| `--dropzone-text-color-dragover` | The text color of the dropzone area in dragover state. | `#3f3f46` |
 
 ### Events
 

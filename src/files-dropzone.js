@@ -16,21 +16,25 @@ template.innerHTML = /* html */`
     }
 
     :host {
-      --gray: #71717a;
-      --blue: #38bdf8;
+      --dark: #3f3f46;
+      --light: #f9f9f9;
+      --accent: #0ea5e9;
 
       --dropzone-border-width: 2px;
       --dropzone-border-style: dashed;
       --dropzone-border-radius: 0.25rem;
-      --dropzone-border-color: var(--gray);
-      --dropzone-border-color-hover: var(--blue);
-      --dropzone-border-color-dragover: var(--blue);
+      --dropzone-border-color: #71717a;
+      --dropzone-border-color-hover: var(--accent);
+      --dropzone-border-color-dragover: var(--accent);
+      --dropzone-border-color-focus: var(--accent);
       --dropzone-background-color: #ffffff;
-      --dropzone-background-color-hover: #f9f9f9;
-      --dropzone-background-color-dragover: #f9f9f9;
-      --dropzone-text-color: var(--gray);
-      --dropzone-text-color-hover: var(--gray);
-      --dropzone-text-color-dragover: var(--gray);
+      --dropzone-background-color-hover: var(--light);
+      --dropzone-background-color-dragover: var(--light);
+      --dropzone-text-color: var(--dark);
+      --dropzone-text-color-hover: var(--dark);
+      --dropzone-text-color-dragover: var(--dark);
+      --dropzone-focus-ring-color: rgba(14, 165, 233, 0.4);
+      --dropzone-focus-ring-width: 3px;
 
       display: block;
     }
@@ -53,12 +57,20 @@ template.innerHTML = /* html */`
       transition: border 0.2s ease-in-out, background-color 0.2s ease-in-out;
     }
 
+    :host(:not([disabled]):focus) .dropzone {
+      border-color: var(--dropzone-border-color-focus);
+    }
+
+    :host([no-click]) .dropzone {
+      cursor: default;
+    }
+
     :host([disabled]) .dropzone {
-      opacity: 0.5;
+      opacity: 0.8;
       cursor: not-allowed;
     }
 
-    :host(:not([disabled])) .dropzone:hover {
+    :host(:not([disabled], [no-click])) .dropzone:hover {
       border-color: var(--dropzone-border-color-hover);
       background-color: var(--dropzone-background-color-hover);
     }
@@ -87,10 +99,13 @@ class FilesDropzone extends HTMLElement {
       this.attachShadow({ mode: 'open' });
       this.shadowRoot.appendChild(template.content.cloneNode(true));
     }
+
+    this.#fileInput = this.shadowRoot.getElementById('fileInput');
+    this.#dropzoneEl = this.shadowRoot.getElementById('dropzoneEl');
   }
 
   static get observedAttributes() {
-    return ['accept', 'disabled'];
+    return ['accept', 'disabled', 'no-keyboard'];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -100,17 +115,30 @@ class FilesDropzone extends HTMLElement {
 
     if (name === 'disabled' && oldValue !== newValue && this.#fileInput) {
       this.#fileInput.disabled = this.disabled;
+
+      if (this.disabled) {
+        this.#dropzoneEl.removeAttribute('tabindex');
+      } else {
+        this.#dropzoneEl.setAttribute('tabindex', '0');
+      }
+    }
+
+    if (name === 'no-keyboard' && oldValue !== newValue && this.#dropzoneEl) {
+      if (this.noKeyboard) {
+        this.#dropzoneEl.removeAttribute('tabindex');
+      } else {
+        this.#dropzoneEl.setAttribute('tabindex', '0');
+      }
     }
   }
 
   connectedCallback() {
     this.#upgradeProperty('accept');
-
-    this.#fileInput = this.shadowRoot.getElementById('fileInput');
-    this.#dropzoneEl = this.shadowRoot.getElementById('dropzoneEl');
-
-    this.#fileInput.accept = this.accept;
-    this.#fileInput.disabled = this.disabled;
+    this.#upgradeProperty('disabled');
+    this.#upgradeProperty('noClick');
+    this.#upgradeProperty('noKeyboard');
+    this.#upgradeProperty('noDrag');
+    this.#upgradeProperty('multiple');
 
     this.#fileInput.addEventListener('change', this.#handleFileChange);
     this.#dropzoneEl.addEventListener('dragover', this.#handleDragOver);
@@ -149,6 +177,42 @@ class FilesDropzone extends HTMLElement {
     }
   }
 
+  get noClick() {
+    return this.hasAttribute('no-click');
+  }
+
+  set noClick(value) {
+    if (value) {
+      this.setAttribute('no-click', '');
+    } else {
+      this.removeAttribute('no-click');
+    }
+  }
+
+  get noKeyboard() {
+    return this.hasAttribute('no-keyboard');
+  }
+
+  set noKeyboard(value) {
+    if (value) {
+      this.setAttribute('no-keyboard', '');
+    } else {
+      this.removeAttribute('no-keyboard');
+    }
+  }
+
+  get noDrag() {
+    return this.hasAttribute('no-drag');
+  }
+
+  set noDrag(value) {
+    if (value) {
+      this.setAttribute('no-drag', '');
+    } else {
+      this.removeAttribute('no-drag');
+    }
+  }
+
   #handleFileChange = evt => {
     this.#handleFilesSelect(evt.target.files);
   };
@@ -156,7 +220,7 @@ class FilesDropzone extends HTMLElement {
   #handleDragOver = evt => {
     evt.preventDefault();
 
-    if (this.disabled) {
+    if (this.disabled || this.noDrag) {
       return;
     }
 
@@ -171,6 +235,10 @@ class FilesDropzone extends HTMLElement {
   };
 
   #handleDrop = evt => {
+    if (this.disabled || this.noDrag) {
+      return;
+    }
+
     evt.preventDefault();
     evt.stopPropagation();
 
@@ -181,7 +249,7 @@ class FilesDropzone extends HTMLElement {
   };
 
   #handleClick = () => {
-    if (this.disabled) {
+    if (this.disabled || this.noClick) {
       return;
     }
 
@@ -189,7 +257,7 @@ class FilesDropzone extends HTMLElement {
   };
 
   #handleKeyUp = evt => {
-    if (this.disabled) {
+    if (this.disabled || this.noKeyboard) {
       return;
     }
 
