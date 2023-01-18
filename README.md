@@ -45,7 +45,7 @@ import './node_modules/@georapbox/files-dropzone-element/dist/files-dropzone-def
 
 ### Style
 
-By default, the component comes with basic styling. However, You can customise the styles of the various elements of the component using the `::part()` CSS pseudo-elements provided for this purpose. See the [CSS Parts](#css-parts) section.
+By default, the component comes with basic styling. However, you can customise the styles of the various elements of the component using either [CSS Parts](#css-parts) or [CSS Custom Properties](#css-custom-properties).
 
 ## API
 
@@ -54,10 +54,10 @@ By default, the component comes with basic styling. However, You can customise t
 | ---- | -------- | ---- | -------- | ------- | ----------- |
 | `accept`<sup>1</sup> | ✓ | String | - | `null` | A string containing one or more of unique file type specifiers, separated by commas. |
 | `disabled` | ✓ | Boolean | - | `false` | Disables the dropzone. |
-| `noClick`<br>*`no-click`* | ✓ | Boolean | `false` | If set, disables the ability to select files by clicking on the dropzone area, using the native file dialog. |
-|`noDrag`<br>*`no-drag`*| ✓ | Boolean | `false` | If set, disables drag 'n' drop. |
-| `noKeyboard`<br>*`no-keyboard`* | ✓ | Boolean | `false` | If set, disables the ability to select files using the SPACE/ENTER keys and also disables the ability to focus on the element using the keyboard. |
-| `multiple` | ✓ | Boolean | `false` | If set, allows drag 'n' drop (or selection from the file dialog) of multiple files. If not set, dropping multiple files in the dropzone area, will reject all of them to avoid undesired effects. |
+| `noClick`<br>*`no-click`* | ✓ | Boolean | - | `false` | If set, disables the ability to select files by clicking on the dropzone area, using the native file dialog. |
+|`noDrag`<br>*`no-drag`*| ✓ | Boolean | - | `false` | If set, disables drag 'n' drop. |
+| `noKeyboard`<br>*`no-keyboard`* | ✓ | Boolean | - | `false` | If set, disables the ability to select files using the SPACE/ENTER keys and also disables the ability to focus on the element using the keyboard. |
+| `multiple` | ✓ | Boolean | - | `false` | If set, allows drag 'n' drop (or selection from the file dialog) of multiple files. If not set, dropping multiple files in the dropzone area, will reject all of them to avoid undesired effects. |
 
 <sup>1</sup> Each unique file type specifier may take one of the following forms:
 - A valid case-insensitive filename extension, starting with a period (".") character. For example: `.jpg`, `.pdf`, or `.doc`.
