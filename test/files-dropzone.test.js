@@ -161,6 +161,31 @@ describe('<files-dropzone>', () => {
     expect(el.hasAttribute('no-drag')).to.be.false;
   });
 
+  // multiple property
+  it('property multiple is true when attribute multiple is set', async () => {
+    const el = await fixture(html`<files-dropzone multiple></files-dropzone>`);
+    expect(el.multiple).to.be.true;
+  });
+
+  it('property multiple is false when attribute multiple is not set', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    expect(el.multiple).to.be.false;
+  });
+
+  it('attribute multiple is set when property multiple is set', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    el.multiple = true;
+    await elementUpdated(el);
+    expect(el.hasAttribute('multiple')).to.be.true;
+  });
+
+  it('attribute multiple is removed when property multiple is set to false', async () => {
+    const el = await fixture(html`<files-dropzone multiple></files-dropzone>`);
+    el.multiple = false;
+    await elementUpdated(el);
+    expect(el.hasAttribute('multiple')).to.be.false;
+  });
+
   afterEach(() => {
     fixtureCleanup();
   });

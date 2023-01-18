@@ -1,5 +1,7 @@
 import { isValidFile } from './utils/is-valid-file.js';
 
+const TOO_MANY_FILES = 'TOO_MANY_FILES';
+const INVALID_MIME_TYPE = 'INVALID_MIME_TYPE';
 const template = document.createElement('template');
 
 template.innerHTML = /* html */`
@@ -81,7 +83,7 @@ template.innerHTML = /* html */`
     }
   </style>
 
-  <input type="file" id="fileInput" multiple hidden>
+  <input type="file" id="fileInput" hidden>
 
   <div part="dropzone" class="dropzone" id="dropzoneEl" tabindex="0" role="presentation">
     Drag 'n' drop files here, or click to select files
@@ -105,7 +107,7 @@ class FilesDropzone extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['accept', 'disabled', 'no-keyboard'];
+    return ['accept', 'disabled', 'no-keyboard', 'multiple'];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -129,6 +131,10 @@ class FilesDropzone extends HTMLElement {
       } else {
         this.#dropzoneEl.setAttribute('tabindex', '0');
       }
+    }
+
+    if (name === 'multiple' && oldValue !== newValue && this.#fileInput) {
+      this.#fileInput.multiple = this.multiple;
     }
   }
 
@@ -213,6 +219,18 @@ class FilesDropzone extends HTMLElement {
     }
   }
 
+  get multiple() {
+    return this.hasAttribute('multiple');
+  }
+
+  set multiple(value) {
+    if (value) {
+      this.setAttribute('multiple', '');
+    } else {
+      this.removeAttribute('multiple');
+    }
+  }
+
   #handleFileChange = evt => {
     this.#handleFilesSelect(evt.target.files);
   };
@@ -269,20 +287,31 @@ class FilesDropzone extends HTMLElement {
   #handleFilesSelect(files) {
     const acceptedFiles = [];
     const rejectedFiles = [];
+    const filesLength = files.length;
 
-    for (let i = 0; i < files.length; i++) {
+    for (let i = 0; i < filesLength; i += 1) {
       const file = files[i];
 
-      if (isValidFile(file, this.accept)) {
-        acceptedFiles.push(file);
-      } else {
+      if (!this.multiple && filesLength > 1) {
         rejectedFiles.push({
           file,
-          reason: {
-            code: 'INVALID_MIME_TYPE',
-            message: `File type ${file.type} is not accepted.`
-          }
+          errors: [{
+            code: TOO_MANY_FILES,
+            message: `Too many files selected. Only one file is allowed.`
+          }]
         });
+      } else {
+        if (isValidFile(file, this.accept)) {
+          acceptedFiles.push(file);
+        } else {
+          rejectedFiles.push({
+            file,
+            errors: [{
+              code: INVALID_MIME_TYPE,
+              message: `File type ${file.type} is not accepted.`
+            }]
+          });
+        }
       }
     }
 
