@@ -147,6 +147,7 @@ class FilesDropzone extends HTMLElement {
     this.#upgradeProperty('multiple');
 
     this.#fileInput.addEventListener('change', this.#onFileInputChange);
+    this.#dropzoneEl.addEventListener('dragenter', this.#onDragEnter);
     this.#dropzoneEl.addEventListener('dragover', this.#onDragOver);
     this.#dropzoneEl.addEventListener('dragleave', this.#onDragLeave);
     this.#dropzoneEl.addEventListener('drop', this.#onDrop);
@@ -156,6 +157,7 @@ class FilesDropzone extends HTMLElement {
 
   disconnectedCallback() {
     this.#fileInput.removeEventListener('change', this.#onFileInputChange);
+    this.#dropzoneEl.removeEventListener('dragenter', this.#onDragEnter);
     this.#dropzoneEl.removeEventListener('dragover', this.#onDragOver);
     this.#dropzoneEl.removeEventListener('dragleave', this.#onDragLeave);
     this.#dropzoneEl.removeEventListener('drop', this.#onDrop);
@@ -235,6 +237,17 @@ class FilesDropzone extends HTMLElement {
     this.#handleFilesSelect(evt.target.files);
   };
 
+  #onDragEnter = () => {
+    if (this.disabled || this.noDrag) {
+      return;
+    }
+
+    this.dispatchEvent(new Event(`${COMPONENT_NAME}:dragenter`, {
+      bubbles: true,
+      composed: true
+    }));
+  };
+
   #onDragOver = evt => {
     evt.preventDefault();
 
@@ -246,11 +259,25 @@ class FilesDropzone extends HTMLElement {
 
     this.#dropzoneEl.classList.add('dropzone--dragover');
     this.#dropzoneEl.part.add('dropzone--dragover');
+
+    this.dispatchEvent(new Event(`${COMPONENT_NAME}:dragover`, {
+      bubbles: true,
+      composed: true
+    }));
   };
 
   #onDragLeave = () => {
+    if (this.disabled || this.noDrag) {
+      return;
+    }
+
     this.#dropzoneEl.classList.remove('dropzone--dragover');
     this.#dropzoneEl.part.remove('dropzone--dragover');
+
+    this.dispatchEvent(new Event(`${COMPONENT_NAME}:dragleave`, {
+      bubbles: true,
+      composed: true
+    }));
   };
 
   #onDrop = evt => {
@@ -286,6 +313,10 @@ class FilesDropzone extends HTMLElement {
   };
 
   #handleFilesSelect(files) {
+    if (!files || !files.length) {
+      return;
+    }
+
     const acceptedFiles = [];
     const rejectedFiles = [];
     const filesLength = files.length;
@@ -316,9 +347,34 @@ class FilesDropzone extends HTMLElement {
       }
     }
 
-    console.log('acceptedFiles', acceptedFiles);
-    console.log('rejectedFiles', rejectedFiles);
-    console.log('--------------');
+    this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}:drop`, {
+      bubbles: true,
+      composed: true,
+      detail: {
+        acceptedFiles,
+        rejectedFiles
+      }
+    }));
+
+    if (acceptedFiles.length > 0) {
+      this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}:drop-accepted`, {
+        bubbles: true,
+        composed: true,
+        detail: {
+          acceptedFiles
+        }
+      }));
+    }
+
+    if (rejectedFiles.length > 0) {
+      this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}:drop-rejected`, {
+        bubbles: true,
+        composed: true,
+        detail: {
+          rejectedFiles
+        }
+      }));
+    }
   }
 
   /**

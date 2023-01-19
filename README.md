@@ -52,7 +52,7 @@ By default, the component comes with basic styling. However, you can customise t
 ### Properties
 | Name | Reflects | Type | Required | Default | Description |
 | ---- | -------- | ---- | -------- | ------- | ----------- |
-| `accept`<sup>1</sup> | ✓ | String | - | `null` | A string containing one or more of unique file type specifiers, separated by commas. |
+| `accept`<sup>1</sup> | ✓ | String | - | `null` | A string containing one or more of unique file type specifiers, separated by commas. Files that do not match one of the accepted file type specifiers, will be rejected. |
 | `disabled` | ✓ | Boolean | - | `false` | Disables the dropzone. |
 | `noClick`<br>*`no-click`* | ✓ | Boolean | - | `false` | If set, disables the ability to select files by clicking on the dropzone area, using the native file dialog. |
 |`noDrag`<br>*`no-drag`*| ✓ | Boolean | - | `false` | If set, disables drag 'n' drop. |
@@ -99,7 +99,12 @@ By default, the component comes with basic styling. However, you can customise t
 
 | Name | Description | Event Detail |
 | ---- | ----------- | ------------ |
-<!-- TODO -->
+| `files-dropzone:drop` | Emitted when one or more files are selected, either by using the native file dialog or dropping files in the dropzone area. The event is emitted regardless if the dropped files are accepted or rejected. Files are accepted or rejected based on the `accept` and `multiple` attributes. If `multiple` attribute is not set and more than one files are dropped, all files will be rejected to avoid undesired effects. | `{acceptedFiles: Array<File>, rejectedFiles: Array<{file: File, errors: Array<{code: string, message: string}>}>}` |
+| `files-dropzone:drop-accepted` | Emitted when one or more dropped files are accepted. If no files are accepted, the event is not emitted at all. | `{acceptedFiles: Array<File>}` |
+| `files-dropzone:drop-rejected` | Emitted when one or more dropped files are rejected. If no files are rejected, the event is not emitted at all. | `{rejectedFiles: Array<{file: File, errors: Array<{code: string, message: string}>}>}` |
+| `files-dropzone:dragenter` | Emitted on `dragenter` event. The event is not emitted if `disabled` or `no-drag` attributes are set. | - |
+| `files-dropzone:dragover` | Emitted on `dragover` event. The event is not emitted if `disabled` or `no-drag` attributes are set. | - |
+| `files-dropzone:dragleave` | Emitted on `dragleave` event. The event is not emitted if `disabled` or `no-drag` attributes are set. | - |
 
 ## Changelog
 

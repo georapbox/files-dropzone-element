@@ -2,14 +2,6 @@
   --body-max-width: 600px;
 }
 
-#console:empty {
-  display: none;
-}
-
-#console {
-  max-height: 300px;
-}
-
 .visually-hidden {
   position: absolute;
   width: 1px;
