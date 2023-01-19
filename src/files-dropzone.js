@@ -29,7 +29,6 @@ template.innerHTML = /* html */`
       --dropzone-border-color: #71717a;
       --dropzone-border-color-hover: var(--accent);
       --dropzone-border-color-dragover: var(--accent);
-      --dropzone-border-color-focus: var(--accent);
       --dropzone-background-color: #ffffff;
       --dropzone-background-color-hover: var(--light);
       --dropzone-background-color-dragover: var(--light);
@@ -57,10 +56,6 @@ template.innerHTML = /* html */`
       text-align: center;
       cursor: pointer;
       transition: border 0.2s ease-in-out, background-color 0.2s ease-in-out;
-    }
-
-    :host(:not([disabled]):focus) .dropzone {
-      border-color: var(--dropzone-border-color-focus);
     }
 
     :host([no-click]) .dropzone {
@@ -375,6 +370,14 @@ class FilesDropzone extends HTMLElement {
         }
       }));
     }
+  }
+
+  openFileDialog() {
+    if (this.disabled) {
+      return;
+    }
+
+    this.#fileInput.click();
   }
 
   /**

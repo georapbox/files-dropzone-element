@@ -95,6 +95,13 @@ By default, the component comes with basic styling. However, you can customise t
 | `--dropzone-text-color-hover` | The text color of the dropzone area in hover state. | `#3f3f46` |
 | `--dropzone-text-color-dragover` | The text color of the dropzone area in dragover state. | `#3f3f46` |
 
+### Methods
+
+| Name | Type | Description | Arguments |
+| ---- | ---- | ----------- | --------- |
+| `defineCustomElement` | Static | Defines/registers the custom element with the name provided. If no name is provided, the default name is used. The method checks if the element is already defined, hence will skip trying to redefine it. | elementName='files-dropzone' |
+| `openFileDialog` | Prototype | Opens the native file dialog programmatically. The method will fail silently if the dropzone is disabled. Note that most browsers require a direct user interaction with the document, to open the file dialog, for security reasons. Therefore, if you are trying to call this method asynchronously, there's a good chance it's going to be blocked by the browser. For example in Safari 15.x, invoking this method inside a `setTimeout` with more that 1000ms delay, the dialog will not open. | - |
+
 ### Events
 
 | Name | Description | Event Detail |
