@@ -4,7 +4,7 @@ import { FilesDropzone } from '../src/files-dropzone.js';
 
 FilesDropzone.defineCustomElement();
 
-describe('<files-dropzone>', () => {
+describe('files-dropzone', () => {
   /**
    * Accessibility
    */
