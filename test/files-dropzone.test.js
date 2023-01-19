@@ -5,7 +5,10 @@ import { FilesDropzone } from '../src/files-dropzone.js';
 FilesDropzone.defineCustomElement();
 
 describe('<files-dropzone>', () => {
-  // Accessibility tests
+  /**
+   * Accessibility
+   */
+
   it('passes accessibility test when enabled without attributes', async () => {
     const el = await fixture(html`<files-dropzone></files-dropzone>`);
     await expect(el).to.be.accessible();
@@ -42,6 +45,32 @@ describe('<files-dropzone>', () => {
     const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
     expect(dropzone.hasAttribute('tabindex')).to.be.false;
   });
+
+  /**
+   * Slots
+   */
+
+  it('has a default slot', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    const slot = el.shadowRoot.querySelector('slot');
+    expect(slot).to.exist;
+  });
+
+  it('has a default slot with text', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    const slot = el.shadowRoot.querySelector('slot');
+    expect(slot.assignedNodes({ flatten: true })[0].textContent).to.contain('Drag \'n\' drop files here, or click to select files');
+  });
+
+  it('changes content of the default slot', async () => {
+    const el = await fixture(html`<files-dropzone>foo</files-dropzone>`);
+    const slot = el.shadowRoot.querySelector('slot');
+    expect(slot.assignedNodes({ flatten: true })[0].textContent).to.contain('foo');
+  });
+
+  /**
+   * Attributes/properties
+   */
 
   // accept property
   it('property accept is set when attribute accept is set', async () => {

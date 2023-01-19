@@ -65,6 +65,12 @@ By default, the component comes with basic styling. However, you can customise t
 - A string to match any file of a specific type. For example: `image/*` for image files, `audio/*` for audio files, etc.
 - Any comination of the above. For example: `image/*,.docx,application/pdf`
 
+### Slots
+
+| Name | Description |
+| ---- | ----------- |
+| (default) | Un-named slot to override the default content of the dropzone area. |
+
 ### CSS Parts
 
 | Name | Description |
