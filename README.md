@@ -12,6 +12,8 @@
 
 A custom element that creates a drag and drop zone for files.
 
+Note that the element does not provide any functionality for uploading files. Once files are dropped, you are free to process them however you like. 
+
 [API documentation](#api) &bull; [Demo][demo]
 
 ## Install
@@ -40,7 +42,7 @@ import './node_modules/@georapbox/files-dropzone-element/dist/files-dropzone-def
 ### Markup
 
 ```html
-<files-dropzone accept="image/*,.docx,application/pdf" multiple></files-dropzone>
+<files-dropzone accept="image/*,.txt,application/pdf" multiple></files-dropzone>
 ```
 
 ### Style
@@ -54,10 +56,11 @@ By default, the component comes with basic styling. However, you can customise t
 | ---- | -------- | ---- | -------- | ------- | ----------- |
 | `accept`<sup>1</sup> | ✓ | String | - | `null` | A string containing one or more of unique file type specifiers, separated by commas. Files that do not match one of the accepted file type specifiers, will be rejected. |
 | `disabled` | ✓ | Boolean | - | `false` | Disables the dropzone. |
+| `multiple` | ✓ | Boolean | - | `false` | If set, allows drag 'n' drop (or selection from the file dialog) of multiple files. If not set, dropping multiple files in the dropzone area, will reject all of them to avoid undesired effects. |
 | `noClick`<br>*`no-click`* | ✓ | Boolean | - | `false` | If set, disables the ability to select files by clicking on the dropzone area, using the native file dialog. |
 |`noDrag`<br>*`no-drag`*| ✓ | Boolean | - | `false` | If set, disables drag 'n' drop. |
 | `noKeyboard`<br>*`no-keyboard`* | ✓ | Boolean | - | `false` | If set, disables the ability to select files using the SPACE/ENTER keys and also disables the ability to focus on the element using the keyboard. |
-| `multiple` | ✓ | Boolean | - | `false` | If set, allows drag 'n' drop (or selection from the file dialog) of multiple files. If not set, dropping multiple files in the dropzone area, will reject all of them to avoid undesired effects. |
+| `noStyle`<br>*`no-style`* | ✓ | Boolean | - | `false` | If set, it will remove all default styling. It can be useful in cases you want to style the component's parts from scratch. Note that the available [CSS Custom Properties](#css-custom-properties) can still be used. |
 
 <sup>1</sup> Each unique file type specifier may take one of the following forms:
 - A valid case-insensitive filename extension, starting with a period (".") character. For example: `.jpg`, `.pdf`, or `.doc`.
