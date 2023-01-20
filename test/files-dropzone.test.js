@@ -115,6 +115,31 @@ describe('files-dropzone', () => {
     expect(el.hasAttribute('disabled')).to.be.false;
   });
 
+  // multiple property
+  it('property multiple is true when attribute multiple is set', async () => {
+    const el = await fixture(html`<files-dropzone multiple></files-dropzone>`);
+    expect(el.multiple).to.be.true;
+  });
+
+  it('property multiple is false when attribute multiple is not set', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    expect(el.multiple).to.be.false;
+  });
+
+  it('attribute multiple is set when property multiple is set', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    el.multiple = true;
+    await elementUpdated(el);
+    expect(el.hasAttribute('multiple')).to.be.true;
+  });
+
+  it('attribute multiple is removed when property multiple is set to false', async () => {
+    const el = await fixture(html`<files-dropzone multiple></files-dropzone>`);
+    el.multiple = false;
+    await elementUpdated(el);
+    expect(el.hasAttribute('multiple')).to.be.false;
+  });
+
   // noClick property
   it('property noClick is true when attribute no-click is set', async () => {
     const el = await fixture(html`<files-dropzone no-click></files-dropzone>`);
@@ -138,31 +163,6 @@ describe('files-dropzone', () => {
     el.noClick = false;
     await elementUpdated(el);
     expect(el.hasAttribute('no-click')).to.be.false;
-  });
-
-  // noKeyboard property
-  it('property noKeyboard is true when attribute no-keyboard is set', async () => {
-    const el = await fixture(html`<files-dropzone no-keyboard></files-dropzone>`);
-    expect(el.noKeyboard).to.be.true;
-  });
-
-  it('property noKeyboard is false when attribute no-keyboard is not set', async () => {
-    const el = await fixture(html`<files-dropzone></files-dropzone>`);
-    expect(el.noKeyboard).to.be.false;
-  });
-
-  it('attribute no-keyboard is set when property noKeyboard is set', async () => {
-    const el = await fixture(html`<files-dropzone></files-dropzone>`);
-    el.noKeyboard = true;
-    await elementUpdated(el);
-    expect(el.hasAttribute('no-keyboard')).to.be.true;
-  });
-
-  it('attribute no-keyboard is removed when property noKeyboard is set to false', async () => {
-    const el = await fixture(html`<files-dropzone no-keyboard></files-dropzone>`);
-    el.noKeyboard = false;
-    await elementUpdated(el);
-    expect(el.hasAttribute('no-keyboard')).to.be.false;
   });
 
   // noDrag property
@@ -190,29 +190,54 @@ describe('files-dropzone', () => {
     expect(el.hasAttribute('no-drag')).to.be.false;
   });
 
-  // multiple property
-  it('property multiple is true when attribute multiple is set', async () => {
-    const el = await fixture(html`<files-dropzone multiple></files-dropzone>`);
-    expect(el.multiple).to.be.true;
+  // noKeyboard property
+  it('property noKeyboard is true when attribute no-keyboard is set', async () => {
+    const el = await fixture(html`<files-dropzone no-keyboard></files-dropzone>`);
+    expect(el.noKeyboard).to.be.true;
   });
 
-  it('property multiple is false when attribute multiple is not set', async () => {
+  it('property noKeyboard is false when attribute no-keyboard is not set', async () => {
     const el = await fixture(html`<files-dropzone></files-dropzone>`);
-    expect(el.multiple).to.be.false;
+    expect(el.noKeyboard).to.be.false;
   });
 
-  it('attribute multiple is set when property multiple is set', async () => {
+  it('attribute no-keyboard is set when property noKeyboard is set', async () => {
     const el = await fixture(html`<files-dropzone></files-dropzone>`);
-    el.multiple = true;
+    el.noKeyboard = true;
     await elementUpdated(el);
-    expect(el.hasAttribute('multiple')).to.be.true;
+    expect(el.hasAttribute('no-keyboard')).to.be.true;
   });
 
-  it('attribute multiple is removed when property multiple is set to false', async () => {
-    const el = await fixture(html`<files-dropzone multiple></files-dropzone>`);
-    el.multiple = false;
+  it('attribute no-keyboard is removed when property noKeyboard is set to false', async () => {
+    const el = await fixture(html`<files-dropzone no-keyboard></files-dropzone>`);
+    el.noKeyboard = false;
     await elementUpdated(el);
-    expect(el.hasAttribute('multiple')).to.be.false;
+    expect(el.hasAttribute('no-keyboard')).to.be.false;
+  });
+
+  // noStyle property
+  it('property noStyle is true when attribute no-style is set', async () => {
+    const el = await fixture(html`<files-dropzone no-style></files-dropzone>`);
+    expect(el.noStyle).to.be.true;
+  });
+
+  it('property noStyle is false when attribute no-style is not set', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    expect(el.noStyle).to.be.false;
+  });
+
+  it('attribute no-style is set when property noStyle is set', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    el.noStyle = true;
+    await elementUpdated(el);
+    expect(el.hasAttribute('no-style')).to.be.true;
+  });
+
+  it('attribute no-style is removed when property noStyle is set to false', async () => {
+    const el = await fixture(html`<files-dropzone no-style></files-dropzone>`);
+    el.noStyle = false;
+    await elementUpdated(el);
+    expect(el.hasAttribute('no-style')).to.be.false;
   });
 
   afterEach(() => {

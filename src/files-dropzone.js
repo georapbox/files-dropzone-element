@@ -41,15 +41,10 @@ template.innerHTML = /* html */`
       display: block;
     }
 
-    .dropzone {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    :host(:not([no-style])) .dropzone {
       border: var(--dropzone-border-width) var(--dropzone-border-style) var(--dropzone-border-color);
       border-radius: var(--dropzone-border-radius);
-      width: 100%;
-      min-height: 100px;
-      padding: 1rem;
+      padding: 2rem 1rem;
       overflow: hidden;
       background-color: var(--dropzone-background-color);
       color: var(--dropzone-text-color);
@@ -58,21 +53,21 @@ template.innerHTML = /* html */`
       transition: border 0.2s ease-in-out, background-color 0.2s ease-in-out;
     }
 
-    :host([no-click]) .dropzone {
+    :host(:not([no-style])[no-click]) .dropzone {
       cursor: default;
     }
 
-    :host([disabled]) .dropzone {
+    :host(:not([no-style])[disabled]) .dropzone {
       opacity: 0.8;
       cursor: not-allowed;
     }
 
-    :host(:not([disabled], [no-click])) .dropzone:hover {
+    :host(:not([no-style]):not([disabled], [no-click])) .dropzone:hover {
       border-color: var(--dropzone-border-color-hover);
       background-color: var(--dropzone-background-color-hover);
     }
 
-    :host(:not([disabled])) .dropzone--dragover {
+    :host(:not([no-style]):not([disabled])) .dropzone--dragover {
       border-color: var(--dropzone-border-color-dragover);
       background-color: var(--dropzone-background-color-dragover);
     }
@@ -136,10 +131,11 @@ class FilesDropzone extends HTMLElement {
   connectedCallback() {
     this.#upgradeProperty('accept');
     this.#upgradeProperty('disabled');
-    this.#upgradeProperty('noClick');
-    this.#upgradeProperty('noKeyboard');
-    this.#upgradeProperty('noDrag');
     this.#upgradeProperty('multiple');
+    this.#upgradeProperty('noClick');
+    this.#upgradeProperty('noDrag');
+    this.#upgradeProperty('noKeyboard');
+    this.#upgradeProperty('noStyle');
 
     this.#fileInput.addEventListener('change', this.#onFileInputChange);
     this.#dropzoneEl.addEventListener('dragenter', this.#onDragEnter);
@@ -180,6 +176,18 @@ class FilesDropzone extends HTMLElement {
     }
   }
 
+  get multiple() {
+    return this.hasAttribute('multiple');
+  }
+
+  set multiple(value) {
+    if (value) {
+      this.setAttribute('multiple', '');
+    } else {
+      this.removeAttribute('multiple');
+    }
+  }
+
   get noClick() {
     return this.hasAttribute('no-click');
   }
@@ -189,18 +197,6 @@ class FilesDropzone extends HTMLElement {
       this.setAttribute('no-click', '');
     } else {
       this.removeAttribute('no-click');
-    }
-  }
-
-  get noKeyboard() {
-    return this.hasAttribute('no-keyboard');
-  }
-
-  set noKeyboard(value) {
-    if (value) {
-      this.setAttribute('no-keyboard', '');
-    } else {
-      this.removeAttribute('no-keyboard');
     }
   }
 
@@ -216,15 +212,27 @@ class FilesDropzone extends HTMLElement {
     }
   }
 
-  get multiple() {
-    return this.hasAttribute('multiple');
+  get noKeyboard() {
+    return this.hasAttribute('no-keyboard');
   }
 
-  set multiple(value) {
+  set noKeyboard(value) {
     if (value) {
-      this.setAttribute('multiple', '');
+      this.setAttribute('no-keyboard', '');
     } else {
-      this.removeAttribute('multiple');
+      this.removeAttribute('no-keyboard');
+    }
+  }
+
+  get noStyle() {
+    return this.hasAttribute('no-style');
+  }
+
+  set noStyle(value) {
+    if (value) {
+      this.setAttribute('no-style', '');
+    } else {
+      this.removeAttribute('no-style');
     }
   }
 
