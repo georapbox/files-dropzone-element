@@ -73,7 +73,7 @@ describe('files-dropzone', () => {
    */
 
   // accept property
-  it('property accept is set when attribute accept is set', async () => {
+  it('property accept is "image/*" when attribute accept is "image/*"', async () => {
     const el = await fixture(html`<files-dropzone accept="image/*"></files-dropzone>`);
     expect(el.accept).to.equal('image/*');
   });
@@ -83,7 +83,7 @@ describe('files-dropzone', () => {
     expect(el.accept).to.be.null;
   });
 
-  it('attribute accept is set when property accept is set', async () => {
+  it('attribute accept is "image/*" when property accept is "image/*"', async () => {
     const el = await fixture(html`<files-dropzone></files-dropzone>`);
     el.accept = 'image/*';
     await elementUpdated(el);
@@ -108,11 +108,58 @@ describe('files-dropzone', () => {
     expect(el.hasAttribute('disabled')).to.be.true;
   });
 
-  it('attribute disabled is removed when property disabled is set to false', async () => {
+  it('attribute disabled is removed when property disabled is false', async () => {
     const el = await fixture(html`<files-dropzone disabled></files-dropzone>`);
     el.disabled = false;
     await elementUpdated(el);
     expect(el.hasAttribute('disabled')).to.be.false;
+  });
+
+  // maxFiles property
+  it('property maxFiles is 5 when attribute max-files is "5"', async () => {
+    const el = await fixture(html`<files-dropzone max-files="5"></files-dropzone>`);
+    expect(el.maxFiles).to.equal(5);
+  });
+
+  it('property maxFiles is Infinity when attribute max-files is not set', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    expect(el.maxFiles).to.equal(Infinity);
+  });
+
+  it('property maxFiles is Infinity when attribute max-files is "0"', async () => {
+    const el = await fixture(html`<files-dropzone max-files="0"></files-dropzone>`);
+    expect(el.maxFiles).to.equal(Infinity);
+  });
+
+  it('property maxFiles is Infinity when attribute max-files is "-1"', async () => {
+    const el = await fixture(html`<files-dropzone max-files="-1"></files-dropzone>`);
+    expect(el.maxFiles).to.equal(Infinity);
+  });
+
+  it('property maxFiles is Infinity when attribute max-files is "foo"', async () => {
+    const el = await fixture(html`<files-dropzone max-files="foo"></files-dropzone>`);
+    expect(el.maxFiles).to.equal(Infinity);
+  });
+
+  it('attribute max-files is "5" when property maxFiles is 5', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    el.maxFiles = 5;
+    await elementUpdated(el);
+    expect(el.getAttribute('max-files')).to.equal('5');
+  });
+
+  it('attribute max-files is "Infinity" when property maxFiles is -1', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    el.maxFiles = -1;
+    await elementUpdated(el);
+    expect(el.getAttribute('max-files')).to.equal('Infinity');
+  });
+
+  it('attribute max-files is "Infinity" when property maxFiles is undefined', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    el.maxFiles = void 0;
+    await elementUpdated(el);
+    expect(el.getAttribute('max-files')).to.equal('Infinity');
   });
 
   // multiple property
@@ -133,7 +180,7 @@ describe('files-dropzone', () => {
     expect(el.hasAttribute('multiple')).to.be.true;
   });
 
-  it('attribute multiple is removed when property multiple is set to false', async () => {
+  it('attribute multiple is removed when property multiple is false', async () => {
     const el = await fixture(html`<files-dropzone multiple></files-dropzone>`);
     el.multiple = false;
     await elementUpdated(el);
@@ -158,7 +205,7 @@ describe('files-dropzone', () => {
     expect(el.hasAttribute('no-click')).to.be.true;
   });
 
-  it('attribute no-click is removed when property noClick is set to false', async () => {
+  it('attribute no-click is removed when property noClick is false', async () => {
     const el = await fixture(html`<files-dropzone no-click></files-dropzone>`);
     el.noClick = false;
     await elementUpdated(el);
@@ -183,7 +230,7 @@ describe('files-dropzone', () => {
     expect(el.hasAttribute('no-drag')).to.be.true;
   });
 
-  it('attribute no-drag is removed when property noDrag is set to false', async () => {
+  it('attribute no-drag is removed when property noDrag is false', async () => {
     const el = await fixture(html`<files-dropzone no-drag></files-dropzone>`);
     el.noDrag = false;
     await elementUpdated(el);
@@ -208,7 +255,7 @@ describe('files-dropzone', () => {
     expect(el.hasAttribute('no-keyboard')).to.be.true;
   });
 
-  it('attribute no-keyboard is removed when property noKeyboard is set to false', async () => {
+  it('attribute no-keyboard is removed when property noKeyboard is false', async () => {
     const el = await fixture(html`<files-dropzone no-keyboard></files-dropzone>`);
     el.noKeyboard = false;
     await elementUpdated(el);
@@ -233,7 +280,7 @@ describe('files-dropzone', () => {
     expect(el.hasAttribute('no-style')).to.be.true;
   });
 
-  it('attribute no-style is removed when property noStyle is set to false', async () => {
+  it('attribute no-style is removed when property noStyle is false', async () => {
     const el = await fixture(html`<files-dropzone no-style></files-dropzone>`);
     el.noStyle = false;
     await elementUpdated(el);

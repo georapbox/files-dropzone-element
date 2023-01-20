@@ -97,7 +97,7 @@ class FilesDropzone extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['accept', 'disabled', 'no-keyboard', 'multiple'];
+    return ['accept', 'disabled', 'multiple', 'no-keyboard'];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -115,16 +115,16 @@ class FilesDropzone extends HTMLElement {
       }
     }
 
+    if (name === 'multiple' && oldValue !== newValue && this.#fileInput) {
+      this.#fileInput.multiple = this.multiple;
+    }
+
     if (name === 'no-keyboard' && oldValue !== newValue && this.#dropzoneEl) {
       if (this.noKeyboard) {
         this.#dropzoneEl.removeAttribute('tabindex');
       } else {
         this.#dropzoneEl.setAttribute('tabindex', '0');
       }
-    }
-
-    if (name === 'multiple' && oldValue !== newValue && this.#fileInput) {
-      this.#fileInput.multiple = this.multiple;
     }
   }
 
@@ -174,6 +174,22 @@ class FilesDropzone extends HTMLElement {
     } else {
       this.removeAttribute('disabled');
     }
+  }
+
+  get maxFiles() {
+    const num = Number(this.getAttribute('max-files')) || 0;
+
+    if (num <= 0) {
+      return Infinity;
+    }
+
+    return Math.floor(Math.abs(num));
+  }
+
+  set maxFiles(value) {
+    const num = Number(value) || 0;
+    const newValue = num <= 0 ? Infinity : Math.floor(Math.abs(num));
+    this.setAttribute('max-files', newValue);
   }
 
   get multiple() {
@@ -324,18 +340,35 @@ class FilesDropzone extends HTMLElement {
     const rejectedFiles = [];
     const filesLength = files.length;
 
-    for (let i = 0; i < filesLength; i += 1) {
-      const file = files[i];
-
-      if (!this.multiple && filesLength > 1) {
+    // If the component is not in multiple mode, reject all files.
+    if (!this.multiple && filesLength > 1) {
+      for (let i = 0; i < filesLength; i += 1) {
         rejectedFiles.push({
-          file,
+          file: files[i],
           errors: [{
             code: TOO_MANY_FILES,
             message: `Too many files selected. Only one file is allowed.`
           }]
         });
-      } else {
+      }
+    } else if (this.multiple && filesLength > this.maxFiles) {
+      // If the component is in multiple mode, but the number of files exceeds
+      // the maxFiles attribute, reject all files.
+      for (let i = 0; i < filesLength; i += 1) {
+        rejectedFiles.push({
+          file: files[i],
+          errors: [{
+            code: TOO_MANY_FILES,
+            message: `Too many files selected. Only ${this.maxFiles} files are allowed.`
+          }]
+        });
+      }
+    } else {
+      // Validate each file. If it's valid, add it to the accepted files array,
+      // otherwise add it to the rejected files array.
+      for (let i = 0; i < filesLength; i += 1) {
+        const file = files[i];
+
         if (isValidFile(file, this.accept)) {
           acceptedFiles.push(file);
         } else {
