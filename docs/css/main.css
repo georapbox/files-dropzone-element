@@ -1,21 +1,91 @@
 :root {
-  --body-max-width: 600px;
+  --body-max-width: 1024px;
 }
 
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+form fieldset {
+  flex: 1;
+  min-width: 200px;
+}
+
+form input[type="text"],
+form textarea {
+  margin-right: 0;
+}
+
+form input[type="checkbox"] {
+  margin-right: 0.1rem;
+}
+
+#code-preview {
+  white-space: pre-wrap;
+}
+
+.dropped-files:empty {
+  display: none;
+}
+
+.dropped-files {
+  padding: 1rem;
+  background-color: var(--background);
+  border-radius: 0.25rem;
+}
+
+.dropped-files h4 {
+  margin: 0 0 0.25rem 0;
+}
+
+.dropped-files blockquote {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 1rem 0;
+  font-size: 0.9rem;
+}
+
+.dropped-files blockquote svg {
+  min-width: 20px;
+}
+
+.dropped-files ul {
+  margin-top: 0;
+  padding-left: 1.5rem;
+}
+
+.dropped-files ul li div {
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  text-overflow: ellipsis;
   white-space: nowrap;
-  border: 0;
+}
+
+files-dropzone {
+  margin-bottom: 1em;
+}
+
+files-dropzone::part(dropzone) {
+  padding-block: 4rem;
 }
 
 @media (prefers-color-scheme: dark) {
-  files-dropzone {
+  files-dropzone:not([no-style]) {
     --dropzone-border-color: var(--border);
     --dropzone-border-color-hover: var(--focus);
     --dropzone-border-color-dragover: var(--focus);

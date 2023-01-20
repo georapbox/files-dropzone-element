@@ -4,12 +4,13 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
   <title>&lt;files-dropzone&gt;</title>
   <meta name="description" content="A custom element that creates a drag and drop zone for files">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="stylesheet" href="lib/highlight/highlight-github-dark.min.css">
   <link rel="stylesheet" href="css/water.css">
   <link rel="stylesheet" href="css/main.css">
-  <script type="module" src="js/main.js"></script>
 </head>
 <body>
   <div class="container">
@@ -19,21 +20,99 @@
 
     <h2>Demo</h2>
 
-    <files-dropzone accept="image/*" multiple no-drag></files-dropzone>
-
     <p><small><em>This is just a demo dropzone. Dropped files are not uploaded anywhere.</em></small></p>
 
-    <h2>Source</h2>
+    <files-dropzone></files-dropzone>
 
-    <p>
-      Source code and documentation can be found in <a href="https://github.com/georapbox/files-dropzone-element" target="_blank" rel="noreferrer noopener">Github repository</a>.
-    </p>
+    <div class="dropped-files" id="droppedFiles"></div>
+
+    <details open>
+      <summary>Customize component</summary>
+
+      <form autocomplete="off">
+        <fieldset>
+          <legend>Attributes</legend>
+
+          <div class="form-row">
+            <div class="form-col">
+              <label for="accept">accept</label>
+              <input type="text" id="accept" name="accept" list="acceptDatalist" placeholder="eg. image/*,.txt,application/pdf" data-attr>
+
+              <datalist id="acceptDatalist">
+                <option value="application/*"></option>
+                <option value="text/*"></option>
+                <option value="image/*"></option>
+                <option value="audio/*"></option>
+                <option value="video/*"></option>
+                <option value=".txt"></option>
+                <option value=".png"></option>
+                <option value=".jpg"></option>
+                <option value=".mp3"></option>
+                <option value=".mp4"></option>
+                <option value=".pdf"></option>
+                <option value=".html"></option>
+                <option value=".css"></option>
+              </datalist>
+            </div>
+          </div>
+
+          <div class="form-row" style="gap: 1rem;">
+            <div>
+              <input type="checkbox" id="disabled" name="disabled" data-attr>
+              <label for="disabled">disabled</label>
+            </div>
+
+            <div>
+              <input type="checkbox" id="multiple" name="multiple" data-attr>
+              <label for="multiple">multiple</label>
+            </div>
+
+            <div>
+              <input type="checkbox" id="no-click" name="no-click" data-attr>
+              <label for="no-click">no-click</label>
+            </div>
+
+            <div>
+              <input type="checkbox" id="no-drag" name="no-drag" data-attr>
+              <label for="no-drag">no-drag</label>
+            </div>
+
+            <div>
+              <input type="checkbox" id="no-keyboard" name="no-keyboard" data-attr>
+              <label for="no-keyboard">no-keyboard</label>
+            </div>
+
+            <div>
+              <input type="checkbox" id="no-style" name="no-style" data-attr>
+              <label for="no-style">no-style</label>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Slots</legend>
+
+          <div class="form-row">
+            <div class="form-col">
+              <label for="slot">Default slot</label>
+              <input type="text" id="slot" name="slot" data-slot="default">
+              <p style="margin-top: 0;"><small><em>For the demo purposes, the slot is plain text. However, in reality you can use any valid HTML.</em></small></p>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+
+      <pre><code id="code-preview"></code></pre>
+    </details>
+
+    <h2>Source</h2>
+    <p>Source code and documentation can be found in <a href="https://github.com/georapbox/files-dropzone-element" target="_blank" rel="noreferrer noopener">Github repository</a>.</p>
 
     <h2>License</h2>
-
-    <p>
-      <a href="https://georapbox.mit-license.org/@2023" target="_blank" rel="noreferrer noopener">The MIT License (MIT)</a>
-    </p>
+    <p>Licensed under the <a href="https://georapbox.mit-license.org/@2023" target="_blank" rel="noreferrer noopener">The MIT License (MIT)</a></p>
   </div>
+
+  <script src="./lib/highlight/highlight.min.js" defer></script>
+  <script type="module" src="./js/main.js"></script>
 </body>
 </html>

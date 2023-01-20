@@ -44,7 +44,7 @@ template.innerHTML = /* html */`
     :host(:not([no-style])) .dropzone {
       border: var(--dropzone-border-width) var(--dropzone-border-style) var(--dropzone-border-color);
       border-radius: var(--dropzone-border-radius);
-      padding: 2rem 1rem;
+      padding: 3rem 1rem;
       overflow: hidden;
       background-color: var(--dropzone-background-color);
       color: var(--dropzone-text-color);
