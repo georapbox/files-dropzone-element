@@ -131,6 +131,7 @@ class FilesDropzone extends HTMLElement {
   connectedCallback() {
     this.#upgradeProperty('accept');
     this.#upgradeProperty('disabled');
+    this.#upgradeProperty('maxFiles');
     this.#upgradeProperty('multiple');
     this.#upgradeProperty('noClick');
     this.#upgradeProperty('noDrag');
