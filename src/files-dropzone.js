@@ -2,6 +2,8 @@ import { isValidFile } from './utils/is-valid-file.js';
 
 const COMPONENT_NAME = 'files-dropzone';
 const TOO_MANY_FILES = 'TOO_MANY_FILES';
+const FILE_TOO_LARGE = 'FILE_TOO_LARGE';
+const FILE_TOO_SMALL = 'FILE_TOO_SMALL';
 const INVALID_MIME_TYPE = 'INVALID_MIME_TYPE';
 const template = document.createElement('template');
 
@@ -132,6 +134,8 @@ class FilesDropzone extends HTMLElement {
     this.#upgradeProperty('accept');
     this.#upgradeProperty('disabled');
     this.#upgradeProperty('maxFiles');
+    this.#upgradeProperty('maxSize');
+    this.#upgradeProperty('minSize');
     this.#upgradeProperty('multiple');
     this.#upgradeProperty('noClick');
     this.#upgradeProperty('noDrag');
@@ -188,9 +192,39 @@ class FilesDropzone extends HTMLElement {
   }
 
   set maxFiles(value) {
-    const num = Number(value) || 0;
-    const newValue = num <= 0 ? Infinity : Math.floor(Math.abs(num));
-    this.setAttribute('max-files', newValue);
+    this.setAttribute('max-files', value);
+  }
+
+  get maxSize() {
+    const value = this.getAttribute('max-size');
+
+    if (value === null) {
+      return Infinity;
+    }
+
+    const num = Number(value);
+
+    return Number.isNaN(num) ? Infinity : num;
+  }
+
+  set maxSize(value) {
+    this.setAttribute('max-size', value);
+  }
+
+  get minSize() {
+    const value = this.getAttribute('min-size');
+
+    if (value === null) {
+      return 0;
+    }
+
+    const num = Number(value);
+
+    return Number.isNaN(num) ? 0 : num;
+  }
+
+  set minSize(value) {
+    this.setAttribute('min-size', value);
   }
 
   get multiple() {
@@ -343,9 +377,9 @@ class FilesDropzone extends HTMLElement {
 
     // If the component is not in multiple mode, reject all files.
     if (!this.multiple && filesLength > 1) {
-      for (let i = 0; i < filesLength; i += 1) {
+      for (const file of files) {
         rejectedFiles.push({
-          file: files[i],
+          file,
           errors: [{
             code: TOO_MANY_FILES,
             message: `Too many files selected. Only one file is allowed.`
@@ -355,9 +389,9 @@ class FilesDropzone extends HTMLElement {
     } else if (this.multiple && filesLength > this.maxFiles) {
       // If the component is in multiple mode, but the number of files exceeds
       // the maxFiles attribute, reject all files.
-      for (let i = 0; i < filesLength; i += 1) {
+      for (const file of files) {
         rejectedFiles.push({
-          file: files[i],
+          file,
           errors: [{
             code: TOO_MANY_FILES,
             message: `Too many files selected. Only ${this.maxFiles} files are allowed.`
@@ -367,19 +401,38 @@ class FilesDropzone extends HTMLElement {
     } else {
       // Validate each file. If it's valid, add it to the accepted files array,
       // otherwise add it to the rejected files array.
-      for (let i = 0; i < filesLength; i += 1) {
-        const file = files[i];
+      for (const file of files) {
+        const fileHasValidType = isValidFile(file, this.accept);
+        const fileExceedsMaxSize = file.size > this.maxSize;
+        const fileIsSmallerThanMinSize = file.size < this.minSize;
 
-        if (isValidFile(file, this.accept)) {
+        if (fileHasValidType && !fileExceedsMaxSize && !fileIsSmallerThanMinSize) {
           acceptedFiles.push(file);
         } else {
-          rejectedFiles.push({
-            file,
-            errors: [{
+          const errors = [];
+
+          if (!fileHasValidType) {
+            errors.push({
               code: INVALID_MIME_TYPE,
               message: `File type ${file.type} is not accepted.`
-            }]
-          });
+            });
+          }
+
+          if (fileExceedsMaxSize) {
+            errors.push({
+              code: FILE_TOO_LARGE,
+              message: `File size ${file.size} exceeds the maximum size of ${this.maxSize}.`
+            });
+          }
+
+          if (fileIsSmallerThanMinSize) {
+            errors.push({
+              code: FILE_TOO_SMALL,
+              message: `File size ${file.size} is smaller than the minimum size of ${this.minSize}.`
+            });
+          }
+
+          rejectedFiles.push({ file, errors });
         }
       }
     }
@@ -412,6 +465,8 @@ class FilesDropzone extends HTMLElement {
         }
       }));
     }
+
+    this.#fileInput.value = this.#fileInput.defaultValue;
   }
 
   openFileDialog() {

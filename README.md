@@ -57,6 +57,8 @@ By default, the component comes with basic styling. However, you can customise t
 | `accept`<sup>1</sup> | ✓ | String | - | `null` | A string containing one or more of unique file type specifiers, separated by commas. Files that do not match one of the accepted file type specifiers, will be rejected. |
 | `disabled` | ✓ | Boolean | - | `false` | Disables the dropzone. |
 | `maxFiles`<br>*`max-files`* | ✓ | Number | - | `Infinity` | Maximum accepted number of files. Note that this property has effect only when `multiple` is set to true. If its value is set to `0` or any negative number, it will allow any number of files. If the number of dropped files is greater than the value set, all of the files will be rejected to avoid making unsafe assumptions on which files to accept. |
+| `maxSize`<br>*`max-size`* | ✓ | Number | - | `Infinity` | Maximum file size (in bytes). |
+| `minSize`<br>*`min-size`* | ✓ | Number | - | `0` | Minimum file size (in bytes). |
 | `multiple` | ✓ | Boolean | - | `false` | If set, allows drag 'n' drop (or selection from the file dialog) of multiple files. If it is not set and many files are dropped, all of them will be rejected to avoid making unsafe assumptions on which files to accept. |
 | `noClick`<br>*`no-click`* | ✓ | Boolean | - | `false` | If set, disables the ability to select files by clicking on the dropzone area, using the native file dialog. |
 |`noDrag`<br>*`no-drag`*| ✓ | Boolean | - | `false` | If set, disables drag 'n' drop. |
@@ -110,9 +112,9 @@ By default, the component comes with basic styling. However, you can customise t
 
 | Name | Description | Event Detail |
 | ---- | ----------- | ------------ |
-| `files-dropzone:drop` | Emitted when one or more files are selected, either by using the native file dialog or dropping files in the dropzone area. The event is emitted regardless if the dropped files are accepted or rejected. Files are accepted or rejected based on the `accept`, `max-files` and `multiple` attributes. | `{acceptedFiles: Array<File>, rejectedFiles: Array<{file: File, errors: Array<{code: string, message: string}>}>}` |
+| `files-dropzone:drop` | Emitted when one or more files are selected, either by using the native file dialog or dropping files in the dropzone area. The event is emitted regardless if the dropped files are accepted or rejected. Files are accepted or rejected based on the `accept`, `max-files`, `max-size`, `min-size` and `multiple` attributes. | `{acceptedFiles: Array<File>, rejectedFiles: Array<{file: File, errors: Array<{code: 'TOO_MANY_FILES' \| 'FILE_TOO_LARGE' \| FILE_TOO_SMALL \| 'INVALID_MIME_TYPE', message: string}>}>}` |
 | `files-dropzone:drop-accepted` | Emitted when one or more dropped files are accepted. If no files are accepted, the event is not emitted at all. | `{acceptedFiles: Array<File>}` |
-| `files-dropzone:drop-rejected` | Emitted when one or more dropped files are rejected. If no files are rejected, the event is not emitted at all. | `{rejectedFiles: Array<{file: File, errors: Array<{code: string, message: string}>}>}` |
+| `files-dropzone:drop-rejected` | Emitted when one or more dropped files are rejected. If no files are rejected, the event is not emitted at all. | `{rejectedFiles: Array<{file: File, errors: Array<{code: 'TOO_MANY_FILES' \| 'FILE_TOO_LARGE' \| FILE_TOO_SMALL \| 'INVALID_MIME_TYPE', message: string}>}>}` |
 | `files-dropzone:dragenter` | Emitted on `dragenter` event. The event is not emitted if `disabled` or `no-drag` attributes are set. | - |
 | `files-dropzone:dragover` | Emitted on `dragover` event. The event is not emitted if `disabled` or `no-drag` attributes are set. | - |
 | `files-dropzone:dragleave` | Emitted on `dragleave` event. The event is not emitted if `disabled` or `no-drag` attributes are set. | - |

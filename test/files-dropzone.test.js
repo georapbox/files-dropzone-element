@@ -148,18 +148,102 @@ describe('files-dropzone', () => {
     expect(el.getAttribute('max-files')).to.equal('5');
   });
 
-  it('attribute max-files is "Infinity" when property maxFiles is -1', async () => {
+  it('attribute max-files is "-1" when property maxFiles is -1', async () => {
     const el = await fixture(html`<files-dropzone></files-dropzone>`);
     el.maxFiles = -1;
     await elementUpdated(el);
-    expect(el.getAttribute('max-files')).to.equal('Infinity');
+    expect(el.getAttribute('max-files')).to.equal('-1');
   });
 
-  it('attribute max-files is "Infinity" when property maxFiles is undefined', async () => {
+  it('attribute max-files is "undefined" when property maxFiles is undefined', async () => {
     const el = await fixture(html`<files-dropzone></files-dropzone>`);
     el.maxFiles = void 0;
     await elementUpdated(el);
-    expect(el.getAttribute('max-files')).to.equal('Infinity');
+    expect(el.getAttribute('max-files')).to.equal('undefined');
+  });
+
+  // maxSize property
+  it('property maxSize is Infinity when attribute max-size is not set', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    expect(el.maxSize).to.equal(Infinity);
+  });
+
+  it('property maxSize is 1024 when attribute max-size is "1024"', async () => {
+    const el = await fixture(html`<files-dropzone max-size="1024"></files-dropzone>`);
+    expect(el.maxSize).to.equal(1024);
+  });
+
+  it('property maxSize is 0 when attribute max-size is "0"', async () => {
+    const el = await fixture(html`<files-dropzone max-size="0"></files-dropzone>`);
+    expect(el.maxSize).to.equal(0);
+  });
+
+  it('property maxSize is -1 when attribute max-size is "-1"', async () => {
+    const el = await fixture(html`<files-dropzone max-size="-1"></files-dropzone>`);
+    expect(el.maxSize).to.equal(-1);
+  });
+
+  it('attribute max-size is "1024" when property maxSize is 1024', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    el.maxSize = 1024;
+    await elementUpdated(el);
+    expect(el.getAttribute('max-size')).to.equal('1024');
+  });
+
+  it('attribute max-size is "undefined" when property maxSize is undefined', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    el.maxSize = void 0;
+    await elementUpdated(el);
+    expect(el.getAttribute('max-size')).to.equal('undefined');
+  });
+
+  it('attribute max-size is "null" when property maxSize is null', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    el.maxSize = null;
+    await elementUpdated(el);
+    expect(el.getAttribute('max-size')).to.equal('null');
+  });
+
+  // minSize property
+  it('property minSize is 0 when attribute min-size is not set', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    expect(el.minSize).to.equal(0);
+  });
+
+  it('property minSize is 1024 when attribute min-size is "1024"', async () => {
+    const el = await fixture(html`<files-dropzone min-size="1024"></files-dropzone>`);
+    expect(el.minSize).to.equal(1024);
+  });
+
+  it('property minSize is 0 when attribute min-size is "0"', async () => {
+    const el = await fixture(html`<files-dropzone min-size="0"></files-dropzone>`);
+    expect(el.minSize).to.equal(0);
+  });
+
+  it('property minSize is -1 when attribute min-size is "-1"', async () => {
+    const el = await fixture(html`<files-dropzone min-size="-1"></files-dropzone>`);
+    expect(el.minSize).to.equal(-1);
+  });
+
+  it('attribute min-size is "1024" when property minSize is 1024', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    el.minSize = 1024;
+    await elementUpdated(el);
+    expect(el.getAttribute('min-size')).to.equal('1024');
+  });
+
+  it('attribute min-size is "undefined" when property minSize is undefined', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    el.minSize = void 0;
+    await elementUpdated(el);
+    expect(el.getAttribute('min-size')).to.equal('undefined');
+  });
+
+  it('attribute min-size is "null" when property minSize is null', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    el.minSize = null;
+    await elementUpdated(el);
+    expect(el.getAttribute('min-size')).to.equal('null');
   });
 
   // multiple property

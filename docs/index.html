@@ -57,7 +57,19 @@
 
             <div class="form-col">
               <label for="max-files">max-files</label>
-              <input type="number" id="max-files" name="max-files" min="0" step="1" data-attr>
+              <input type="number" id="max-files" name="max-files" min="1" step="1" data-attr>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-col">
+              <label for="max-size">max-size (bytes)</label>
+              <input type="number" id="max-size" name="max-size" min="0" step="1024" data-attr>
+            </div>
+
+            <div class="form-col">
+              <label for="min-size">min-size (bytes)</label>
+              <input type="number" id="min-size" name="min-size" min="0" step="1024" data-attr>
             </div>
           </div>
 
