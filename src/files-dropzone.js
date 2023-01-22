@@ -341,12 +341,40 @@ class FilesDropzone extends HTMLElement {
     }
 
     evt.preventDefault();
-    evt.stopPropagation();
 
     this.#dropzoneEl.classList.remove('dropzone--dragover');
     this.#dropzoneEl.part.remove('dropzone--dragover');
 
-    this.#handleFilesSelect(evt.dataTransfer.files);
+    const dataTransferItemList = evt.dataTransfer.items;
+    let droppedFiles = [];
+
+    if (dataTransferItemList) {
+      for (const item of dataTransferItemList) {
+        if (item.kind !== 'file') {
+          // Ignore non-file items such as links.
+          continue;
+        }
+
+        // https://developer.mozilla.org/en-US/docs/Web/API/DataTransferItem/webkitGetAsEntry
+        // This function is implemented as `webkitGetAsEntry()` in non-WebKit browsers
+        // including Firefox at this time but it may be renamed to `getAsEntry()` in the future.
+        const entry = item.getAsEntry ? item.getAsEntry() : item.webkitGetAsEntry();
+
+        if (entry.isFile) {
+          droppedFiles.push(item.getAsFile());
+        }
+
+        if (entry.isDirectory) {
+          // TODO: handle directories
+          console.log('Directory not supported');
+        }
+      }
+    } else {
+      const dataTransferFileList = evt.dataTransfer.files;
+      droppedFiles = [...dataTransferFileList];
+    }
+
+    this.#handleFilesSelect(droppedFiles);
   };
 
   #onClick = () => {
