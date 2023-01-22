@@ -306,6 +306,7 @@ class FilesDropzone extends HTMLElement {
     evt.preventDefault();
 
     if (this.disabled || this.noDrag) {
+      evt.dataTransfer.dropEffect = 'none';
       return;
     }
 
