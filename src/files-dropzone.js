@@ -21,24 +21,15 @@ template.innerHTML = /* html */`
     }
 
     :host {
-      --dark: #3f3f46;
-      --light: #f9f9f9;
-      --accent: #0ea5e9;
-
       --dropzone-border-width: 2px;
       --dropzone-border-style: dashed;
       --dropzone-border-radius: 0.25rem;
       --dropzone-border-color: #71717a;
-      --dropzone-border-color-hover: var(--accent);
-      --dropzone-border-color-dragover: var(--accent);
+      --dropzone-border-color-dragover: #0ea5e9;
       --dropzone-background-color: #ffffff;
-      --dropzone-background-color-hover: var(--light);
-      --dropzone-background-color-dragover: var(--light);
-      --dropzone-text-color: var(--dark);
-      --dropzone-text-color-hover: var(--dark);
-      --dropzone-text-color-dragover: var(--dark);
-      --dropzone-focus-ring-color: rgba(14, 165, 233, 0.4);
-      --dropzone-focus-ring-width: 3px;
+      --dropzone-background-color-dragover: #f9f9f9;
+      --dropzone-body-color: #3f3f46;
+      --dropzone-body-color-dragover: var(--dropzone-body-color);
 
       display: block;
     }
@@ -49,10 +40,10 @@ template.innerHTML = /* html */`
       padding: 3rem 1rem;
       overflow: hidden;
       background-color: var(--dropzone-background-color);
-      color: var(--dropzone-text-color);
+      color: var(--dropzone-body-color);
       text-align: center;
       cursor: pointer;
-      transition: border 0.2s ease-in-out, background-color 0.2s ease-in-out;
+      transition: border 0.2s ease-in-out, background-color 0.2s ease-in-out, color 0.2s ease-in-out;
     }
 
     :host(:not([no-style])[no-click]) .dropzone {
@@ -64,14 +55,10 @@ template.innerHTML = /* html */`
       cursor: not-allowed;
     }
 
-    :host(:not([no-style]):not([disabled], [no-click])) .dropzone:hover {
-      border-color: var(--dropzone-border-color-hover);
-      background-color: var(--dropzone-background-color-hover);
-    }
-
     :host(:not([no-style]):not([disabled])) .dropzone--dragover {
       border-color: var(--dropzone-border-color-dragover);
       background-color: var(--dropzone-background-color-dragover);
+      color: var(--dropzone-body-color-dragover);
     }
   </style>
 

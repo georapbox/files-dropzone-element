@@ -92,14 +92,11 @@ By default, the component comes with basic styling. However, you can customise t
 | `--dropzone-border-width` | The border width of the dropzone area. | `2px` |
 | `--dropzone-border-style` | The border style of the dropzone area. | `dashed` |
 | `--dropzone-border-color` | The border color of the dropzone area. | `#71717a` |
-| `--dropzone-border-color-hover` | The border color of the dropzone area in hover state. | `#38bdf8` |
 | `--dropzone-border-color-dragover` | The border color of the dropzone area in dragover state. | `#38bdf8` |
 | `--dropzone-background-color` | The background color of the dropzone area. | `#ffffff` |
-| `--dropzone-background-color-hover` | The background color of the dropzone area in hover state. | `#f9f9f9` |
 | `--dropzone-background-color-dragover` | The background color of the dropzone area in dragover state. | `#f9f9f9` |
-| `--dropzone-text-color` | The text color of the dropzone area. | `#3f3f46` |
-| `--dropzone-text-color-hover` | The text color of the dropzone area in hover state. | `#3f3f46` |
-| `--dropzone-text-color-dragover` | The text color of the dropzone area in dragover state. | `#3f3f46` |
+| `--dropzone-body-color` | The text color of the dropzone area. | `#3f3f46` |
+| `--dropzone-body-color-dragover` | The text color of the dropzone area in dragover state. | `#3f3f46` |
 
 ### Methods
 
