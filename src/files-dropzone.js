@@ -1,4 +1,5 @@
 import { isValidFile } from './utils/is-valid-file.js';
+import { getFilesFromDataTransferItemList, getFilesFromDataTransferFileList } from './utils/files-selector.js';
 
 const COMPONENT_NAME = 'files-dropzone';
 const TOO_MANY_FILES = 'TOO_MANY_FILES';
@@ -322,7 +323,7 @@ class FilesDropzone extends HTMLElement {
     }));
   };
 
-  #onDrop = evt => {
+  #onDrop = async evt => {
     if (this.disabled || this.noDrag) {
       return;
     }
@@ -332,36 +333,13 @@ class FilesDropzone extends HTMLElement {
     this.#dropzoneEl.classList.remove('dropzone--dragover');
     this.#dropzoneEl.part.remove('dropzone--dragover');
 
-    const dataTransferItemList = evt.dataTransfer.items;
-    let droppedFiles = [];
+    const files = evt.dataTransfer.items
+      ? await getFilesFromDataTransferItemList(evt.dataTransfer.items)
+      : await getFilesFromDataTransferFileList(evt.dataTransfer.files);
 
-    if (dataTransferItemList) {
-      for (const item of dataTransferItemList) {
-        if (item.kind !== 'file') {
-          // Ignore non-file items such as links.
-          continue;
-        }
-
-        // https://developer.mozilla.org/en-US/docs/Web/API/DataTransferItem/webkitGetAsEntry
-        // This function is implemented as `webkitGetAsEntry()` in non-WebKit browsers
-        // including Firefox at this time but it may be renamed to `getAsEntry()` in the future.
-        const entry = item.getAsEntry ? item.getAsEntry() : item.webkitGetAsEntry();
-
-        if (entry.isFile) {
-          droppedFiles.push(item.getAsFile());
-        }
-
-        if (entry.isDirectory) {
-          // TODO: handle directories
-          console.log('Directory not supported');
-        }
-      }
-    } else {
-      const dataTransferFileList = evt.dataTransfer.files;
-      droppedFiles = [...dataTransferFileList];
+    if (files.length > 0) {
+      this.#handleFilesSelect(files);
     }
-
-    this.#handleFilesSelect(droppedFiles);
   };
 
   #onClick = () => {

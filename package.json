@@ -39,7 +39,7 @@
     "test": "web-test-runner",
     "test:watch": "npm run test -- --watch",
     "test:coverage": "npm run test -- --coverage",
-    "dev": "parcel watch",
+    "dev": "parcel watch --no-cache",
     "build:parcel": "parcel build",
     "build": "npm-run-all clean build:parcel",
     "clean": "rimraf dist coverage .parcel-cache",
