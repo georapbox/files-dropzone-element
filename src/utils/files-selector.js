@@ -77,7 +77,9 @@ export const getFilesFromDataTransferItemList = async dataTransferItemList => {
   while (queue.length > 0) {
     const entry = queue.shift();
 
-    if (entry.isFile) {
+    if (!entry) {
+      continue;
+    } else if (entry.isFile) {
       let file;
 
       try {

@@ -73,8 +73,8 @@ import(componentUrl).then(res => {
     window.hljs.highlightElement(codePreview);
   });
 
-  document.addEventListener('files-dropzone:drop', evt => {
-    console.log('files-dropzone:drop ->', evt.detail);
+  document.addEventListener('files-dropzone-drop', evt => {
+    console.log('files-dropzone-drop ->', evt.detail);
 
     const { acceptedFiles, rejectedFiles } = evt.detail;
     const acceptedFilesList = createFilesList(acceptedFiles, 'accepted');

@@ -1,5 +1,5 @@
 import { elementUpdated, expect, fixture, fixtureCleanup, html } from '@open-wc/testing';
-// import sinon from 'sinon';
+import sinon from 'sinon';
 import { FilesDropzone } from '../src/files-dropzone.js';
 
 FilesDropzone.defineCustomElement();
@@ -369,6 +369,94 @@ describe('files-dropzone', () => {
     el.noStyle = false;
     await elementUpdated(el);
     expect(el.hasAttribute('no-style')).to.be.false;
+  });
+
+  /**
+   * Events
+   */
+
+  // files-dropzone-dragenter
+  it('fires files-dropzone-dragenter event when dragenter event is fired', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
+    const spy = sinon.spy();
+    el.addEventListener('files-dropzone-dragenter', spy);
+    dropzone.dispatchEvent(new DragEvent('dragenter'));
+    expect(spy).to.have.been.calledOnce;
+  });
+
+  it('it does not fire files-dropzone-dragenter event when dragenter event is fired and no-drag is set', async () => {
+    const el = await fixture(html`<files-dropzone no-drag></files-dropzone>`);
+    const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
+    const spy = sinon.spy();
+    el.addEventListener('files-dropzone-dragenter', spy);
+    dropzone.dispatchEvent(new DragEvent('dragenter'));
+    expect(spy).to.not.have.been.called;
+  });
+
+  it('it does not fire files-dropzone-dragenter event when dragenter event is fired and disabled is set', async () => {
+    const el = await fixture(html`<files-dropzone disabled></files-dropzone>`);
+    const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
+    const spy = sinon.spy();
+    el.addEventListener('files-dropzone-dragenter', spy);
+    dropzone.dispatchEvent(new DragEvent('dragenter'));
+    expect(spy).to.not.have.been.called;
+  });
+
+  // files-dropzone-dragover
+  it('fires files-dropzone-dragover event when dragover event is fired', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
+    const spy = sinon.spy();
+    el.addEventListener('files-dropzone-dragover', spy);
+    dropzone.dispatchEvent(new DragEvent('dragover', { dataTransfer: new DataTransfer() }));
+    expect(spy).to.have.been.calledOnce;
+  });
+
+  it('it does not fire files-dropzone-dragover event when dragover event is fired and no-drag is set', async () => {
+    const el = await fixture(html`<files-dropzone no-drag></files-dropzone>`);
+    const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
+    const spy = sinon.spy();
+    el.addEventListener('files-dropzone-dragover', spy);
+    dropzone.dispatchEvent(new DragEvent('dragover', { dataTransfer: new DataTransfer() }));
+    expect(spy).to.not.have.been.called;
+  });
+
+  it('it does not fire files-dropzone-dragover event when dragover event is fired and disabled is set', async () => {
+    const el = await fixture(html`<files-dropzone disabled></files-dropzone>`);
+    const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
+    const spy = sinon.spy();
+    el.addEventListener('files-dropzone-dragover', spy);
+    dropzone.dispatchEvent(new DragEvent('dragover', { dataTransfer: new DataTransfer() }));
+    expect(spy).to.not.have.been.called;
+  });
+
+  // files-dropzone-dragleave
+  it('fires files-dropzone-dragleave event when dragleave event is fired', async () => {
+    const el = await fixture(html`<files-dropzone></files-dropzone>`);
+    const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
+    const spy = sinon.spy();
+    el.addEventListener('files-dropzone-dragleave', spy);
+    dropzone.dispatchEvent(new DragEvent('dragleave'));
+    expect(spy).to.have.been.calledOnce;
+  });
+
+  it('it does not fire files-dropzone-dragleave event when dragleave event is fired and no-drag is set', async () => {
+    const el = await fixture(html`<files-dropzone no-drag></files-dropzone>`);
+    const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
+    const spy = sinon.spy();
+    el.addEventListener('files-dropzone-dragleave', spy);
+    dropzone.dispatchEvent(new DragEvent('dragleave'));
+    expect(spy).to.not.have.been.called;
+  });
+
+  it('it does not fire files-dropzone-dragleave event when dragleave event is fired and disabled is set', async () => {
+    const el = await fixture(html`<files-dropzone disabled></files-dropzone>`);
+    const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
+    const spy = sinon.spy();
+    el.addEventListener('files-dropzone-dragleave', spy);
+    dropzone.dispatchEvent(new DragEvent('dragleave'));
+    expect(spy).to.not.have.been.called;
   });
 
   afterEach(() => {

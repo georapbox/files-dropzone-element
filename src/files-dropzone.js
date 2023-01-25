@@ -276,7 +276,11 @@ class FilesDropzone extends HTMLElement {
   }
 
   #onFileInputChange = evt => {
-    this.#handleFilesSelect(evt.target.files);
+    const files = evt.target.files;
+
+    if (files.length > 0) {
+      this.#handleFilesSelect(evt.target.files);
+    }
   };
 
   #onDragEnter = () => {
@@ -284,7 +288,7 @@ class FilesDropzone extends HTMLElement {
       return;
     }
 
-    this.dispatchEvent(new Event(`${COMPONENT_NAME}:dragenter`, {
+    this.dispatchEvent(new Event(`${COMPONENT_NAME}-dragenter`, {
       bubbles: true,
       composed: true
     }));
@@ -303,7 +307,7 @@ class FilesDropzone extends HTMLElement {
     this.#dropzoneEl.classList.add('dropzone--dragover');
     this.#dropzoneEl.part.add('dropzone--dragover');
 
-    this.dispatchEvent(new Event(`${COMPONENT_NAME}:dragover`, {
+    this.dispatchEvent(new Event(`${COMPONENT_NAME}-dragover`, {
       bubbles: true,
       composed: true
     }));
@@ -317,7 +321,7 @@ class FilesDropzone extends HTMLElement {
     this.#dropzoneEl.classList.remove('dropzone--dragover');
     this.#dropzoneEl.part.remove('dropzone--dragover');
 
-    this.dispatchEvent(new Event(`${COMPONENT_NAME}:dragleave`, {
+    this.dispatchEvent(new Event(`${COMPONENT_NAME}-dragleave`, {
       bubbles: true,
       composed: true
     }));
@@ -431,7 +435,7 @@ class FilesDropzone extends HTMLElement {
       }
     }
 
-    this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}:drop`, {
+    this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}-drop`, {
       bubbles: true,
       composed: true,
       detail: {
@@ -441,7 +445,7 @@ class FilesDropzone extends HTMLElement {
     }));
 
     if (acceptedFiles.length > 0) {
-      this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}:drop-accepted`, {
+      this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}-drop-accepted`, {
         bubbles: true,
         composed: true,
         detail: {
@@ -451,7 +455,7 @@ class FilesDropzone extends HTMLElement {
     }
 
     if (rejectedFiles.length > 0) {
-      this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}:drop-rejected`, {
+      this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}-drop-rejected`, {
         bubbles: true,
         composed: true,
         detail: {
