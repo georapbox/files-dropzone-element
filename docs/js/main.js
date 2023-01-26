@@ -6,8 +6,8 @@ import(componentUrl).then(res => {
 
   FilesDropzone.defineCustomElement();
 
-  const droppedFilesList = document.querySelector('#droppedFiles');
-  const codePreview = document.querySelector('#code-preview');
+  const droppedFilesList = document.getElementById('droppedFiles');
+  const codePreview = document.getElementById('codePreview');
   const form = document.querySelector('form');
   const dropzone = document.querySelector('files-dropzone');
 
@@ -24,29 +24,55 @@ import(componentUrl).then(res => {
       return;
     }
 
+    const INITIAL_FILES_COUNT = 50;
+
     const container = document.createElement('div');
-    const title = document.createElement('h4');
-    const ul = document.createElement('ul');
 
-    container.classList.add(status);
-    title.textContent = status === 'accepted' ? 'Accepted files' : 'Rejected files';
+    const title = Object.assign(document.createElement('h4'), {
+      className: `dropped-files__title dropped-files__title--${status}`,
+      textContent: status === 'accepted' ? 'Accepted files' : 'Rejected files'
+    });
 
-    const items = files.map(item => {
+    const list = Object.assign(document.createElement('ul'), {
+      className: 'dropped-files__list'
+    });
+
+    files.forEach((item, index) => {
       const file = status === 'accepted' ? item : item.file;
 
-      return /* html */`
-        <li>
-          <code>${file.name}</code><code style="color: var(--text-main);">- ${file.size} bytes</code>
-        </li>
-      `;
-    }).join('');
+      const listItem = Object.assign(document.createElement('li'), {
+        className: 'dropped-files__list-item',
+        hidden: index >= INITIAL_FILES_COUNT,
+        innerHTML: /* html */`${file.name} <span style="color: var(--text-main);">- ${file.size} bytes<span>`
+      });
+
+      list.appendChild(listItem);
+    });
+
+    const showAllBtn = Object.assign(document.createElement('button'), {
+      type: 'button',
+      className: 'dropped-files__show-all',
+      textContent: 'Show all'
+    });
 
     container.appendChild(title);
-    container.appendChild(ul);
-    ul.innerHTML = items;
+    container.appendChild(list);
+
+    if (files.length > INITIAL_FILES_COUNT) {
+      container.appendChild(showAllBtn);
+    }
 
     return container;
   }
+
+  droppedFilesList.addEventListener('click', evt => {
+    const target = evt.target;
+
+    if (target.matches('.dropped-files__show-all')) {
+      target.previousElementSibling.querySelectorAll('li').forEach(item => item.hidden = false);
+      target.remove();
+    }
+  });
 
   form.addEventListener('input', evt => {
     const target = evt.target;
@@ -80,24 +106,12 @@ import(componentUrl).then(res => {
 
     droppedFilesList.replaceChildren();
 
-    droppedFilesList.innerHTML = /* html */`
-      <details open>
-        <summary>Dropped files</summary>
-        <blockquote>
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-info-lg" viewBox="0 0 16 16">
-            <path d="m9.708 6.075-3.024.379-.108.502.595.108c.387.093.464.232.38.619l-.975 4.577c-.255 1.183.14 1.74 1.067 1.74.72 0 1.554-.332 1.933-.789l.116-.549c-.263.232-.65.325-.905.325-.363 0-.494-.255-.402-.704l1.323-6.208Zm.091-2.755a1.32 1.32 0 1 1-2.64 0 1.32 1.32 0 0 1 2.64 0Z"/>
-          </svg>
-          <em>Open the browser's console to watch emitted events with more info of the dropped files.</em>
-        </blockquote>
-      </details>
-    `;
-
     if (acceptedFilesList) {
-      droppedFilesList.querySelector('details').appendChild(acceptedFilesList);
+      droppedFilesList.appendChild(acceptedFilesList);
     }
 
     if (rejectedFilesList) {
-      droppedFilesList.querySelector('details').appendChild(rejectedFilesList);
+      droppedFilesList.appendChild(rejectedFilesList);
     }
   });
 }).catch(err => {
