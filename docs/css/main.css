@@ -1,5 +1,24 @@
 :root {
   --body-max-width: 1200px;
+
+  --success-text: #146c43;
+  --danger-text: #b02a37;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --success-text: #75b798;
+    --danger-text: #ea868f;
+  }
+
+  files-dropzone:not([no-style]) {
+    --dropzone-border-color: var(--border);
+    --dropzone-border-color-dragover: var(--focus);
+    --dropzone-background-color: var(--background-alt);
+    --dropzone-background-color-dragover: var(--background);
+    --dropzone-body-color: var(--text-main);
+    --dropzone-body-color-dragover: var(--text-main);
+  }
 }
 
 .form-row {
@@ -43,14 +62,16 @@ form input[type="checkbox"] {
   display: none;
 }
 
-.dropped-files {
-  padding: 1rem;
-  background-color: var(--background);
-  border-radius: 0.25rem;
-}
-
 .dropped-files h4 {
   margin: 0 0 0.25rem 0;
+}
+
+.dropped-files .accepted h4 {
+  color: var(--success-text);
+}
+
+.dropped-files .rejected h4 {
+  color: var(--danger-text);
 }
 
 .dropped-files blockquote {
@@ -70,10 +91,8 @@ form input[type="checkbox"] {
   padding-left: 1.5rem;
 }
 
-.dropped-files ul li div {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.dropped-files ul li code {
+  background-color: transparent;
 }
 
 files-dropzone {
@@ -82,15 +101,4 @@ files-dropzone {
 
 files-dropzone::part(dropzone) {
   padding-block: 4rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  files-dropzone:not([no-style]) {
-    --dropzone-border-color: var(--border);
-    --dropzone-border-color-dragover: var(--focus);
-    --dropzone-background-color: var(--background-alt);
-    --dropzone-background-color-dragover: var(--background);
-    --dropzone-body-color: var(--text-main);
-    --dropzone-body-color-dragover: var(--text-main);
-  }
 }
