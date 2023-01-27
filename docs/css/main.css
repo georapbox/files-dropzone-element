@@ -82,14 +82,6 @@ form input[type="checkbox"] {
   margin: 1rem 0 0.75rem 0;
 }
 
-.dropped-files__title--accepted {
-  color: var(--success-text);
-}
-
-.dropped-files__title--rejected {
-  color: var(--danger-text);
-}
-
 .dropped-files__list {
   margin: 0 0 1rem 0;
   padding: 0;
@@ -98,9 +90,13 @@ form input[type="checkbox"] {
 .dropped-files__list-item {
   font-family: monospace;
   font-size: 0.9rem;
-  color: var(--code);
+  color: var(--success-text);
   padding: 0.3rem 0.75rem;
-  list-style-position: inside;
+  list-style: none;
+}
+
+.dropped-files__list-item--rejected {
+  color: var(--danger-text);
 }
 
 .dropped-files__list-item::marker {
