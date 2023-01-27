@@ -1,5 +1,5 @@
 import { isValidFile } from './utils/is-valid-file.js';
-import { getFilesFromDataTransferItemList, getFilesFromDataTransferFileList } from './utils/files-selector.js';
+import { getFilesFromEvent } from './utils/files-selector.js';
 
 const COMPONENT_NAME = 'files-dropzone';
 const TOO_MANY_FILES = 'TOO_MANY_FILES';
@@ -275,12 +275,8 @@ class FilesDropzone extends HTMLElement {
     }
   }
 
-  #onFileInputChange = evt => {
-    const files = evt.target.files;
-
-    if (files.length > 0) {
-      this.#handleFilesSelect(evt.target.files);
-    }
+  #onFileInputChange = async evt => {
+    this.#handleFilesSelect(await getFilesFromEvent(evt));
   };
 
   #onDragEnter = () => {
@@ -336,14 +332,7 @@ class FilesDropzone extends HTMLElement {
 
     this.#dropzoneEl.classList.remove('dropzone--dragover');
     this.#dropzoneEl.part.remove('dropzone--dragover');
-
-    const files = evt.dataTransfer.items
-      ? await getFilesFromDataTransferItemList(evt.dataTransfer.items)
-      : await getFilesFromDataTransferFileList(evt.dataTransfer.files);
-
-    if (files.length > 0) {
-      this.#handleFilesSelect(files);
-    }
+    this.#handleFilesSelect(await getFilesFromEvent(evt));
   };
 
   #onClick = () => {
@@ -365,7 +354,7 @@ class FilesDropzone extends HTMLElement {
   };
 
   #handleFilesSelect(files) {
-    if (!files || !files.length) {
+    if (!Array.isArray(files) || !files.length) {
       return;
     }
 
@@ -412,7 +401,7 @@ class FilesDropzone extends HTMLElement {
           if (!fileHasValidType) {
             errors.push({
               code: INVALID_MIME_TYPE,
-              message: `File type ${file.type} is not accepted.`
+              message: `File type "${file.type}" is not accepted.`
             });
           }
 
