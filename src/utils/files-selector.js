@@ -221,23 +221,13 @@ const getFilesFromDataTransferItemList = async dataTransferItemList => {
     if (!entry) {
       continue;
     } else if (entry.isFile) {
-      let file;
-
-      try {
-        file = await getFileFromFileEntry(entry);
-      } catch (err) {
-        continue;
-      }
+      const file = await getFileFromFileEntry(entry);
 
       if (FILES_TO_IGNORE.indexOf(file.name) === -1) {
         files.push(file);
       }
     } else if (entry.isDirectory) {
-      try {
-        queue.push(...await readAllDirectoryEntries(entry.createReader()));
-      } catch (err) {
-        console.error(err);
-      }
+      queue.push(...await readAllDirectoryEntries(entry.createReader()));
     }
   }
 

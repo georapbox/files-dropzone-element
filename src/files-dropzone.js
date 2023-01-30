@@ -276,7 +276,15 @@ class FilesDropzone extends HTMLElement {
   }
 
   #onFileInputChange = async evt => {
-    this.#handleFilesSelect(await getFilesFromEvent(evt));
+    try {
+      this.#handleFilesSelect(await getFilesFromEvent(evt));
+    } catch (error) {
+      this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}-error`, {
+        bubbles: true,
+        composed: true,
+        detail: { error }
+      }));
+    }
   };
 
   #onDragEnter = () => {
@@ -332,7 +340,16 @@ class FilesDropzone extends HTMLElement {
 
     this.#dropzoneEl.classList.remove('dropzone--dragover');
     this.#dropzoneEl.part.remove('dropzone--dragover');
-    this.#handleFilesSelect(await getFilesFromEvent(evt));
+
+    try {
+      this.#handleFilesSelect(await getFilesFromEvent(evt));
+    } catch (error) {
+      this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}-error`, {
+        bubbles: true,
+        composed: true,
+        detail: { error }
+      }));
+    }
   };
 
   #onClick = () => {

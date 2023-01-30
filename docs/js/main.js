@@ -117,3 +117,7 @@ import(componentUrl).then(res => {
 }).catch(err => {
   console.error(err);
 });
+
+document.addEventListener('files-dropzone-error', evt => {
+  console.log('files-dropzone-error ->', evt.detail.error);
+});
