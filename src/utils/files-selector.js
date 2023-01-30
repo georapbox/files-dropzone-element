@@ -198,12 +198,14 @@ const getFileFromFileEntry = fileEntry => {
 const getFilesFromDataTransferItemList = async dataTransferItemList => {
   const files = [];
 
-  // Use BFS to traverse entire directory/file structure
+  // Chromium browsers read only 100 files at a time as per the spec, so we need to use
+  // BFS (Breadth-first search) to traverse the entire directory/file structure.
+  // https://developer.mozilla.org/en-US/docs/Web/API/DataTransferItem/webkitGetAsEntry#javascript_content
   const queue = [];
 
   for (const item of dataTransferItemList) {
     if (item.kind !== 'file') {
-      // Ignore non-file items such as links.
+      // Ignore non-file items, such as links.
       continue;
     }
 
