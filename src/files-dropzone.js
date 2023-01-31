@@ -386,7 +386,7 @@ class FilesDropzone extends HTMLElement {
           file,
           errors: [{
             code: TOO_MANY_FILES,
-            message: `Too many files selected. Only one file is allowed.`
+            message: `Too many files selected. Only 1 file is allowed.`
           }]
         });
       }
@@ -398,7 +398,7 @@ class FilesDropzone extends HTMLElement {
           file,
           errors: [{
             code: TOO_MANY_FILES,
-            message: `Too many files selected. Only ${this.maxFiles} files are allowed.`
+            message: `Too many files selected. Only ${this.maxFiles} ${this.maxFiles > 1 ? 'files are' : 'file is'} allowed.`
           }]
         });
       }
