@@ -72,6 +72,7 @@ form input[type="checkbox"] {
 
 .console-info svg {
   min-width: 20px;
+  color: var(--links);
 }
 
 .dropped-files:empty {
@@ -113,10 +114,22 @@ form input[type="checkbox"] {
   font-size: 0.9rem;
 }
 
-files-dropzone {
-  margin-bottom: 1em;
+.open-file-dialog-btn {
+  width: 100%;
+  margin: 0;
+  line-height: 1.5;
 }
 
-files-dropzone::part(dropzone) {
-  padding-block: 4rem;
+.dropzone-container {
+  min-height: 144.78px;
+}
+
+@media screen and (min-width: 400px) {
+  .dropzone-container {
+    min-height: 122.4px;
+  }
+}
+
+files-dropzone::not(:defined) {
+  display: none;
 }

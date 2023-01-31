@@ -10,6 +10,7 @@ import(componentUrl).then(res => {
   const codePreview = document.getElementById('codePreview');
   const form = document.querySelector('form');
   const dropzone = document.querySelector('files-dropzone');
+  const openFileDialogBtn = document.getElementById('openFileDialogBtn');
 
   codePreview.textContent = '<files-dropzone></files-dropzone>';
 
@@ -114,10 +115,18 @@ import(componentUrl).then(res => {
       droppedFilesList.appendChild(rejectedFilesList);
     }
   });
+
+  document.addEventListener('files-dropzone-error', evt => {
+    console.log('files-dropzone-error ->', evt.detail.error);
+  });
+
+  openFileDialogBtn.addEventListener('click', () => {
+    dropzone.openFileDialog();
+
+    if (dropzone.hasAttribute('disabled')) {
+      alert('Dropzone is disabled. File dialog will not open programmatically.');
+    }
+  });
 }).catch(err => {
   console.error(err);
-});
-
-document.addEventListener('files-dropzone-error', evt => {
-  console.log('files-dropzone-error ->', evt.detail.error);
 });
