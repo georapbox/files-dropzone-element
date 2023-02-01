@@ -117,6 +117,84 @@ By default, the component comes with basic styling. However, you can customise t
 | `files-dropzone-dragleave` | Emitted on `dragleave` event. The event is not emitted if `disabled` or `no-drag` attributes are set. | - |
 | `files-dropzone-error` | Emitted if there is any error in the process of reading dropped files or directories. | `{error: any}` |
 
+## Usage example
+
+Below is a basic usage example of the custom element that also demonstrates styles customization.
+
+```html
+<head>
+  <style>
+    files-dropzone {
+      --dropzone-border-color: #dbdbdb;
+      --dropzone-border-color-dragover: #0096bfab;
+      --dropzone-background-color: #f7f7f7;
+      --dropzone-background-color-dragover: #efefef;
+      --dropzone-body-color: #363636;
+      --dropzone-body-color-dragover: #363636;
+    }
+
+    files-dropzone::part(dropzone) {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      files-dropzone {
+        --dropzone-border-color: #526980;
+        --dropzone-border-color-dragover: #0096bfab;
+        --dropzone-background-color: #1a242f;
+        --dropzone-background-color-dragover: #161f27;
+        --dropzone-body-color: #dbdbdb;
+        --dropzone-body-color-dragover: #dbdbdb;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <files-dropzone accept="image/png,image/jpg" multiple>
+    <span>Drag 'n' drop files here, or click to select files</span>
+    <small>Accepted file types: <code>png</code>, <code>jpg</code></small>
+  </files-dropzone>
+
+  <h3>Accepted files</h3>
+  <ul id="accepted-files"></ul>
+
+  <h3>Rejected files</h3>
+  <ul id="rejected-files"></ul>
+
+  <script type="module">
+    import { FilesDropzone } from 'https://unpkg.com/@georapbox/files-dropzone-element';
+
+    FilesDropzone.defineCustomElement();
+
+    const drozone = document.querySelector('files-dropzone');
+    const acceptedFilesList = document.getElementById('accepted-files');
+    const rejectedFilesList = document.getElementById('rejected-files');
+
+    dropzone.addEventListener('files-dropzone-drop', evt => {
+      const { acceptedFiles, rejectedFiles } = evt.detail;
+
+      acceptedFilesList.replaceChildren();
+      rejectedFilesList.replaceChildren();
+
+      acceptedFiles.forEach(file => {
+        const li = document.createElement('li');
+        li.textContent = `${file.name} - ${file.size} bytes`;
+        acceptedFilesList.appendChild(li);
+      });
+
+      rejectedFiles.forEach(file => {
+        const li = document.createElement('li');
+        li.textContent = `${file.name} - ${file.size} bytes`;
+        rejectedFilesList.appendChild(li);
+      });
+    });
+  </script>
+</body>  
+```
+
 ## Changelog
 
 For API updates and breaking changes, check the [CHANGELOG][changelog].
