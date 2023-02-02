@@ -14,8 +14,8 @@
   files-dropzone:not([no-style]) {
     --dropzone-border-color: var(--border);
     --dropzone-border-color-dragover: var(--focus);
-    --dropzone-background-color: var(--background-alt);
-    --dropzone-background-color-dragover: var(--background);
+    --dropzone-background-color: var(--background);
+    --dropzone-background-color-dragover: #10161b;
     --dropzone-body-color: var(--text-main);
     --dropzone-body-color-dragover: var(--text-main);
   }
@@ -121,15 +121,13 @@ form input[type="checkbox"] {
 }
 
 .dropzone-container {
-  min-height: 144.78px;
-}
-
-@media screen and (min-width: 400px) {
-  .dropzone-container {
-    min-height: 122.4px;
-  }
+  min-height: 154.4px;
 }
 
 files-dropzone::not(:defined) {
   display: none;
+}
+
+files-dropzone::part(dropzone) {
+  padding-block: 4rem;
 }
