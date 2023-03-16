@@ -2,9 +2,6 @@
 [![npm license](https://img.shields.io/npm/l/@georapbox/files-dropzone-element.svg)](https://www.npmjs.com/package/@georapbox/files-dropzone-element)
 
 [demo]: https://georapbox.github.io/files-dropzone-element/
-[getUserMedia]: https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
-[MediaDevices]: https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices
-[constraints]: https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#parameters
 [license]: https://georapbox.mit-license.org/@2023
 [changelog]: https://github.com/georapbox/files-dropzone-element/blob/main/CHANGELOG.md
 
