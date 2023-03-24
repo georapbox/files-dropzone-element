@@ -31,7 +31,7 @@ import(componentUrl).then(res => {
 
     const title = Object.assign(document.createElement('h4'), {
       className: 'dropped-files__title',
-      textContent: status === 'accepted' ? 'Accepted files' : 'Rejected files'
+      textContent: `${status === 'accepted' ? 'Accepted' : 'Rejected'} files (${files.length})`
     });
 
     const list = Object.assign(document.createElement('ul'), {
