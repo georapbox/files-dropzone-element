@@ -31,6 +31,8 @@ template.innerHTML = /* html */`
       --dropzone-background-color-dragover: #f4f4f5;
       --dropzone-body-color: #3f3f46;
       --dropzone-body-color-dragover: var(--dropzone-body-color);
+      --dropzone-focus-shadow-rgb: 49,132,253;
+      --transition-duration: 0.2s;
 
       display: block;
     }
@@ -44,7 +46,7 @@ template.innerHTML = /* html */`
       color: var(--dropzone-body-color);
       text-align: center;
       cursor: pointer;
-      transition: border 0.2s ease-in-out, background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+      transition: border var(--transition-duration) ease-in-out, background-color var(--transition-duration) ease-in-out, color var(--transition-duration) ease-in-out, box-shadow var(--transition-duration) ease-in-out;
     }
 
     :host(:not([no-style])[no-click]) .dropzone {
@@ -60,6 +62,11 @@ template.innerHTML = /* html */`
       border-color: var(--dropzone-border-color-dragover);
       background-color: var(--dropzone-background-color-dragover);
       color: var(--dropzone-body-color-dragover);
+    }
+
+    :host(:not([no-style]):not([disabled])) .dropzone:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 0.25rem rgba(var(--dropzone-focus-shadow-rgb), 0.5);
     }
   </style>
 
@@ -128,6 +135,7 @@ class FilesDropzone extends HTMLElement {
     this.#upgradeProperty('noClick');
     this.#upgradeProperty('noDrag');
     this.#upgradeProperty('noKeyboard');
+    this.#upgradeProperty('autoFocus');
     this.#upgradeProperty('noStyle');
 
     this.#fileInput.addEventListener('change', this.#onFileInputChange);
@@ -137,6 +145,8 @@ class FilesDropzone extends HTMLElement {
     this.#dropzoneEl.addEventListener('drop', this.#onDrop);
     this.#dropzoneEl.addEventListener('click', this.#onClick);
     this.#dropzoneEl.addEventListener('keyup', this.#onKeyUp);
+
+    this.autoFocus && this.#dropzoneEl.focus();
   }
 
   disconnectedCallback() {
@@ -260,6 +270,18 @@ class FilesDropzone extends HTMLElement {
       this.setAttribute('no-keyboard', '');
     } else {
       this.removeAttribute('no-keyboard');
+    }
+  }
+
+  get autoFocus() {
+    return this.hasAttribute('auto-focus');
+  }
+
+  set autoFocus(value) {
+    if (value) {
+      this.setAttribute('auto-focus', '');
+    } else {
+      this.removeAttribute('auto-focus');
     }
   }
 

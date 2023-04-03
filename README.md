@@ -53,14 +53,15 @@ By default, the component comes with basic styling. However, you can customise t
 | ---- | -------- | ---- | -------- | ------- | ----------- |
 | `accept`<sup>1</sup> | ✓ | String | - | `null` | A string containing one or more of unique file type specifiers, separated by commas. Files that do not match one of the accepted file type specifiers, will be rejected. |
 | `disabled` | ✓ | Boolean | - | `false` | Disables the dropzone. |
-| `maxFiles`<br>*`max-files`* | ✓ | Number | - | `Infinity` | Maximum accepted number of files. Note that this property has effect only when `multiple` is set to true. If its value is set to `0` or any negative number, it will allow any number of files. If the number of dropped files is greater than the value set, all of the files will be rejected to avoid making unsafe assumptions on which files to accept. |
+| `maxFiles`<br>*`max-files`* | ✓ | Number | - | `Infinity` | Maximum accepted number of files. Note that this property has effect only when `multiple` is `true`. If its value is set to `0` or any negative number, it will allow any number of files. If the number of dropped files is greater than the value set, all of the files will be rejected to avoid making unsafe assumptions on which files to accept. |
 | `maxSize`<br>*`max-size`* | ✓ | Number | - | `Infinity` | Maximum file size (in bytes). |
 | `minSize`<br>*`min-size`* | ✓ | Number | - | `0` | Minimum file size (in bytes). |
-| `multiple` | ✓ | Boolean | - | `false` | If set, allows drag 'n' drop (or selection from the file dialog) of multiple files. If it is not set and many files are dropped, all of them will be rejected to avoid making unsafe assumptions on which files to accept. |
-| `noClick`<br>*`no-click`* | ✓ | Boolean | - | `false` | If set, disables the ability to select files by clicking on the dropzone area, using the native file dialog. |
-|`noDrag`<br>*`no-drag`*| ✓ | Boolean | - | `false` | If set, disables drag 'n' drop. |
-| `noKeyboard`<br>*`no-keyboard`* | ✓ | Boolean | - | `false` | If set, disables the ability to select files using the SPACE/ENTER keys and also disables the ability to focus on the element using the keyboard. |
-| `noStyle`<br>*`no-style`* | ✓ | Boolean | - | `false` | If set, it will remove all default styling. It can be useful in cases you want to style the component's parts from scratch. Note that the available [CSS Custom Properties](#css-custom-properties) can still be used. |
+| `multiple` | ✓ | Boolean | - | `false` | If `true`, allows drag 'n' drop (or selection from the file dialog) of multiple files. If set to `false` and many files are dropped, all of them will be rejected to avoid making unsafe assumptions on which files to accept. |
+| `noClick`<br>*`no-click`* | ✓ | Boolean | - | `false` | If `true`, disables the ability to select files by clicking on the dropzone area, using the native file dialog. |
+|`noDrag`<br>*`no-drag`*| ✓ | Boolean | - | `false` | If `true`, disables drag 'n' drop. |
+| `noKeyboard`<br>*`no-keyboard`* | ✓ | Boolean | - | `false` | If `true`, disables the ability to select files using the SPACE/ENTER keys and also disables the ability to focus on the element using the keyboard. |
+| `autoFocus`<br>*`auto-focus`* | ✓ | Boolean | - | `false` | If `true`, the dropzone will be focused when the component is rendered. It has no effect if the `noKeyboard` or `disabled` properties are set to `true`. |
+| `noStyle`<br>*`no-style`* | ✓ | Boolean | - | `false` | If `true`, it will remove all default styling. It can be useful in cases you want to style the component's parts from scratch. Note that the available [CSS Custom Properties](#css-custom-properties) can still be used. |
 
 <sup>1</sup> Each unique file type specifier may take one of the following forms:
 - A valid case-insensitive filename extension, starting with a period (".") character. For example: `.jpg`, `.pdf`, or `.doc`.
@@ -94,6 +95,8 @@ By default, the component comes with basic styling. However, you can customise t
 | `--dropzone-background-color-dragover` | The background color of the dropzone area in dragover state. | `#f4f4f5` |
 | `--dropzone-body-color` | The text color of the dropzone area. | `#3f3f46` |
 | `--dropzone-body-color-dragover` | The text color of the dropzone area in dragover state. | `#3f3f46` |
+| `--dropzone-focus-shadow-rgb` | The RGB color of the dropzone area focus shadow. | `49, 132, 253` |
+| `--transition-duration` | The transition's duration for the dropzone area. | `0.2s` |
 
 ### Methods
 
