@@ -25,8 +25,8 @@ template.innerHTML = /* html */`
       --dropzone-border-width: 2px;
       --dropzone-border-style: dashed;
       --dropzone-border-radius: 0.25rem;
-      --dropzone-border-color: #71717a;
-      --dropzone-border-color-dragover: #0ea5e9;
+      --dropzone-border-color: #6c757d;
+      --dropzone-border-color-dragover: #0d6efd;
       --dropzone-background-color: #ffffff;
       --dropzone-background-color-dragover: #f4f4f5;
       --dropzone-body-color: #3f3f46;
