@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v1.1.1 (2023-06-12)
+
+- Added `image/jxl` mime type to common mime types.
+
 ## v1.1.0 (2023-04-03)
 
 - Added `auto-focus` attribute to dropzone element to focus on it when the component is rendered.
