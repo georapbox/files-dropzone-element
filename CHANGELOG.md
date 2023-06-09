@@ -3,6 +3,7 @@
 ## v1.1.1 (2023-06-12)
 
 - Added `image/jxl` mime type to common mime types.
+- Update dev dependencies.
 
 ## v1.1.0 (2023-04-03)
 
