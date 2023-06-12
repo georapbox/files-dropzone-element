@@ -86,6 +86,7 @@ form input[type="checkbox"] {
 .dropped-files__list {
   margin: 0;
   padding: 0;
+  animation: fade 0.5s ease-in-out;
 }
 
 .dropped-files__list-item {
@@ -130,4 +131,9 @@ files-dropzone::not(:defined) {
 
 files-dropzone::part(dropzone) {
   padding-block: 4rem;
+}
+
+@keyframes fade {
+  0% { opacity: 0.6; }
+  100% { opacity: 1; }
 }

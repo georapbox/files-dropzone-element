@@ -29,6 +29,7 @@ const COMMON_MIME_TYPES = new Map([
   ['jar', 'application/java-archive'],
   ['jpeg', 'image/jpeg'],
   ['jpg', 'image/jpeg'],
+  ['jxl', 'image/jxl'],
   ['js', 'text/javascript'],
   ['json', 'application/json'],
   ['jsonld', 'application/ld+json'],
