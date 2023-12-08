@@ -6,6 +6,7 @@
   "module": "dist/files-dropzone.js",
   "unpkg": "dist/files-dropzone.js",
   "type": "module",
+  "types": "dist/files-dropzone.d.ts",
   "targets": {
     "files-dropzone": {
       "context": "browser",
@@ -39,12 +40,13 @@
     "test": "web-test-runner",
     "test:watch": "npm run test -- --watch",
     "test:coverage": "npm run test -- --coverage",
+    "types": "tsc --project tsconfig.json",
     "dev:parcel": "parcel watch",
     "dev": "npm-run-all clean dev:parcel",
     "build:parcel": "parcel build",
     "build": "npm-run-all clean build:parcel",
     "clean": "rimraf dist .parcel-cache",
-    "prepare": "npm-run-all clean lint test build"
+    "prepare": "npm-run-all clean lint test build types"
   },
   "keywords": [
     "custom element",
@@ -74,6 +76,7 @@
     "npm-run-all": "~4.1.5",
     "parcel": "~2.9.2",
     "rimraf": "~5.0.1",
-    "sinon": "~15.1.0"
+    "sinon": "~15.1.0",
+    "typescript": "~5.3.3"
   }
 }
