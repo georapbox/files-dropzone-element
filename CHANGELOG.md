@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v1.2.0 (2023-12-11)
+
+- Added `--dropzone-transition-duration` CSS Custom Property to change the transition duration for the dropzone. For backward compatibility, `--transition-duration` is still supported.
+- Added Typescript types declaration file.
+- Updated dev dependencies.
+
 ## v1.1.1 (2023-06-12)
 
 - Added `image/jxl` mime type to common mime types.
