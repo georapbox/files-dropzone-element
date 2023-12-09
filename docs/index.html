@@ -8,25 +8,36 @@
   <title>&lt;files-dropzone&gt;</title>
   <meta name="description" content="A custom element that creates a drag and drop zone for files">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-  <link rel="stylesheet" href="lib/highlight/highlight-github.min.css">
+  <link rel="stylesheet" href="lib/highlight/highlight-github.css">
   <link rel="stylesheet" href="css/water.css">
   <link rel="stylesheet" href="css/main.css">
 </head>
-<body>
+<body class="no-js">
+  <script>document.body.classList.remove('no-js');</script>
+
   <div class="container">
+    <noscript>
+      <div class="noscript-banner">
+        This page requires JavaScript to work properly.
+        Please enable JavaScript in your browser settings.
+      </div>
+    </noscript>
+
     <h1>&lt;files-dropzone&gt;</h1>
 
     <p>A custom element that creates a drag and drop zone for files.</p>
 
-    <h2>Demo</h2>
+    <h2 data-hide="no-js">Demo</h2>
 
-    <p><small><em>This is just a demo dropzone. Dropped files are not uploaded anywhere.</em></small></p>
+    <p data-hide="no-js">
+      <small><em>This is just a demo dropzone. Dropped files are not uploaded anywhere.</em></small>
+    </p>
 
-    <div class="dropzone-container">
+    <div class="dropzone-container" data-hide="no-js">
       <files-dropzone></files-dropzone>
     </div>
 
-    <details open>
+    <details data-hide="no-js" open>
       <summary>Dropped files</summary>
 
       <p class="console-info">
@@ -39,7 +50,7 @@
       <div class="dropped-files" id="droppedFiles"></div>
     </details>
 
-    <details open>
+    <details data-hide="no-js" open>
       <summary>Customize component</summary>
 
       <pre><code class="code-preview" id="codePreview"></code></pre>

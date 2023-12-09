@@ -1,6 +1,5 @@
 :root {
-  --body-max-width: 1200px;
-
+  --body-max-width: 1024px;
   --success-text: #146c43;
   --danger-text: #b02a37;
 }
@@ -21,7 +20,25 @@
   }
 }
 
-hidden {
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.noscript-banner {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--border-radius);
+  background-color: var(--focus);
+  text-align: center;
+}
+
+.no-js [data-hide="no-js"] {
   display: none !important;
 }
 
