@@ -17,67 +17,83 @@ const FILE_TOO_SMALL = 'FILE_TOO_SMALL';
 const INVALID_MIME_TYPE = 'INVALID_MIME_TYPE';
 const template = document.createElement('template');
 
+const styles = /* css */`
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  :host([hidden]),
+  [hidden] {
+    display: none !important;
+  }
+
+  :host {
+    --dropzone-border-width: 2px;
+    --dropzone-border-style: dashed;
+    --dropzone-border-radius: 0.25rem;
+    --dropzone-border-color: #6c757d;
+    --dropzone-border-color-dragover: #0d6efd;
+    --dropzone-border-color-hover: var(--dropzone-border-color-dragover);
+    --dropzone-background-color: #ffffff;
+    --dropzone-background-color-dragover: #f4f4f5;
+    --dropzone-background-color-hover: var(--dropzone-background-color-dragover);
+    --dropzone-body-color: #3f3f46;
+    --dropzone-body-color-dragover: var(--dropzone-body-color);
+    --dropzone-body-color-hover: var(--dropzone-body-color-dragover);
+    --dropzone-focus-shadow-rgb: 49,132,253;
+    --dropzone-focus-box-shadow: 0 0 0 0.25rem rgba(var(--dropzone-focus-shadow-rgb), 0.5);
+    --transition-duration: 0.2s; /* for backwards compatibility */
+    --dropzone-transition-duration: var(--transition-duration);
+
+    display: block;
+  }
+
+  :host(:not([no-style])) .dropzone {
+    border: var(--dropzone-border-width) var(--dropzone-border-style) var(--dropzone-border-color);
+    border-radius: var(--dropzone-border-radius);
+    padding: 3rem 1rem;
+    overflow: hidden;
+    background-color: var(--dropzone-background-color);
+    color: var(--dropzone-body-color);
+    text-align: center;
+    cursor: pointer;
+    transition: border var(--dropzone-transition-duration) ease-in-out, background-color var(--dropzone-transition-duration) ease-in-out, color var(--dropzone-transition-duration) ease-in-out, box-shadow var(--dropzone-transition-duration) ease-in-out;
+  }
+
+  :host(:not([no-style])[no-click]) .dropzone {
+    cursor: default;
+  }
+
+  :host(:not([no-style])[disabled]) .dropzone {
+    opacity: 0.8;
+    cursor: not-allowed;
+  }
+
+  :host(:not([no-style]):not([disabled])) .dropzone--dragover {
+    border-color: var(--dropzone-border-color-dragover);
+    background-color: var(--dropzone-background-color-dragover);
+    color: var(--dropzone-body-color-dragover);
+  }
+
+  :host(:not([no-style]):not([disabled])) .dropzone:focus-visible {
+    outline: none;
+    box-shadow: var(--dropzone-focus-box-shadow);
+  }
+
+  @media (hover: hover) {
+    :host(:not([no-style]):not([disabled])) .dropzone:not(.dropzone--dragover):hover {
+      border-color: var(--dropzone-border-color-hover);
+      background-color: var(--dropzone-background-color-hover);
+      color: var(--dropzone-body-color-hover);
+    }
+  }
+`;
+
 template.innerHTML = /* html */`
   <style>
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-    }
-
-    :host([hidden]),
-    [hidden] {
-      display: none !important;
-    }
-
-    :host {
-      --dropzone-border-width: 2px;
-      --dropzone-border-style: dashed;
-      --dropzone-border-radius: 0.25rem;
-      --dropzone-border-color: #6c757d;
-      --dropzone-border-color-dragover: #0d6efd;
-      --dropzone-background-color: #ffffff;
-      --dropzone-background-color-dragover: #f4f4f5;
-      --dropzone-body-color: #3f3f46;
-      --dropzone-body-color-dragover: var(--dropzone-body-color);
-      --dropzone-focus-shadow-rgb: 49,132,253;
-      --transition-duration: 0.2s; /* for backwards compatibility */
-      --dropzone-transition-duration: var(--transition-duration);
-
-      display: block;
-    }
-
-    :host(:not([no-style])) .dropzone {
-      border: var(--dropzone-border-width) var(--dropzone-border-style) var(--dropzone-border-color);
-      border-radius: var(--dropzone-border-radius);
-      padding: 3rem 1rem;
-      overflow: hidden;
-      background-color: var(--dropzone-background-color);
-      color: var(--dropzone-body-color);
-      text-align: center;
-      cursor: pointer;
-      transition: border var(--dropzone-transition-duration) ease-in-out, background-color var(--dropzone-transition-duration) ease-in-out, color var(--dropzone-transition-duration) ease-in-out, box-shadow var(--dropzone-transition-duration) ease-in-out;
-    }
-
-    :host(:not([no-style])[no-click]) .dropzone {
-      cursor: default;
-    }
-
-    :host(:not([no-style])[disabled]) .dropzone {
-      opacity: 0.8;
-      cursor: not-allowed;
-    }
-
-    :host(:not([no-style]):not([disabled])) .dropzone--dragover {
-      border-color: var(--dropzone-border-color-dragover);
-      background-color: var(--dropzone-background-color-dragover);
-      color: var(--dropzone-body-color-dragover);
-    }
-
-    :host(:not([no-style]):not([disabled])) .dropzone:focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 0.25rem rgba(var(--dropzone-focus-shadow-rgb), 0.5);
-    }
+    ${styles}
   </style>
 
   <input type="file" id="fileInput" hidden>
@@ -127,11 +143,15 @@ template.innerHTML = /* html */`
  * @cssproperty --dropzone-border-radius - The border radius of the dropzone.
  * @cssproperty --dropzone-border-color - The border color of the dropzone.
  * @cssproperty --dropzone-border-color-dragover - The border color of the dropzone when dragging over it.
+ * @cssproperty --dropzone-border-color-hover - The border color of the dropzone when hovering over it.
  * @cssproperty --dropzone-background-color - The background color of the dropzone.
  * @cssproperty --dropzone-background-color-dragover - The background color of the dropzone when dragging over it.
+ * @cssproperty --dropzone-background-color-hover - The background color of the dropzone when hovering over it.
  * @cssproperty --dropzone-body-color - The text color of the dropzone.
  * @cssproperty --dropzone-body-color-dragover - The text color of the dropzone when dragging over it.
+ * @cssproperty --dropzone-body-color-hover - The text color of the dropzone when hovering over it.
  * @cssproperty --dropzone-focus-shadow-rgb - The RGB value of the dropzone's focus shadow.
+ * @cssproperty --dropzone-focus-box-shadow - The box shadow of the dropzone when focused.
  * @cssproperty --dropzone-transition-duration - The transition's duration for the dropzone area.
  *
  * @event files-dropzone-drop - Fired when files are dropped.

@@ -91,11 +91,15 @@ By default, the component comes with basic styling. However, you can customise t
 | `--dropzone-border-radius` | The border radius of the dropzone area. | `0.25rem` |
 | `--dropzone-border-color` | The border color of the dropzone area. | `#6c757d` |
 | `--dropzone-border-color-dragover` | The border color of the dropzone when dragging over it. | `#0d6efd` |
+| `--dropzone-border-color-hover` | The border color of the dropzone when hovering over it. | `var(--dropzone-border-color-dragover)` |
 | `--dropzone-background-color` | The background color of the dropzone area. | `#ffffff` |
 | `--dropzone-background-color-dragover` | The background color of the dropzone when dragging over it. | `#f4f4f5` |
+| `--dropzone-background-color-hover` | The background color of the dropzone when hovering over it. | `var(--dropzone-background-color-dragover)` |
 | `--dropzone-body-color` | The text color of the dropzone area. | `#3f3f46` |
-| `--dropzone-body-color-dragover` | The text color of the dropzone when dragging over it. | `#3f3f46` |
+| `--dropzone-body-color-dragover` | The text color of the dropzone when dragging over it. | `var(--dropzone-body-color)` |
+| `--dropzone-body-color-hover` | The text color of the dropzone when hovering over it. | `var(--dropzone-body-color-dragover)` |
 | `--dropzone-focus-shadow-rgb` | The RGB color of the dropzone area focus shadow. | `49, 132, 253` |
+| `--dropzone-focus-box-shadow` | The box shadow of the dropzone area focus. | `0 0 0 0.25rem rgba(var(--dropzone-focus-shadow-rgb), 0.5)` |
 | `--dropzone-transition-duration` | The transition's duration for the dropzone area. | `0.2s` |
 
 ### Methods
