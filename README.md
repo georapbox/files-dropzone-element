@@ -52,7 +52,7 @@ By default, the component comes with basic styling. However, you can customise t
 | Name | Reflects | Type | Required | Default | Description |
 | ---- | -------- | ---- | -------- | ------- | ----------- |
 | `accept`<sup>1</sup> | ✓ | String | - | `null` | A string containing one or more of unique file type specifiers, separated by commas. Files that do not match one of the accepted file type specifiers, will be rejected. |
-| `disabled` | ✓ | Boolean | - | `false` | Disables the dropzone. |
+| `disabled` | ✓ | Boolean | - | `false` | Determines whether the dropzone is disabled. If `true`, the dropzone will be disabled and the user will not be able to select files. |
 | `maxFiles`<br>*`max-files`* | ✓ | Number | - | `Infinity` | Maximum accepted number of files. Note that this property has effect only when `multiple` is `true`. If its value is set to `0` or any negative number, it will allow any number of files. If the number of dropped files is greater than the value set, all of the files will be rejected to avoid making unsafe assumptions on which files to accept. |
 | `maxSize`<br>*`max-size`* | ✓ | Number | - | `Infinity` | Maximum file size (in bytes). |
 | `minSize`<br>*`min-size`* | ✓ | Number | - | `0` | Minimum file size (in bytes). |
@@ -86,24 +86,30 @@ By default, the component comes with basic styling. However, you can customise t
 
 | Name | Description | Default |
 | ---- | ----------- | ------- |
-| `--dropzone-border-radius` | The border radius of the dropzone area. | `0.25rem` |
 | `--dropzone-border-width` | The border width of the dropzone area. | `2px` |
 | `--dropzone-border-style` | The border style of the dropzone area. | `dashed` |
+| `--dropzone-border-radius` | The border radius of the dropzone area. | `0.25rem` |
 | `--dropzone-border-color` | The border color of the dropzone area. | `#6c757d` |
-| `--dropzone-border-color-dragover` | The border color of the dropzone area in dragover state. | `#0d6efd` |
+| `--dropzone-border-color-dragover` | The border color of the dropzone when dragging over it. | `#0d6efd` |
+| `--dropzone-border-color-hover` | The border color of the dropzone when hovering over it. | `var(--dropzone-border-color-dragover)` |
 | `--dropzone-background-color` | The background color of the dropzone area. | `#ffffff` |
-| `--dropzone-background-color-dragover` | The background color of the dropzone area in dragover state. | `#f4f4f5` |
+| `--dropzone-background-color-dragover` | The background color of the dropzone when dragging over it. | `#f4f4f5` |
+| `--dropzone-background-color-hover` | The background color of the dropzone when hovering over it. | `var(--dropzone-background-color-dragover)` |
 | `--dropzone-body-color` | The text color of the dropzone area. | `#3f3f46` |
-| `--dropzone-body-color-dragover` | The text color of the dropzone area in dragover state. | `#3f3f46` |
+| `--dropzone-body-color-dragover` | The text color of the dropzone when dragging over it. | `var(--dropzone-body-color)` |
+| `--dropzone-body-color-hover` | The text color of the dropzone when hovering over it. | `var(--dropzone-body-color-dragover)` |
 | `--dropzone-focus-shadow-rgb` | The RGB color of the dropzone area focus shadow. | `49, 132, 253` |
-| `--transition-duration` | The transition's duration for the dropzone area. | `0.2s` |
+| `--dropzone-focus-box-shadow` | The box shadow of the dropzone area focus. | `0 0 0 0.25rem rgba(var(--dropzone-focus-shadow-rgb), 0.5)` |
+| `--dropzone-transition-duration` | The transition's duration for the dropzone area. | `0.2s` |
 
 ### Methods
 
 | Name | Type | Description | Arguments |
 | ---- | ---- | ----------- | --------- |
 | `defineCustomElement` | Static | Defines/registers the custom element with the name provided. If no name is provided, the default name is used. The method checks if the element is already defined, hence will skip trying to redefine it. | elementName='files-dropzone' |
-| `openFileDialog` | Prototype | Opens the native file dialog programmatically. The method will fail silently if the dropzone is disabled. Note that most browsers require a direct user interaction with the document, to open the file dialog, for security reasons. Therefore, if you are trying to call this method asynchronously, there's a good chance it's going to be blocked by the browser. For example in Safari 15.x, invoking this method inside a `setTimeout` with more that 1000ms delay, the dialog will not open. | - |
+| `openFileDialog`<sup>1</sup> | Instance | Opens the native file dialog programmatically. The method will fail silently if the dropzone is disabled. Note that most browsers require a direct user interaction with the document, to open the file dialog, for security reasons. Therefore, if you are trying to call this method asynchronously, there's a good chance it's going to be blocked by the browser. For example in Safari 15.x, invoking this method inside a `setTimeout` with more that 1000ms delay, the dialog will not open. | - |
+
+<sup>1</sup> Instance methods are only available after the component has been defined. To ensure the component is defined, you can use `whenDefined` method of the `CustomElementRegistry` interface, eg `customElements.whenDefined('modal-element').then(() => { /* call methods here */ });`
 
 ### Events
 

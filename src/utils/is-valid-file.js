@@ -1,9 +1,11 @@
+// @ts-check
+
 /**
  * Checks if a file is valid based on the accepted file type specifiers.
  *
- * @param {File} file The File object to validate.
- * @param {String} [acceptedTypeSpecifiers=''] The accepted file type specifiers.
- * @returns {Boolean} True if the file is valid, false otherwise.
+ * @param {File} file - The File object to validate.
+ * @param {string} [acceptedTypeSpecifiers=''] - The accepted file type specifiers.
+ * @returns {boolean} - True if the file is valid, false otherwise.
  */
 export function isValidFile(file, acceptedTypeSpecifiers = '') {
   if (!acceptedTypeSpecifiers) {

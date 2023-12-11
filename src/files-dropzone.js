@@ -1,3 +1,12 @@
+// @ts-check
+
+/**
+ * Represents a value that may be of type T, or null.
+ *
+ * @template T
+ * @typedef {T | null} Nullable
+ */
+
 import { isValidFile } from './utils/is-valid-file.js';
 import { getFilesFromEvent } from './utils/files-selector.js';
 
@@ -8,66 +17,83 @@ const FILE_TOO_SMALL = 'FILE_TOO_SMALL';
 const INVALID_MIME_TYPE = 'INVALID_MIME_TYPE';
 const template = document.createElement('template');
 
+const styles = /* css */`
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  :host([hidden]),
+  [hidden] {
+    display: none !important;
+  }
+
+  :host {
+    --dropzone-border-width: 2px;
+    --dropzone-border-style: dashed;
+    --dropzone-border-radius: 0.25rem;
+    --dropzone-border-color: #6c757d;
+    --dropzone-border-color-dragover: #0d6efd;
+    --dropzone-border-color-hover: var(--dropzone-border-color-dragover);
+    --dropzone-background-color: #ffffff;
+    --dropzone-background-color-dragover: #f4f4f5;
+    --dropzone-background-color-hover: var(--dropzone-background-color-dragover);
+    --dropzone-body-color: #3f3f46;
+    --dropzone-body-color-dragover: var(--dropzone-body-color);
+    --dropzone-body-color-hover: var(--dropzone-body-color-dragover);
+    --dropzone-focus-shadow-rgb: 49,132,253;
+    --dropzone-focus-box-shadow: 0 0 0 0.25rem rgba(var(--dropzone-focus-shadow-rgb), 0.5);
+    --transition-duration: 0.2s; /* for backwards compatibility */
+    --dropzone-transition-duration: var(--transition-duration);
+
+    display: block;
+  }
+
+  :host(:not([no-style])) .dropzone {
+    border: var(--dropzone-border-width) var(--dropzone-border-style) var(--dropzone-border-color);
+    border-radius: var(--dropzone-border-radius);
+    padding: 3rem 1rem;
+    overflow: hidden;
+    background-color: var(--dropzone-background-color);
+    color: var(--dropzone-body-color);
+    text-align: center;
+    cursor: pointer;
+    transition: border var(--dropzone-transition-duration) ease-in-out, background-color var(--dropzone-transition-duration) ease-in-out, color var(--dropzone-transition-duration) ease-in-out, box-shadow var(--dropzone-transition-duration) ease-in-out;
+  }
+
+  :host(:not([no-style])[no-click]) .dropzone {
+    cursor: default;
+  }
+
+  :host(:not([no-style])[disabled]) .dropzone {
+    opacity: 0.8;
+    cursor: not-allowed;
+  }
+
+  :host(:not([no-style]):not([disabled])) .dropzone--dragover {
+    border-color: var(--dropzone-border-color-dragover);
+    background-color: var(--dropzone-background-color-dragover);
+    color: var(--dropzone-body-color-dragover);
+  }
+
+  :host(:not([no-style]):not([disabled])) .dropzone:focus-visible {
+    outline: none;
+    box-shadow: var(--dropzone-focus-box-shadow);
+  }
+
+  @media (hover: hover) {
+    :host(:not([no-style]):not([disabled])) .dropzone:not(.dropzone--dragover):hover {
+      border-color: var(--dropzone-border-color-hover);
+      background-color: var(--dropzone-background-color-hover);
+      color: var(--dropzone-body-color-hover);
+    }
+  }
+`;
+
 template.innerHTML = /* html */`
   <style>
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-    }
-
-    :host([hidden]),
-    [hidden] {
-      display: none !important;
-    }
-
-    :host {
-      --dropzone-border-width: 2px;
-      --dropzone-border-style: dashed;
-      --dropzone-border-radius: 0.25rem;
-      --dropzone-border-color: #6c757d;
-      --dropzone-border-color-dragover: #0d6efd;
-      --dropzone-background-color: #ffffff;
-      --dropzone-background-color-dragover: #f4f4f5;
-      --dropzone-body-color: #3f3f46;
-      --dropzone-body-color-dragover: var(--dropzone-body-color);
-      --dropzone-focus-shadow-rgb: 49,132,253;
-      --transition-duration: 0.2s;
-
-      display: block;
-    }
-
-    :host(:not([no-style])) .dropzone {
-      border: var(--dropzone-border-width) var(--dropzone-border-style) var(--dropzone-border-color);
-      border-radius: var(--dropzone-border-radius);
-      padding: 3rem 1rem;
-      overflow: hidden;
-      background-color: var(--dropzone-background-color);
-      color: var(--dropzone-body-color);
-      text-align: center;
-      cursor: pointer;
-      transition: border var(--transition-duration) ease-in-out, background-color var(--transition-duration) ease-in-out, color var(--transition-duration) ease-in-out, box-shadow var(--transition-duration) ease-in-out;
-    }
-
-    :host(:not([no-style])[no-click]) .dropzone {
-      cursor: default;
-    }
-
-    :host(:not([no-style])[disabled]) .dropzone {
-      opacity: 0.8;
-      cursor: not-allowed;
-    }
-
-    :host(:not([no-style]):not([disabled])) .dropzone--dragover {
-      border-color: var(--dropzone-border-color-dragover);
-      background-color: var(--dropzone-background-color-dragover);
-      color: var(--dropzone-body-color-dragover);
-    }
-
-    :host(:not([no-style]):not([disabled])) .dropzone:focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 0.25rem rgba(var(--dropzone-focus-shadow-rgb), 0.5);
-    }
+    ${styles}
   </style>
 
   <input type="file" id="fileInput" hidden>
@@ -77,26 +103,100 @@ template.innerHTML = /* html */`
   </div>
 `;
 
+/**
+ * @summary A custom element that allows users to drag and drop files into it.
+ * @documentation https://github.com/georapbox/files-dropzone-element
+ *
+ * @tagname files-dropzone - This is the default tag name, unless overridden by the `defineCustomElement` method.
+ *
+ * @property {string} accept - A comma-separated list of unique file type specifiers describing file types to allow.
+ * @property {boolean} disabled - Determines whether the dropzone is disabled.
+ * @property {number} maxFiles - The maximum number of files allowed to be dropped.
+ * @property {number} maxSize - The maximum file size allowed in bytes.
+ * @property {number} minSize - The minimum file size allowed in bytes.
+ * @property {boolean} multiple - Allows multiple files to be dropped.
+ * @property {boolean} noClick - Prevents the file dialog from opening when the dropzone is clicked.
+ * @property {boolean} noDrag - Prevents the dropzone from reacting to drag events.
+ * @property {boolean} noKeyboard - Prevents the dropzone from reacting to keyboard events.
+ * @property {boolean} autoFocus - Automatically focuses the dropzone when it's connected to the DOM.
+ * @property {boolean} noStyle - Prevents the dropzone from applying any styling.
+ *
+ * @attribute {string} accept - Reflects the accept property.
+ * @attribute {boolean} disabled - Reflects the disabled property.
+ * @attribute {number} max-files - Reflects the maxFiles property.
+ * @attribute {number} max-size - Reflects the maxSize property.
+ * @attribute {number} min-size - Reflects the minSize property.
+ * @attribute {boolean} multiple - Reflects the multiple property.
+ * @attribute {boolean} no-click - Reflects the noClick property.
+ * @attribute {boolean} no-drag - Reflects the noDrag property.
+ * @attribute {boolean} no-keyboard - Reflects the noKeyboard property.
+ * @attribute {boolean} auto-focus - Reflects the autoFocus property.
+ * @attribute {boolean} no-style - Reflects the noStyle property.
+ *
+ * @slot - The default slot content of the dropzone.
+ *
+ * @csspart dropzone - The dropzone element.
+ * @csspart dropzone--dragover - The state of the dropzone when dragging over it.
+ *
+ * @cssproperty --dropzone-border-width - The border width of the dropzone.
+ * @cssproperty --dropzone-border-style - The border style of the dropzone.
+ * @cssproperty --dropzone-border-radius - The border radius of the dropzone.
+ * @cssproperty --dropzone-border-color - The border color of the dropzone.
+ * @cssproperty --dropzone-border-color-dragover - The border color of the dropzone when dragging over it.
+ * @cssproperty --dropzone-border-color-hover - The border color of the dropzone when hovering over it.
+ * @cssproperty --dropzone-background-color - The background color of the dropzone.
+ * @cssproperty --dropzone-background-color-dragover - The background color of the dropzone when dragging over it.
+ * @cssproperty --dropzone-background-color-hover - The background color of the dropzone when hovering over it.
+ * @cssproperty --dropzone-body-color - The text color of the dropzone.
+ * @cssproperty --dropzone-body-color-dragover - The text color of the dropzone when dragging over it.
+ * @cssproperty --dropzone-body-color-hover - The text color of the dropzone when hovering over it.
+ * @cssproperty --dropzone-focus-shadow-rgb - The RGB value of the dropzone's focus shadow.
+ * @cssproperty --dropzone-focus-box-shadow - The box shadow of the dropzone when focused.
+ * @cssproperty --dropzone-transition-duration - The transition's duration for the dropzone area.
+ *
+ * @event files-dropzone-drop - Fired when files are dropped.
+ * @event files-dropzone-drop-accepted - Fired when files dropped files are accepted.
+ * @event files-dropzone-drop-rejected - Fired when files dropped files are rejected.
+ * @event files-dropzone-dragenter - Fired when files are dragged into the dropzone.
+ * @event files-dropzone-dragover - Fired when files are dragged over the dropzone.
+ * @event files-dropzone-dragleave - Fired when files are dragged out of the dropzone.
+ * @event files-dropzone-error - Fired when there is any error in the process of reading dropped files or directories.
+ *
+ * @method defineCustomElement - Static method. Defines a custom element with the given name.
+ * @method openFileDialog - Instance method. Opens the file dialog programmatically.
+ */
 class FilesDropzone extends HTMLElement {
-  #fileInput;
-  #dropzoneEl;
+  /** @type {Nullable<HTMLInputElement>} */
+  #fileInput = null;
+
+  /** @type {Nullable<HTMLElement>} */
+  #dropzoneEl = null;
 
   constructor() {
     super();
 
     if (!this.shadowRoot) {
-      this.attachShadow({ mode: 'open' });
-      this.shadowRoot.appendChild(template.content.cloneNode(true));
+      const shadowRoot = this.attachShadow({ mode: 'open' });
+      shadowRoot.appendChild(template.content.cloneNode(true));
     }
 
-    this.#fileInput = this.shadowRoot.getElementById('fileInput');
-    this.#dropzoneEl = this.shadowRoot.getElementById('dropzoneEl');
+    if (this.shadowRoot) {
+      this.#fileInput = /** @type {Nullable<HTMLInputElement>} */(this.shadowRoot.getElementById('fileInput'));
+      this.#dropzoneEl = this.shadowRoot.getElementById('dropzoneEl');
+    }
   }
 
   static get observedAttributes() {
     return ['accept', 'disabled', 'multiple', 'no-keyboard'];
   }
 
+  /**
+   * Lifecycle method that is called when attributes are changed, added, removed, or replaced.
+   *
+   * @param {string} name - The name of the attribute.
+   * @param {string} oldValue - The old value of the attribute.
+   * @param {string} newValue - The new value of the attribute.
+   */
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'accept' && oldValue !== newValue && this.#fileInput) {
       this.#fileInput.accept = this.accept;
@@ -106,9 +206,9 @@ class FilesDropzone extends HTMLElement {
       this.#fileInput.disabled = this.disabled;
 
       if (this.disabled) {
-        this.#dropzoneEl.removeAttribute('tabindex');
+        this.#dropzoneEl?.removeAttribute('tabindex');
       } else {
-        this.#dropzoneEl.setAttribute('tabindex', '0');
+        this.#dropzoneEl?.setAttribute('tabindex', '0');
       }
     }
 
@@ -125,6 +225,9 @@ class FilesDropzone extends HTMLElement {
     }
   }
 
+  /**
+   * Lifecycle method that is called when the element is added to the DOM.
+   */
   connectedCallback() {
     this.#upgradeProperty('accept');
     this.#upgradeProperty('disabled');
@@ -138,47 +241,60 @@ class FilesDropzone extends HTMLElement {
     this.#upgradeProperty('autoFocus');
     this.#upgradeProperty('noStyle');
 
-    this.#fileInput.addEventListener('change', this.#onFileInputChange);
-    this.#dropzoneEl.addEventListener('dragenter', this.#onDragEnter);
-    this.#dropzoneEl.addEventListener('dragover', this.#onDragOver);
-    this.#dropzoneEl.addEventListener('dragleave', this.#onDragLeave);
-    this.#dropzoneEl.addEventListener('drop', this.#onDrop);
-    this.#dropzoneEl.addEventListener('click', this.#onClick);
-    this.#dropzoneEl.addEventListener('keyup', this.#onKeyUp);
+    this.#fileInput?.addEventListener('change', this.#handleFileInputChange);
+    this.#dropzoneEl?.addEventListener('dragenter', this.#handleDragEnter);
+    this.#dropzoneEl?.addEventListener('dragover', this.#handleDragOver);
+    this.#dropzoneEl?.addEventListener('dragleave', this.#handleDragLeave);
+    this.#dropzoneEl?.addEventListener('drop', this.#handleDrop);
+    this.#dropzoneEl?.addEventListener('click', this.#handleClick);
+    this.#dropzoneEl?.addEventListener('keyup', this.#handleKeyUp);
 
-    this.autoFocus && this.#dropzoneEl.focus();
+    this.autoFocus && this.#dropzoneEl?.focus();
   }
 
+  /**
+   * Lifecycle method that is called when the element is removed from the DOM.
+   */
   disconnectedCallback() {
-    this.#fileInput.removeEventListener('change', this.#onFileInputChange);
-    this.#dropzoneEl.removeEventListener('dragenter', this.#onDragEnter);
-    this.#dropzoneEl.removeEventListener('dragover', this.#onDragOver);
-    this.#dropzoneEl.removeEventListener('dragleave', this.#onDragLeave);
-    this.#dropzoneEl.removeEventListener('drop', this.#onDrop);
-    this.#dropzoneEl.removeEventListener('click', this.#onClick);
-    this.#dropzoneEl.removeEventListener('keyup', this.#onKeyUp);
+    this.#fileInput?.removeEventListener('change', this.#handleFileInputChange);
+    this.#dropzoneEl?.removeEventListener('dragenter', this.#handleDragEnter);
+    this.#dropzoneEl?.removeEventListener('dragover', this.#handleDragOver);
+    this.#dropzoneEl?.removeEventListener('dragleave', this.#handleDragLeave);
+    this.#dropzoneEl?.removeEventListener('drop', this.#handleDrop);
+    this.#dropzoneEl?.removeEventListener('click', this.#handleClick);
+    this.#dropzoneEl?.removeEventListener('keyup', this.#handleKeyUp);
   }
 
+  /**
+   * @type {string} - A comma-separated list of unique file type specifiers describing file types to allow.
+   * @attribute accept - Reflects the accept property.
+   */
   get accept() {
-    return this.getAttribute('accept');
+    return this.getAttribute('accept') || '';
   }
 
   set accept(value) {
-    this.setAttribute('accept', value);
+    this.setAttribute('accept', value != null ? value.toString() : value);
   }
 
+  /**
+   * @type {boolean} - Determines whether the dropzone is disabled.
+   * @default false
+   * @attribute disabled - Reflects the disabled property.
+   */
   get disabled() {
     return this.hasAttribute('disabled');
   }
 
   set disabled(value) {
-    if (value) {
-      this.setAttribute('disabled', '');
-    } else {
-      this.removeAttribute('disabled');
-    }
+    this.toggleAttribute('disabled', !!value);
   }
 
+  /**
+   * @type {number} - The maximum number of files allowed to be dropped.
+   * @default Infinity
+   * @attribute max-files - Reflects the maxFiles property.
+   */
   get maxFiles() {
     const num = Number(this.getAttribute('max-files')) || 0;
 
@@ -190,9 +306,14 @@ class FilesDropzone extends HTMLElement {
   }
 
   set maxFiles(value) {
-    this.setAttribute('max-files', value);
+    this.setAttribute('max-files', value != null ? value.toString() : value);
   }
 
+  /**
+   * @type {number} - The maximum file size allowed in bytes.
+   * @default Infinity
+   * @attribute max-size - Reflects the maxSize property.
+   */
   get maxSize() {
     const value = this.getAttribute('max-size');
 
@@ -206,9 +327,14 @@ class FilesDropzone extends HTMLElement {
   }
 
   set maxSize(value) {
-    this.setAttribute('max-size', value);
+    this.setAttribute('max-size', value != null ? value.toString() : value);
   }
 
+  /**
+   * @type {number} - The minimum file size allowed in bytes.
+   * @default 0
+   * @attribute min-size - Reflects the minSize property.
+   */
   get minSize() {
     const value = this.getAttribute('min-size');
 
@@ -222,82 +348,93 @@ class FilesDropzone extends HTMLElement {
   }
 
   set minSize(value) {
-    this.setAttribute('min-size', value);
+    this.setAttribute('min-size', value != null ? value.toString() : value);
   }
 
+  /**
+   * @type {boolean} - Allows multiple files to be dropped.
+   * @default false
+   * @attribute multiple - Reflects the multiple property.
+   */
   get multiple() {
     return this.hasAttribute('multiple');
   }
 
   set multiple(value) {
-    if (value) {
-      this.setAttribute('multiple', '');
-    } else {
-      this.removeAttribute('multiple');
-    }
+    this.toggleAttribute('multiple', !!value);
   }
 
+  /**
+   * @type {boolean} - Prevents the file dialog from opening when the dropzone is clicked.
+   * @default false
+   * @attribute no-click - Reflects the noClick property.
+   */
   get noClick() {
     return this.hasAttribute('no-click');
   }
 
   set noClick(value) {
-    if (value) {
-      this.setAttribute('no-click', '');
-    } else {
-      this.removeAttribute('no-click');
-    }
+    this.toggleAttribute('no-click', !!value);
   }
 
+  /**
+   * @type {boolean} - Prevents the dropzone from reacting to drag events.
+   * @default false
+   * @attribute no-drag - Reflects the noDrag property.
+   */
   get noDrag() {
     return this.hasAttribute('no-drag');
   }
 
   set noDrag(value) {
-    if (value) {
-      this.setAttribute('no-drag', '');
-    } else {
-      this.removeAttribute('no-drag');
-    }
+    this.toggleAttribute('no-drag', !!value);
   }
 
+  /**
+   * @type {boolean} - Prevents the dropzone from reacting to keyboard events.
+   * @default false
+   * @attribute no-keyboard - Reflects the noKeyboard property.
+   */
   get noKeyboard() {
     return this.hasAttribute('no-keyboard');
   }
 
   set noKeyboard(value) {
-    if (value) {
-      this.setAttribute('no-keyboard', '');
-    } else {
-      this.removeAttribute('no-keyboard');
-    }
+    this.toggleAttribute('no-keyboard', !!value);
   }
 
+  /**
+   * @type {boolean} - Automatically focuses the dropzone when it's connected to the DOM.
+   * @default false
+   * @attribute auto-focus - Reflects the autoFocus property.
+   */
   get autoFocus() {
     return this.hasAttribute('auto-focus');
   }
 
   set autoFocus(value) {
-    if (value) {
-      this.setAttribute('auto-focus', '');
-    } else {
-      this.removeAttribute('auto-focus');
-    }
+    this.toggleAttribute('auto-focus', !!value);
   }
 
+  /**
+   * @type {boolean} - Prevents the dropzone from applying any styling.
+   * @default false
+   * @attribute no-style - Reflects the noStyle property.
+   */
   get noStyle() {
     return this.hasAttribute('no-style');
   }
 
   set noStyle(value) {
-    if (value) {
-      this.setAttribute('no-style', '');
-    } else {
-      this.removeAttribute('no-style');
-    }
+    this.toggleAttribute('no-style', !!value);
   }
 
-  #onFileInputChange = async evt => {
+  /**
+   * Handles the change event of the file input.
+   *
+   * @param {*} evt - The event object.
+   */
+  #handleFileInputChange = async evt => {
     try {
       this.#handleFilesSelect(await getFilesFromEvent(evt));
     } catch (error) {
@@ -309,7 +446,10 @@ class FilesDropzone extends HTMLElement {
     }
   };
 
-  #onDragEnter = () => {
+  /**
+   * Handles the dragenter event of the dropzone.
+   */
+  #handleDragEnter = () => {
     if (this.disabled || this.noDrag) {
       return;
     }
@@ -320,7 +460,12 @@ class FilesDropzone extends HTMLElement {
     }));
   };
 
-  #onDragOver = evt => {
+  /**
+   * Handles the dragover event of the dropzone.
+   *
+   * @param {*} evt - The event object.
+   */
+  #handleDragOver = evt => {
     evt.preventDefault();
 
     if (this.disabled || this.noDrag) {
@@ -330,8 +475,10 @@ class FilesDropzone extends HTMLElement {
 
     evt.dataTransfer.dropEffect = 'copy';
 
-    this.#dropzoneEl.classList.add('dropzone--dragover');
-    this.#dropzoneEl.part.add('dropzone--dragover');
+    if (this.#dropzoneEl) {
+      this.#dropzoneEl.classList.add('dropzone--dragover');
+      this.#dropzoneEl.part.add('dropzone--dragover');
+    }
 
     this.dispatchEvent(new Event(`${COMPONENT_NAME}-dragover`, {
       bubbles: true,
@@ -339,13 +486,18 @@ class FilesDropzone extends HTMLElement {
     }));
   };
 
-  #onDragLeave = () => {
+  /**
+   * Handles the dragleave event of the dropzone.
+   */
+  #handleDragLeave = () => {
     if (this.disabled || this.noDrag) {
       return;
     }
 
-    this.#dropzoneEl.classList.remove('dropzone--dragover');
-    this.#dropzoneEl.part.remove('dropzone--dragover');
+    if (this.#dropzoneEl) {
+      this.#dropzoneEl.classList.remove('dropzone--dragover');
+      this.#dropzoneEl.part.remove('dropzone--dragover');
+    }
 
     this.dispatchEvent(new Event(`${COMPONENT_NAME}-dragleave`, {
       bubbles: true,
@@ -353,15 +505,22 @@ class FilesDropzone extends HTMLElement {
     }));
   };
 
-  #onDrop = async evt => {
+  /**
+   * Handles the drop event of the dropzone.
+   *
+   * @param {*} evt - The event object.
+   */
+  #handleDrop = async evt => {
     if (this.disabled || this.noDrag) {
       return;
     }
 
     evt.preventDefault();
 
-    this.#dropzoneEl.classList.remove('dropzone--dragover');
-    this.#dropzoneEl.part.remove('dropzone--dragover');
+    if (this.#dropzoneEl) {
+      this.#dropzoneEl.classList.remove('dropzone--dragover');
+      this.#dropzoneEl.part.remove('dropzone--dragover');
+    }
 
     try {
       this.#handleFilesSelect(await getFilesFromEvent(evt));
@@ -374,24 +533,37 @@ class FilesDropzone extends HTMLElement {
     }
   };
 
-  #onClick = () => {
+  /**
+   * Handles the click event of the dropzone.
+   */
+  #handleClick = () => {
     if (this.disabled || this.noClick) {
       return;
     }
 
-    this.#fileInput.click();
+    this.#fileInput?.click();
   };
 
-  #onKeyUp = evt => {
+  /**
+   * Handles the keyup event of the dropzone.
+   *
+   * @param {*} evt - The event object.
+   */
+  #handleKeyUp = evt => {
     if (this.disabled || this.noKeyboard) {
       return;
     }
 
     if (evt.key === ' ' || evt.key === 'Enter') {
-      this.#fileInput.click();
+      this.#fileInput?.click();
     }
   };
 
+  /**
+   * Handles the selection of files.
+   *
+   * @param {File[]} files - The files to handle.
+   */
   #handleFilesSelect(files) {
     if (!Array.isArray(files) || !files.length) {
       return;
@@ -492,31 +664,51 @@ class FilesDropzone extends HTMLElement {
       }));
     }
 
-    this.#fileInput.value = this.#fileInput.defaultValue;
+    if (this.#fileInput) {
+      this.#fileInput.value = this.#fileInput.defaultValue;
+    }
   }
 
+  /**
+   * Opens the file dialog programmatically.
+   */
   openFileDialog() {
     if (this.disabled) {
       return;
     }
 
-    this.#fileInput.click();
+    this.#fileInput?.click();
   }
 
   /**
-   * https://developers.google.com/web/fundamentals/web-components/best-practices#lazy-properties
    * This is to safe guard against cases where, for instance, a framework may have added the element to the page and set a
    * value on one of its properties, but lazy loaded its definition. Without this guard, the upgraded element would miss that
    * property and the instance property would prevent the class property setter from ever being called.
+   *
+   * https://developers.google.com/web/fundamentals/web-components/best-practices#lazy-properties
+   *
+   * @param {'accept' | 'disabled' | 'maxFiles' | 'maxSize' | 'minSize' | 'multiple' | 'noClick' | 'noDrag' | 'noKeyboard' | 'autoFocus' | 'noStyle'} prop - The property name to upgrade.
    */
   #upgradeProperty(prop) {
-    if (Object.prototype.hasOwnProperty.call(this, prop)) {
-      const value = this[prop];
-      delete this[prop];
-      this[prop] = value;
+    /** @type {any} */
+    const instance = this;
+
+    if (Object.prototype.hasOwnProperty.call(instance, prop)) {
+      const value = instance[prop];
+      delete instance[prop];
+      instance[prop] = value;
     }
   }
 
+  /**
+   * Defines a custom element with the given name.
+   * The name must contain a dash (-).
+   *
+   * @param {string} [elementName='files-dropzone'] - The name of the custom element.
+   * @example
+   *
+   * FilesDropzone.defineCustomElement('my-dropzone');
+   */
   static defineCustomElement(elementName = COMPONENT_NAME) {
     if (typeof window !== 'undefined' && !window.customElements.get(elementName)) {
       window.customElements.define(elementName, FilesDropzone);

@@ -1,3 +1,8 @@
+// @ts-check
+
+/**
+ * A map of common file extensions and their associated MIME types.
+ */
 const COMMON_MIME_TYPES = new Map([
   // https://developer.mozilla.org/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
   ['aac', 'audio/aac'],
@@ -96,15 +101,15 @@ const FILES_TO_IGNORE = [
  * This is needed because Firefox doesn't add a type property to files dragged from the desktop.
  * @bug https://bugzilla.mozilla.org/show_bug.cgi?id=1424689
  *
- * @param {File} file The file object to add the type property to.
- * @returns {File} The file object with the type property added.
+ * @param {File} file - The file object to add the type property to.
+ * @returns {File} - The file object with the type property added.
  */
 const toFileWithMimeType = file => {
   const { name } = file;
   const hasExtension = name && name.lastIndexOf('.') !== -1;
 
   if (hasExtension && !file.type) {
-    const extension = name.split('.').pop().toLowerCase();
+    const extension = (name.split('.').pop() || '').toLowerCase();
     const type = COMMON_MIME_TYPES.get(extension);
 
     if (type) {
@@ -125,13 +130,14 @@ const toFileWithMimeType = file => {
  * If `path` is not provided, the `webkitRelativePath` property of the file will be used
  * or the file's name if `webkitRelativePath` is not available.
  *
- * @param {File} file The file object to add the path property to.
- * @param {String} [path] The path to set on the file object.
- * @returns {File} The file object with the path property added.
+ * @param {File} file - The file object to add the path property to.
+ * @param {string} [path] - The path to set on the file object.
+ * @returns {File} - The file object with the path property added.
  */
 const toFileWithPath = (file, path) => {
   const fileWithMimeType = toFileWithMimeType(file);
 
+  // @ts-ignore
   if (typeof fileWithMimeType.path !== 'string') {
     const { webkitRelativePath } = file;
 
@@ -150,8 +156,8 @@ const toFileWithPath = (file, path) => {
  * Wrap `FileSystemDirectoryReader.readEntries` in a promise to make working with read entries easier.
  * https://developer.mozilla.org/docs/Web/API/FileSystemDirectoryReader/readEntries
  *
- * @param {FileSystemDirectoryReader} directoryReader The directory reader to read entries from.
- * @returns {Promise<FileSystemFileEntry[]>} A promise that resolves with an array of `FileSystemFileEntry` objects.
+ * @param {FileSystemDirectoryReader} directoryReader - The directory reader to read entries from.
+ * @returns {Promise<FileSystemEntry[]>} - A promise that resolves with an array of `FileSystemEntry` objects.
  */
 const readEntriesPromise = async directoryReader => {
   return await new Promise((resolve, reject) => {
@@ -163,8 +169,8 @@ const readEntriesPromise = async directoryReader => {
  * Read all entries in a directory or sub-directory
  * by calling `readEntries` until it returns an empty array.
  *
- * @param {FileSystemDirectoryReader} directoryReader The directory reader to read entries from.
- * @returns {Promise<FileSystemFileEntry[]>} A promise that resolves with an array of `FileSystemFileEntry` objects.
+ * @param {FileSystemDirectoryReader} directoryReader - The directory reader to read entries from.
+ * @returns {Promise<FileSystemEntry[]>} - A promise that resolves with an array of `FileSystemEntry` objects.
  */
 const readAllDirectoryEntries = async directoryReader => {
   const entries = [];
@@ -181,8 +187,8 @@ const readAllDirectoryEntries = async directoryReader => {
 /**
  * Get a `File` object from a `FileSystemFileEntry` object.
  *
- * @param {FileSystemFileEntry} fileEntry The file entry to get a `File` object from.
- * @returns {Promise<File>} A promise that resolves with a `File` object.
+ * @param {FileSystemFileEntry} fileEntry - The file entry to get a `File` object from.
+ * @returns {Promise<File>} - A promise that resolves with a `File` object.
  */
 const getFileFromFileEntry = fileEntry => {
   return new Promise((resolve, reject) => {
@@ -193,8 +199,8 @@ const getFileFromFileEntry = fileEntry => {
 /**
  * Get an array of `File` objects from a `DataTransferItemList` object.
  *
- * @param {DataTransferItemList} dataTransferItemList The item list to get an array of `File` objects from.
- * @returns {Promise<File[]>} A promise that resolves with an array of `File` objects.
+ * @param {DataTransferItemList} dataTransferItemList - The item list to get an array of `File` objects from.
+ * @returns {Promise<File[]>} - A promise that resolves with an array of `File` objects.
  */
 const getFilesFromDataTransferItemList = async dataTransferItemList => {
   const files = [];
@@ -213,6 +219,7 @@ const getFilesFromDataTransferItemList = async dataTransferItemList => {
     // https://developer.mozilla.org/docs/Web/API/DataTransferItem/webkitGetAsEntry
     // This function is implemented as `webkitGetAsEntry()` in non-WebKit browsers
     // including Firefox at this time but it may be renamed to `getAsEntry()` in the future.
+    // @ts-ignore
     const entry = item.getAsEntry ? item.getAsEntry() : item.webkitGetAsEntry();
 
     queue.push(entry);
@@ -240,8 +247,8 @@ const getFilesFromDataTransferItemList = async dataTransferItemList => {
 /**
  * Get an array of `File` objects from a `FileList` object.
  *
- * @param {FileList} fileList The file list to get an array of `File` objects from.
- * @returns {Promise<File[]>} A promise that resolves with an array of `File` objects.
+ * @param {FileList} fileList - The file list to get an array of `File` objects from.
+ * @returns {Promise<File[]>} - A promise that resolves with an array of `File` objects.
  */
 const getFilesFromFileList = async fileList => {
   const files = [];
@@ -259,8 +266,8 @@ const getFilesFromFileList = async fileList => {
  * Get an array of `File` objects from an event.
  * This function supports both `drop` and `change` events.
  *
- * @param {DragEvent | Event} evt The event to get an array of `File` objects from.
- * @returns {Promise<File[]>} A promise that resolves with an array of `File` objects.
+ * @param {*} evt - The event to get an array of `File` objects from.
+ * @returns {Promise<File[]>} - A promise that resolves with an array of `File` objects.
  */
 export const getFilesFromEvent = async evt => {
   if (evt.dataTransfer) {

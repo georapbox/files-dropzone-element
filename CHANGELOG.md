@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## v1.2.0 (2023-12-11)
+
+- Added `--dropzone-transition-duration` CSS Custom Property to change the transition duration for the dropzone. For backward compatibility, `--transition-duration` is still supported.
+- Added `----dropzone-border-color-hover`, `--dropzone-background-color-hover` and `--dropzone-body-color-hover` CSS Custom Properties to change the dropzone border, background and body colors when the dropzone is hovered.
+- Added `--dropzone-focus-box-shadow` CSS Custom Property to change the focus box shadow for the dropzone.
+- Added Typescript types declaration file.
+- Updated dev dependencies.
+
 ## v1.1.1 (2023-06-12)
 
 - Added `image/jxl` mime type to common mime types.

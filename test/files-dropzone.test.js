@@ -75,9 +75,9 @@ describe('files-dropzone', () => {
       expect(el.accept).to.equal('image/*');
     });
 
-    it('property accept is null when attribute accept is not set', async () => {
+    it('property accept is empty string when attribute accept is not set', async () => {
       const el = await fixture(html`<files-dropzone></files-dropzone>`);
-      expect(el.accept).to.be.null;
+      expect(el.accept).to.equal('');
     });
 
     it('attribute accept is "image/*" when property accept is "image/*"', async () => {
