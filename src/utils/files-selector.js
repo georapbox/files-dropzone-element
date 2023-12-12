@@ -38,6 +38,8 @@ const COMMON_MIME_TYPES = new Map([
   ['js', 'text/javascript'],
   ['json', 'application/json'],
   ['jsonld', 'application/ld+json'],
+  ['markdown', 'text/markdown'],
+  ['md', 'text/markdown'],
   ['mid', 'audio/midi'],
   ['midi', 'audio/midi'],
   ['mjs', 'text/javascript'],
