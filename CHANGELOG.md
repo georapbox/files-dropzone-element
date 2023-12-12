@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v1.2.1 (2023-12-12)
+
+- Add `.md` and `.markdown` file extensions to common mime types.
+
 ## v1.2.0 (2023-12-11)
 
 - Added `--dropzone-transition-duration` CSS Custom Property to change the transition duration for the dropzone. For backward compatibility, `--transition-duration` is still supported.
