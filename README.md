@@ -109,7 +109,7 @@ By default, the component comes with basic styling. However, you can customise t
 | `defineCustomElement` | Static | Defines/registers the custom element with the name provided. If no name is provided, the default name is used. The method checks if the element is already defined, hence will skip trying to redefine it. | elementName='files-dropzone' |
 | `openFileDialog`<sup>1</sup> | Instance | Opens the native file dialog programmatically. The method will fail silently if the dropzone is disabled. Note that most browsers require a direct user interaction with the document, to open the file dialog, for security reasons. Therefore, if you are trying to call this method asynchronously, there's a good chance it's going to be blocked by the browser. For example in Safari 15.x, invoking this method inside a `setTimeout` with more that 1000ms delay, the dialog will not open. | - |
 
-<sup>1</sup> Instance methods are only available after the component has been defined. To ensure the component is defined, you can use `whenDefined` method of the `CustomElementRegistry` interface, eg `customElements.whenDefined('modal-element').then(() => { /* call methods here */ });`
+<sup>1</sup> Instance methods are only available after the component has been defined. To ensure the component is defined, you can use `whenDefined` method of the `CustomElementRegistry` interface, eg `customElements.whenDefined('files-dropzone').then(() => { /* call methods here */ });`
 
 ### Events
 
