@@ -42,6 +42,14 @@
   display: none !important;
 }
 
+.component-description p {
+  margin: 0 0 0.5rem 0;
+}
+
+.component-description p:last-child {
+  margin-bottom: 0;
+}
+
 .form-row {
   display: flex;
   flex-wrap: wrap;
@@ -55,19 +63,11 @@
   flex-direction: column;
 }
 
-form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-form fieldset {
-  flex: 1;
-  min-width: 200px;
-}
-
 form input[type="text"],
+form input[type="number"],
 form textarea {
+  width: 100%;
+  min-width: 150px;
   margin-right: 0;
 }
 
@@ -128,7 +128,7 @@ form input[type="checkbox"] {
 
 .dropped-files__show-all {
   display: block;
-  margin: 0 0 1rem 0;
+  margin: 0.5rem 0 0 0;
   font-size: 0.9rem;
 }
 
