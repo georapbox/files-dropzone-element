@@ -114,6 +114,7 @@ form input[type="checkbox"] {
 
 .dropped-files__title {
   margin: 1rem 0 0.75rem 0;
+  font-size: 1rem;
 }
 
 .dropped-files__list {

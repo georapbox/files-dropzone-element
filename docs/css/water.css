@@ -14,7 +14,7 @@
   --text-main: #363636;
   --text-bright: #000;
   --text-muted: #70777f;
-  --links: #0076d1;
+  --links: #0063af;
   --focus: #0096bfab;
   --border: #dbdbdb;
   --code: #000;
@@ -500,12 +500,9 @@ input[type='range']:focus::-ms-fill-upper {
   background: var(--background);
 }
 
-a {
-  text-decoration: none;
-  color: var(--links);
-}
-
+a,
 a:hover {
+  color: var(--links);
   text-decoration: underline;
 }
 
@@ -635,6 +632,10 @@ details> :not(summary) {
 
 summary::-webkit-details-marker {
   color: var(--text-main);
+}
+
+summary:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--focus);
 }
 
 dialog {

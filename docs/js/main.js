@@ -29,7 +29,7 @@ import(componentUrl).then(res => {
 
     const container = document.createElement('div');
 
-    const title = Object.assign(document.createElement('h4'), {
+    const title = Object.assign(document.createElement('h3'), {
       className: 'dropped-files__title',
       textContent: `${status === 'accepted' ? 'Accepted' : 'Rejected'} files (${files.length})`
     });
@@ -44,7 +44,7 @@ import(componentUrl).then(res => {
       const listItem = Object.assign(document.createElement('li'), {
         className: `dropped-files__list-item dropped-files__list-item--${status}`,
         hidden: index >= INITIAL_FILES_COUNT,
-        innerHTML: /* html */`${file.name} <span style="color: var(--text-muted);">- ${file.size} bytes<span>`
+        innerHTML: /* html */`${file.name} <span style="color: var(--text-main);">- ${file.size} bytes<span>`
       });
 
       list.appendChild(listItem);
