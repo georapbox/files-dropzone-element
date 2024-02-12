@@ -4,11 +4,7 @@
 
 ### Breaking changes
 
-Remove `no-click`, `no-keyboard` and `no-drag` attributes as they are not recommended for accessibility or usability. See issue [#4](https://github.com/georapbox/files-dropzone-element/issues/4).
-
-- `no-click` by itself does not offer much as the user is still able to use the component using keyboard or by drag & drop.
-- `no-keyboard` is bad for accessibility as it removes keyboard access to users not able to use other input methods, eg mouse.
-- `no-drag` removes the main functionality of the component, which makes no sense to use in the first place.
+- Remove `no-click`, `no-keyboard` and `no-drag` attributes as they are not recommended for accessibility or usability. See issue [#4](https://github.com/georapbox/files-dropzone-element/issues/4).
 
 ### Other changes
 
