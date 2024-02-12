@@ -65,6 +65,7 @@ const styles = /* css */`
   :host(:not([no-style])[disabled]) .dropzone {
     opacity: 0.8;
     cursor: not-allowed;
+    user-select: none;
   }
 
   :host(:not([no-style]):not([disabled])) .dropzone--dragover {
@@ -92,9 +93,9 @@ template.innerHTML = /* html */`
     ${styles}
   </style>
 
-  <input type="file" id="fileInput" hidden>
+  <input type="file" id="file-input" hidden>
 
-  <div part="dropzone" class="dropzone" id="dropzoneEl" tabindex="0" role="presentation">
+  <div part="dropzone" class="dropzone" id="dropzone" tabindex="0" role="button" aria-disabled="false">
     <slot>Drag 'n' drop files here, or click to select files</slot>
   </div>
 `;
@@ -166,13 +167,13 @@ class FilesDropzone extends HTMLElement {
     super();
 
     if (!this.shadowRoot) {
-      const shadowRoot = this.attachShadow({ mode: 'open' });
+      const shadowRoot = this.attachShadow({ mode: 'open', delegatesFocus: true });
       shadowRoot.appendChild(template.content.cloneNode(true));
     }
 
     if (this.shadowRoot) {
-      this.#fileInput = /** @type {Nullable<HTMLInputElement>} */(this.shadowRoot.getElementById('fileInput'));
-      this.#dropzoneEl = this.shadowRoot.getElementById('dropzoneEl');
+      this.#fileInput = /** @type {Nullable<HTMLInputElement>} */(this.shadowRoot.getElementById('file-input'));
+      this.#dropzoneEl = this.shadowRoot.getElementById('dropzone');
     }
   }
 
@@ -197,8 +198,10 @@ class FilesDropzone extends HTMLElement {
 
       if (this.disabled) {
         this.#dropzoneEl?.removeAttribute('tabindex');
+        this.#dropzoneEl?.setAttribute('aria-disabled', 'true');
       } else {
         this.#dropzoneEl?.setAttribute('tabindex', '0');
+        this.#dropzoneEl?.setAttribute('aria-disabled', 'false');
       }
     }
 

@@ -10,14 +10,50 @@ describe('files-dropzone', () => {
   });
 
   describe('accessibility', () => {
-    it('passes accessibility test when enabled without attributes', async () => {
+    it('passes accessibility test if enabled', async () => {
       const el = await fixture(html`<files-dropzone></files-dropzone>`);
       await expect(el).to.be.accessible();
     });
 
-    it('passes accessibility test when disabled', async () => {
+    it('passes accessibility test if disabled', async () => {
       const el = await fixture(html`<files-dropzone disabled></files-dropzone>`);
       await expect(el).to.be.accessible();
+    });
+
+    it('dropzone should have attribute role="button"', async () => {
+      const el = await fixture(html`<files-dropzone></files-dropzone>`);
+      const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
+      expect(dropzone).to.have.attribute('role', 'button');
+    });
+
+    it('dropzone should have attribute tabindex="0" if enabled', async () => {
+      const el = await fixture(html`<files-dropzone></files-dropzone>`);
+      const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
+      expect(dropzone).to.have.attribute('tabindex', '0');
+    });
+
+    it('dropzone should have attribute tabindex="0" if enabled', async () => {
+      const el = await fixture(html`<files-dropzone></files-dropzone>`);
+      const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
+      expect(dropzone).to.have.attribute('tabindex', '0');
+    });
+
+    it('dropzone should not have attribute tabindex if disabled', async () => {
+      const el = await fixture(html`<files-dropzone disabled></files-dropzone>`);
+      const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
+      expect(dropzone).to.not.have.attribute('tabindex');
+    });
+
+    it('dropzone should have aria-disabled="false" if enabled', async () => {
+      const el = await fixture(html`<files-dropzone></files-dropzone>`);
+      const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
+      expect(dropzone).to.have.attribute('aria-disabled', 'false');
+    });
+
+    it('dropzone should have aria-disabled="true" if disabled', async () => {
+      const el = await fixture(html`<files-dropzone disabled></files-dropzone>`);
+      const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
+      expect(dropzone).to.have.attribute('aria-disabled', 'true');
     });
   });
 
