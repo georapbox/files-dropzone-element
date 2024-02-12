@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## v2.0.0 (2024-02-12)
+
+### Breaking changes
+
+- Remove `no-click`, `no-keyboard` and `no-drag` attributes as they are not recommended for accessibility or usability. See issue [#4](https://github.com/georapbox/files-dropzone-element/issues/4).
+
+### Other changes
+
+- Set `delegateFocus` property to `true` when attaching the shadow root to the host element to delegate focus to the first focusable element in the shadow root.
+- Improve component's accessibility for screen readers.
+- Update dev dependencies.
+
 ## v1.2.1 (2023-12-12)
 
 - Add `.md` and `.markdown` file extensions to common mime types.

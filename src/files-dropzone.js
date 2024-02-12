@@ -62,13 +62,10 @@ const styles = /* css */`
     transition: border var(--dropzone-transition-duration) ease-in-out, background-color var(--dropzone-transition-duration) ease-in-out, color var(--dropzone-transition-duration) ease-in-out, box-shadow var(--dropzone-transition-duration) ease-in-out;
   }
 
-  :host(:not([no-style])[no-click]) .dropzone {
-    cursor: default;
-  }
-
   :host(:not([no-style])[disabled]) .dropzone {
     opacity: 0.8;
     cursor: not-allowed;
+    user-select: none;
   }
 
   :host(:not([no-style]):not([disabled])) .dropzone--dragover {
@@ -96,9 +93,9 @@ template.innerHTML = /* html */`
     ${styles}
   </style>
 
-  <input type="file" id="fileInput" hidden>
+  <input type="file" id="file-input" hidden>
 
-  <div part="dropzone" class="dropzone" id="dropzoneEl" tabindex="0" role="presentation">
+  <div part="dropzone" class="dropzone" id="dropzone" tabindex="0" role="button" aria-disabled="false">
     <slot>Drag 'n' drop files here, or click to select files</slot>
   </div>
 `;
@@ -115,9 +112,6 @@ template.innerHTML = /* html */`
  * @property {number} maxSize - The maximum file size allowed in bytes.
  * @property {number} minSize - The minimum file size allowed in bytes.
  * @property {boolean} multiple - Allows multiple files to be dropped.
- * @property {boolean} noClick - Prevents the file dialog from opening when the dropzone is clicked.
- * @property {boolean} noDrag - Prevents the dropzone from reacting to drag events.
- * @property {boolean} noKeyboard - Prevents the dropzone from reacting to keyboard events.
  * @property {boolean} autoFocus - Automatically focuses the dropzone when it's connected to the DOM.
  * @property {boolean} noStyle - Prevents the dropzone from applying any styling.
  *
@@ -127,9 +121,6 @@ template.innerHTML = /* html */`
  * @attribute {number} max-size - Reflects the maxSize property.
  * @attribute {number} min-size - Reflects the minSize property.
  * @attribute {boolean} multiple - Reflects the multiple property.
- * @attribute {boolean} no-click - Reflects the noClick property.
- * @attribute {boolean} no-drag - Reflects the noDrag property.
- * @attribute {boolean} no-keyboard - Reflects the noKeyboard property.
  * @attribute {boolean} auto-focus - Reflects the autoFocus property.
  * @attribute {boolean} no-style - Reflects the noStyle property.
  *
@@ -176,18 +167,18 @@ class FilesDropzone extends HTMLElement {
     super();
 
     if (!this.shadowRoot) {
-      const shadowRoot = this.attachShadow({ mode: 'open' });
+      const shadowRoot = this.attachShadow({ mode: 'open', delegatesFocus: true });
       shadowRoot.appendChild(template.content.cloneNode(true));
     }
 
     if (this.shadowRoot) {
-      this.#fileInput = /** @type {Nullable<HTMLInputElement>} */(this.shadowRoot.getElementById('fileInput'));
-      this.#dropzoneEl = this.shadowRoot.getElementById('dropzoneEl');
+      this.#fileInput = /** @type {Nullable<HTMLInputElement>} */(this.shadowRoot.getElementById('file-input'));
+      this.#dropzoneEl = this.shadowRoot.getElementById('dropzone');
     }
   }
 
   static get observedAttributes() {
-    return ['accept', 'disabled', 'multiple', 'no-keyboard'];
+    return ['accept', 'disabled', 'multiple'];
   }
 
   /**
@@ -207,21 +198,15 @@ class FilesDropzone extends HTMLElement {
 
       if (this.disabled) {
         this.#dropzoneEl?.removeAttribute('tabindex');
+        this.#dropzoneEl?.setAttribute('aria-disabled', 'true');
       } else {
         this.#dropzoneEl?.setAttribute('tabindex', '0');
+        this.#dropzoneEl?.setAttribute('aria-disabled', 'false');
       }
     }
 
     if (name === 'multiple' && oldValue !== newValue && this.#fileInput) {
       this.#fileInput.multiple = this.multiple;
-    }
-
-    if (name === 'no-keyboard' && oldValue !== newValue && this.#dropzoneEl) {
-      if (this.noKeyboard) {
-        this.#dropzoneEl.removeAttribute('tabindex');
-      } else {
-        this.#dropzoneEl.setAttribute('tabindex', '0');
-      }
     }
   }
 
@@ -235,9 +220,6 @@ class FilesDropzone extends HTMLElement {
     this.#upgradeProperty('maxSize');
     this.#upgradeProperty('minSize');
     this.#upgradeProperty('multiple');
-    this.#upgradeProperty('noClick');
-    this.#upgradeProperty('noDrag');
-    this.#upgradeProperty('noKeyboard');
     this.#upgradeProperty('autoFocus');
     this.#upgradeProperty('noStyle');
 
@@ -365,45 +347,6 @@ class FilesDropzone extends HTMLElement {
   }
 
   /**
-   * @type {boolean} - Prevents the file dialog from opening when the dropzone is clicked.
-   * @default false
-   * @attribute no-click - Reflects the noClick property.
-   */
-  get noClick() {
-    return this.hasAttribute('no-click');
-  }
-
-  set noClick(value) {
-    this.toggleAttribute('no-click', !!value);
-  }
-
-  /**
-   * @type {boolean} - Prevents the dropzone from reacting to drag events.
-   * @default false
-   * @attribute no-drag - Reflects the noDrag property.
-   */
-  get noDrag() {
-    return this.hasAttribute('no-drag');
-  }
-
-  set noDrag(value) {
-    this.toggleAttribute('no-drag', !!value);
-  }
-
-  /**
-   * @type {boolean} - Prevents the dropzone from reacting to keyboard events.
-   * @default false
-   * @attribute no-keyboard - Reflects the noKeyboard property.
-   */
-  get noKeyboard() {
-    return this.hasAttribute('no-keyboard');
-  }
-
-  set noKeyboard(value) {
-    this.toggleAttribute('no-keyboard', !!value);
-  }
-
-  /**
    * @type {boolean} - Automatically focuses the dropzone when it's connected to the DOM.
    * @default false
    * @attribute auto-focus - Reflects the autoFocus property.
@@ -450,7 +393,7 @@ class FilesDropzone extends HTMLElement {
    * Handles the dragenter event of the dropzone.
    */
   #handleDragEnter = () => {
-    if (this.disabled || this.noDrag) {
+    if (this.disabled) {
       return;
     }
 
@@ -468,7 +411,7 @@ class FilesDropzone extends HTMLElement {
   #handleDragOver = evt => {
     evt.preventDefault();
 
-    if (this.disabled || this.noDrag) {
+    if (this.disabled) {
       evt.dataTransfer.dropEffect = 'none';
       return;
     }
@@ -490,7 +433,7 @@ class FilesDropzone extends HTMLElement {
    * Handles the dragleave event of the dropzone.
    */
   #handleDragLeave = () => {
-    if (this.disabled || this.noDrag) {
+    if (this.disabled) {
       return;
     }
 
@@ -511,7 +454,7 @@ class FilesDropzone extends HTMLElement {
    * @param {*} evt - The event object.
    */
   #handleDrop = async evt => {
-    if (this.disabled || this.noDrag) {
+    if (this.disabled) {
       return;
     }
 
@@ -537,7 +480,7 @@ class FilesDropzone extends HTMLElement {
    * Handles the click event of the dropzone.
    */
   #handleClick = () => {
-    if (this.disabled || this.noClick) {
+    if (this.disabled) {
       return;
     }
 
@@ -550,7 +493,7 @@ class FilesDropzone extends HTMLElement {
    * @param {*} evt - The event object.
    */
   #handleKeyUp = evt => {
-    if (this.disabled || this.noKeyboard) {
+    if (this.disabled) {
       return;
     }
 
@@ -687,7 +630,7 @@ class FilesDropzone extends HTMLElement {
    *
    * https://developers.google.com/web/fundamentals/web-components/best-practices#lazy-properties
    *
-   * @param {'accept' | 'disabled' | 'maxFiles' | 'maxSize' | 'minSize' | 'multiple' | 'noClick' | 'noDrag' | 'noKeyboard' | 'autoFocus' | 'noStyle'} prop - The property name to upgrade.
+   * @param {'accept' | 'disabled' | 'maxFiles' | 'maxSize' | 'minSize' | 'multiple' | 'autoFocus' | 'noStyle'} prop - The property name to upgrade.
    */
   #upgradeProperty(prop) {
     /** @type {any} */
