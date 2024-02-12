@@ -57,10 +57,7 @@ By default, the component comes with basic styling. However, you can customise t
 | `maxSize`<br>*`max-size`* | ✓ | Number | - | `Infinity` | Maximum file size (in bytes). |
 | `minSize`<br>*`min-size`* | ✓ | Number | - | `0` | Minimum file size (in bytes). |
 | `multiple` | ✓ | Boolean | - | `false` | If `true`, allows drag 'n' drop (or selection from the file dialog) of multiple files. If set to `false` and many files are dropped, all of them will be rejected to avoid making unsafe assumptions on which files to accept. |
-| `noClick`<br>*`no-click`* | ✓ | Boolean | - | `false` | If `true`, disables the ability to select files by clicking on the dropzone area, using the native file dialog. |
-|`noDrag`<br>*`no-drag`*| ✓ | Boolean | - | `false` | If `true`, disables drag 'n' drop. |
-| `noKeyboard`<br>*`no-keyboard`* | ✓ | Boolean | - | `false` | If `true`, disables the ability to select files using the SPACE/ENTER keys and also disables the ability to focus on the element using the keyboard. |
-| `autoFocus`<br>*`auto-focus`* | ✓ | Boolean | - | `false` | If `true`, the dropzone will be focused when the component is rendered. It has no effect if the `noKeyboard` or `disabled` properties are set to `true`. |
+| `autoFocus`<br>*`auto-focus`* | ✓ | Boolean | - | `false` | If `true`, the dropzone will be focused when the component is rendered. It has no effect if `disabled` property is set to `true`. |
 | `noStyle`<br>*`no-style`* | ✓ | Boolean | - | `false` | If `true`, it will remove all default styling. It can be useful in cases you want to style the component's parts from scratch. Note that the available [CSS Custom Properties](#css-custom-properties) can still be used. |
 
 <sup>1</sup> Each unique file type specifier may take one of the following forms:
@@ -118,9 +115,9 @@ By default, the component comes with basic styling. However, you can customise t
 | `files-dropzone-drop` | Emitted when one or more files are selected, either by using the native file dialog or dropping files in the dropzone area. The event is emitted regardless if the dropped files are accepted or rejected. Files are accepted or rejected based on the `accept`, `max-files`, `max-size`, `min-size` and `multiple` attributes. | `{acceptedFiles: Array<File>, rejectedFiles: Array<{file: File, errors: Array<{code: 'TOO_MANY_FILES' \| 'FILE_TOO_LARGE' \| FILE_TOO_SMALL \| 'INVALID_MIME_TYPE', message: string}>}>}` |
 | `files-dropzone-drop-accepted` | Emitted when one or more dropped files are accepted. If no files are accepted, the event is not emitted at all. | `{acceptedFiles: Array<File>}` |
 | `files-dropzone-drop-rejected` | Emitted when one or more dropped files are rejected. If no files are rejected, the event is not emitted at all. | `{rejectedFiles: Array<{file: File, errors: Array<{code: 'TOO_MANY_FILES' \| 'FILE_TOO_LARGE' \| FILE_TOO_SMALL \| 'INVALID_MIME_TYPE', message: string}>}>}` |
-| `files-dropzone-dragenter` | Emitted on `dragenter` event. The event is not emitted if `disabled` or `no-drag` attributes are set. | - |
-| `files-dropzone-dragover` | Emitted on `dragover` event. The event is not emitted if `disabled` or `no-drag` attributes are set. | - |
-| `files-dropzone-dragleave` | Emitted on `dragleave` event. The event is not emitted if `disabled` or `no-drag` attributes are set. | - |
+| `files-dropzone-dragenter` | Emitted on `dragenter` event. The event is not emitted if `disabled` attribute is set. | - |
+| `files-dropzone-dragover` | Emitted on `dragover` event. The event is not emitted if `disabled` attribute is set. | - |
+| `files-dropzone-dragleave` | Emitted on `dragleave` event. The event is not emitted if `disabled` attribute is set. | - |
 | `files-dropzone-error` | Emitted if there is any error in the process of reading dropped files or directories. | `{error: any}` |
 
 ## Usage example

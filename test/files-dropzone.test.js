@@ -19,33 +19,6 @@ describe('files-dropzone', () => {
       const el = await fixture(html`<files-dropzone disabled></files-dropzone>`);
       await expect(el).to.be.accessible();
     });
-
-    it('passes accessibility test when no-keyboard', async () => {
-      const el = await fixture(html`<files-dropzone no-keyboard></files-dropzone>`);
-      await expect(el).to.be.accessible();
-    });
-
-    it('passes accessibility test when no-click', async () => {
-      const el = await fixture(html`<files-dropzone no-click></files-dropzone>`);
-      await expect(el).to.be.accessible();
-    });
-
-    it('passes accessibility test when no-drag', async () => {
-      const el = await fixture(html`<files-dropzone no-drag></files-dropzone>`);
-      await expect(el).to.be.accessible();
-    });
-
-    it('dropzone has tabindex when no-keyboard is not set', async () => {
-      const el = await fixture(html`<files-dropzone></files-dropzone>`);
-      const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
-      expect(dropzone.hasAttribute('tabindex')).to.be.true;
-    });
-
-    it('dropzone does not have tabindex when no-keyboard is set', async () => {
-      const el = await fixture(html`<files-dropzone no-keyboard></files-dropzone>`);
-      const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
-      expect(dropzone.hasAttribute('tabindex')).to.be.false;
-    });
   });
 
   describe('slots', () => {
@@ -268,81 +241,6 @@ describe('files-dropzone', () => {
       expect(el.hasAttribute('multiple')).to.be.false;
     });
 
-    // noClick property
-    it('property noClick is true when attribute no-click is set', async () => {
-      const el = await fixture(html`<files-dropzone no-click></files-dropzone>`);
-      expect(el.noClick).to.be.true;
-    });
-
-    it('property noClick is false when attribute no-click is not set', async () => {
-      const el = await fixture(html`<files-dropzone></files-dropzone>`);
-      expect(el.noClick).to.be.false;
-    });
-
-    it('attribute no-click is set when property noClick is set', async () => {
-      const el = await fixture(html`<files-dropzone></files-dropzone>`);
-      el.noClick = true;
-      await elementUpdated(el);
-      expect(el.hasAttribute('no-click')).to.be.true;
-    });
-
-    it('attribute no-click is removed when property noClick is false', async () => {
-      const el = await fixture(html`<files-dropzone no-click></files-dropzone>`);
-      el.noClick = false;
-      await elementUpdated(el);
-      expect(el.hasAttribute('no-click')).to.be.false;
-    });
-
-    // noDrag property
-    it('property noDrag is true when attribute no-drag is set', async () => {
-      const el = await fixture(html`<files-dropzone no-drag></files-dropzone>`);
-      expect(el.noDrag).to.be.true;
-    });
-
-    it('property noDrag is false when attribute no-drag is not set', async () => {
-      const el = await fixture(html`<files-dropzone></files-dropzone>`);
-      expect(el.noDrag).to.be.false;
-    });
-
-    it('attribute no-drag is set when property noDrag is set', async () => {
-      const el = await fixture(html`<files-dropzone></files-dropzone>`);
-      el.noDrag = true;
-      await elementUpdated(el);
-      expect(el.hasAttribute('no-drag')).to.be.true;
-    });
-
-    it('attribute no-drag is removed when property noDrag is false', async () => {
-      const el = await fixture(html`<files-dropzone no-drag></files-dropzone>`);
-      el.noDrag = false;
-      await elementUpdated(el);
-      expect(el.hasAttribute('no-drag')).to.be.false;
-    });
-
-    // noKeyboard property
-    it('property noKeyboard is true when attribute no-keyboard is set', async () => {
-      const el = await fixture(html`<files-dropzone no-keyboard></files-dropzone>`);
-      expect(el.noKeyboard).to.be.true;
-    });
-
-    it('property noKeyboard is false when attribute no-keyboard is not set', async () => {
-      const el = await fixture(html`<files-dropzone></files-dropzone>`);
-      expect(el.noKeyboard).to.be.false;
-    });
-
-    it('attribute no-keyboard is set when property noKeyboard is set', async () => {
-      const el = await fixture(html`<files-dropzone></files-dropzone>`);
-      el.noKeyboard = true;
-      await elementUpdated(el);
-      expect(el.hasAttribute('no-keyboard')).to.be.true;
-    });
-
-    it('attribute no-keyboard is removed when property noKeyboard is false', async () => {
-      const el = await fixture(html`<files-dropzone no-keyboard></files-dropzone>`);
-      el.noKeyboard = false;
-      await elementUpdated(el);
-      expect(el.hasAttribute('no-keyboard')).to.be.false;
-    });
-
     // autoFocus property
     it('property autoFocus is true when attribute auto-focus is set', async () => {
       const el = await fixture(html`<files-dropzone auto-focus></files-dropzone>`);
@@ -410,15 +308,6 @@ describe('files-dropzone', () => {
       expect(spy).to.have.been.calledOnce;
     });
 
-    it('it does not fire files-dropzone-dragenter event when dragenter event is fired and no-drag is set', async () => {
-      const el = await fixture(html`<files-dropzone no-drag></files-dropzone>`);
-      const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
-      const spy = sinon.spy();
-      el.addEventListener('files-dropzone-dragenter', spy);
-      dropzone.dispatchEvent(new DragEvent('dragenter'));
-      expect(spy).to.not.have.been.called;
-    });
-
     it('it does not fire files-dropzone-dragenter event when dragenter event is fired and disabled is set', async () => {
       const el = await fixture(html`<files-dropzone disabled></files-dropzone>`);
       const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
@@ -438,15 +327,6 @@ describe('files-dropzone', () => {
       expect(spy).to.have.been.calledOnce;
     });
 
-    it('it does not fire files-dropzone-dragover event when dragover event is fired and no-drag is set', async () => {
-      const el = await fixture(html`<files-dropzone no-drag></files-dropzone>`);
-      const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
-      const spy = sinon.spy();
-      el.addEventListener('files-dropzone-dragover', spy);
-      dropzone.dispatchEvent(new DragEvent('dragover', { dataTransfer: new DataTransfer() }));
-      expect(spy).to.not.have.been.called;
-    });
-
     it('it does not fire files-dropzone-dragover event when dragover event is fired and disabled is set', async () => {
       const el = await fixture(html`<files-dropzone disabled></files-dropzone>`);
       const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
@@ -464,15 +344,6 @@ describe('files-dropzone', () => {
       el.addEventListener('files-dropzone-dragleave', spy);
       dropzone.dispatchEvent(new DragEvent('dragleave'));
       expect(spy).to.have.been.calledOnce;
-    });
-
-    it('it does not fire files-dropzone-dragleave event when dragleave event is fired and no-drag is set', async () => {
-      const el = await fixture(html`<files-dropzone no-drag></files-dropzone>`);
-      const dropzone = el.shadowRoot.querySelector('[part="dropzone"]');
-      const spy = sinon.spy();
-      el.addEventListener('files-dropzone-dragleave', spy);
-      dropzone.dispatchEvent(new DragEvent('dragleave'));
-      expect(spy).to.not.have.been.called;
     });
 
     it('it does not fire files-dropzone-dragleave event when dragleave event is fired and disabled is set', async () => {
