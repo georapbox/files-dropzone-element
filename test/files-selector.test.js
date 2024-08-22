@@ -15,7 +15,7 @@ function createDataTransferWithFiles(files = []) {
   return {
     dataTransfer: {
       files,
-      items: files.map((file) => ({
+      items: files.map(file => ({
         kind: 'file',
         size: file.size,
         type: file.type,
@@ -23,9 +23,9 @@ function createDataTransferWithFiles(files = []) {
         webkitGetAsEntry: () => ({
           isFile: true,
           isDirectory: false,
-          file: (callback) => callback(file),
+          file: callback => callback(file),
           createReader: () => ({
-            readEntries: (callback) => callback([])
+            readEntries: callback => callback([])
           }),
           fullPath: file.name,
           name: file.name
@@ -51,19 +51,13 @@ describe('files-dropzone/utils/files-selector', () => {
   });
 
   it('shoule return an array of files if files are selected', async () => {
-    const files = [
-      createFile('foo.txt', 1024, 'text/plain'),
-      createFile('bar.png', 2048, 'text/png')
-    ];
+    const files = [createFile('foo.txt', 1024, 'text/plain'), createFile('bar.png', 2048, 'text/png')];
     const event = createDataTransferWithFiles(files);
     expect(await getFilesFromEvent(event)).to.deep.equal(files);
   });
 
   it('should add a `path` property to the file', async () => {
-    const files = [
-      createFile('foo.txt', 1024, 'text/plain'),
-      createFile('bar.png', 2048, 'text/png')
-    ];
+    const files = [createFile('foo.txt', 1024, 'text/plain'), createFile('bar.png', 2048, 'text/png')];
     const event = createDataTransferWithFiles(files);
     for (const file of await getFilesFromEvent(event)) {
       expect(file).to.have.property('path');
@@ -72,10 +66,7 @@ describe('files-dropzone/utils/files-selector', () => {
   });
 
   it('should add `type` property to the file if not present but file extension exists', async () => {
-    const files = [
-      createFile('foo.txt', 1024, ''),
-      createFile('bar.png', 2048, '')
-    ];
+    const files = [createFile('foo.txt', 1024, ''), createFile('bar.png', 2048, '')];
     const event = createDataTransferWithFiles(files);
     const filesFromEvent = await getFilesFromEvent(event);
     expect(filesFromEvent[0]).to.have.property('type', 'text/plain');
@@ -83,10 +74,7 @@ describe('files-dropzone/utils/files-selector', () => {
   });
 
   it('should ignore thumbnail cache files for macOS and Windows', async () => {
-    const files = [
-      createFile('.DS_Store', 1024, ''),
-      createFile('Thumbs.db', 2048, '')
-    ];
+    const files = [createFile('.DS_Store', 1024, ''), createFile('Thumbs.db', 2048, '')];
     const event = createDataTransferWithFiles(files);
     expect(await getFilesFromEvent(event)).to.be.empty;
   });
@@ -101,10 +89,7 @@ describe('files-dropzone/utils/files-selector', () => {
   });
 
   it('should get files from a FileList', async () => {
-    const files = [
-      createFile('foo.txt', 1024, 'text/plain'),
-      createFile('bar.png', 2048, 'text/png')
-    ];
+    const files = [createFile('foo.txt', 1024, 'text/plain'), createFile('bar.png', 2048, 'text/png')];
     const event = createFileList(files);
     expect(await getFilesFromEvent(event)).to.deep.equal(files);
   });

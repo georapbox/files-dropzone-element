@@ -67,7 +67,9 @@ describe('files-dropzone', () => {
     it('has a default slot with text', async () => {
       const el = await fixture(html`<files-dropzone></files-dropzone>`);
       const slot = el.shadowRoot.querySelector('slot');
-      expect(slot.assignedNodes({ flatten: true })[0].textContent).to.contain('Drag \'n\' drop files here, or click to select files');
+      expect(slot.assignedNodes({ flatten: true })[0].textContent).to.contain(
+        "Drag 'n' drop files here, or click to select files"
+      );
     });
 
     it('changes content of the default slot', async () => {

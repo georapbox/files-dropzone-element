@@ -17,7 +17,7 @@ const FILE_TOO_SMALL = 'FILE_TOO_SMALL';
 const INVALID_MIME_TYPE = 'INVALID_MIME_TYPE';
 const template = document.createElement('template');
 
-const styles = /* css */`
+const styles = /* css */ `
   *,
   *::before,
   *::after {
@@ -88,7 +88,7 @@ const styles = /* css */`
   }
 `;
 
-template.innerHTML = /* html */`
+template.innerHTML = /* html */ `
   <style>
     ${styles}
   </style>
@@ -172,7 +172,7 @@ class FilesDropzone extends HTMLElement {
     }
 
     if (this.shadowRoot) {
-      this.#fileInput = /** @type {Nullable<HTMLInputElement>} */(this.shadowRoot.getElementById('file-input'));
+      this.#fileInput = /** @type {Nullable<HTMLInputElement>} */ (this.shadowRoot.getElementById('file-input'));
       this.#dropzoneEl = this.shadowRoot.getElementById('dropzone');
     }
   }
@@ -381,11 +381,13 @@ class FilesDropzone extends HTMLElement {
     try {
       this.#handleFilesSelect(await getFilesFromEvent(evt));
     } catch (error) {
-      this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}-error`, {
-        bubbles: true,
-        composed: true,
-        detail: { error }
-      }));
+      this.dispatchEvent(
+        new CustomEvent(`${COMPONENT_NAME}-error`, {
+          bubbles: true,
+          composed: true,
+          detail: { error }
+        })
+      );
     }
   };
 
@@ -397,10 +399,12 @@ class FilesDropzone extends HTMLElement {
       return;
     }
 
-    this.dispatchEvent(new Event(`${COMPONENT_NAME}-dragenter`, {
-      bubbles: true,
-      composed: true
-    }));
+    this.dispatchEvent(
+      new Event(`${COMPONENT_NAME}-dragenter`, {
+        bubbles: true,
+        composed: true
+      })
+    );
   };
 
   /**
@@ -423,10 +427,12 @@ class FilesDropzone extends HTMLElement {
       this.#dropzoneEl.part.add('dropzone--dragover');
     }
 
-    this.dispatchEvent(new Event(`${COMPONENT_NAME}-dragover`, {
-      bubbles: true,
-      composed: true
-    }));
+    this.dispatchEvent(
+      new Event(`${COMPONENT_NAME}-dragover`, {
+        bubbles: true,
+        composed: true
+      })
+    );
   };
 
   /**
@@ -442,10 +448,12 @@ class FilesDropzone extends HTMLElement {
       this.#dropzoneEl.part.remove('dropzone--dragover');
     }
 
-    this.dispatchEvent(new Event(`${COMPONENT_NAME}-dragleave`, {
-      bubbles: true,
-      composed: true
-    }));
+    this.dispatchEvent(
+      new Event(`${COMPONENT_NAME}-dragleave`, {
+        bubbles: true,
+        composed: true
+      })
+    );
   };
 
   /**
@@ -468,11 +476,13 @@ class FilesDropzone extends HTMLElement {
     try {
       this.#handleFilesSelect(await getFilesFromEvent(evt));
     } catch (error) {
-      this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}-error`, {
-        bubbles: true,
-        composed: true,
-        detail: { error }
-      }));
+      this.dispatchEvent(
+        new CustomEvent(`${COMPONENT_NAME}-error`, {
+          bubbles: true,
+          composed: true,
+          detail: { error }
+        })
+      );
     }
   };
 
@@ -521,10 +531,12 @@ class FilesDropzone extends HTMLElement {
       for (const file of files) {
         rejectedFiles.push({
           file,
-          errors: [{
-            code: TOO_MANY_FILES,
-            message: `Too many files selected. Only 1 file is allowed.`
-          }]
+          errors: [
+            {
+              code: TOO_MANY_FILES,
+              message: `Too many files selected. Only 1 file is allowed.`
+            }
+          ]
         });
       }
     } else if (this.multiple && filesLength > this.maxFiles) {
@@ -533,10 +545,12 @@ class FilesDropzone extends HTMLElement {
       for (const file of files) {
         rejectedFiles.push({
           file,
-          errors: [{
-            code: TOO_MANY_FILES,
-            message: `Too many files selected. Only ${this.maxFiles} ${this.maxFiles > 1 ? 'files are' : 'file is'} allowed.`
-          }]
+          errors: [
+            {
+              code: TOO_MANY_FILES,
+              message: `Too many files selected. Only ${this.maxFiles} ${this.maxFiles > 1 ? 'files are' : 'file is'} allowed.`
+            }
+          ]
         });
       }
     } else {
@@ -578,33 +592,39 @@ class FilesDropzone extends HTMLElement {
       }
     }
 
-    this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}-drop`, {
-      bubbles: true,
-      composed: true,
-      detail: {
-        acceptedFiles,
-        rejectedFiles
-      }
-    }));
-
-    if (acceptedFiles.length > 0) {
-      this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}-drop-accepted`, {
+    this.dispatchEvent(
+      new CustomEvent(`${COMPONENT_NAME}-drop`, {
         bubbles: true,
         composed: true,
         detail: {
-          acceptedFiles
+          acceptedFiles,
+          rejectedFiles
         }
-      }));
+      })
+    );
+
+    if (acceptedFiles.length > 0) {
+      this.dispatchEvent(
+        new CustomEvent(`${COMPONENT_NAME}-drop-accepted`, {
+          bubbles: true,
+          composed: true,
+          detail: {
+            acceptedFiles
+          }
+        })
+      );
     }
 
     if (rejectedFiles.length > 0) {
-      this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}-drop-rejected`, {
-        bubbles: true,
-        composed: true,
-        detail: {
-          rejectedFiles
-        }
-      }));
+      this.dispatchEvent(
+        new CustomEvent(`${COMPONENT_NAME}-drop-rejected`, {
+          bubbles: true,
+          composed: true,
+          detail: {
+            rejectedFiles
+          }
+        })
+      );
     }
 
     if (this.#fileInput) {

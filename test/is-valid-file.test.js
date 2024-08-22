@@ -28,7 +28,7 @@ describe('files-dropzone/utils/is-valid-file', () => {
     expect(isValidFile(file, 'text/plain, text/*')).to.be.true;
   });
 
-  it('file is valid if file\'s extension matches accepted extension', async () => {
+  it("file is valid if file's extension matches accepted extension", async () => {
     const file = new File(['foo'], 'foo.txt', {
       type: 'text/plain'
     });
@@ -36,7 +36,7 @@ describe('files-dropzone/utils/is-valid-file', () => {
     expect(isValidFile(file, '.txt')).to.be.true;
   });
 
-  it('file is valid if file\'s extension matches accepted extension (multiple)', async () => {
+  it("file is valid if file's extension matches accepted extension (multiple)", async () => {
     const file = new File(['foo'], 'foo.txt', {
       type: 'text/plain'
     });
@@ -60,7 +60,7 @@ describe('files-dropzone/utils/is-valid-file', () => {
     expect(isValidFile(file, 'image/*, text/html')).to.be.false;
   });
 
-  it('file is invalid if file\'s extension does not match accepted extension', async () => {
+  it("file is invalid if file's extension does not match accepted extension", async () => {
     const file = new File(['foo'], 'foo.txt', {
       type: 'text/plain'
     });

@@ -239,7 +239,7 @@ const getFilesFromDataTransferItemList = async dataTransferItemList => {
         files.push(file);
       }
     } else if (entry.isDirectory) {
-      queue.push(...await readAllDirectoryEntries(entry.createReader()));
+      queue.push(...(await readAllDirectoryEntries(entry.createReader())));
     }
   }
 

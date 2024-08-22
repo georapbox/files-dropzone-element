@@ -13,7 +13,12 @@ export function isValidFile(file, acceptedTypeSpecifiers = '') {
   }
 
   const acceptedMimeTypesList = [
-    ...new Set(acceptedTypeSpecifiers.split(',').map(v => v.trim()).filter(Boolean))
+    ...new Set(
+      acceptedTypeSpecifiers
+        .split(',')
+        .map(v => v.trim())
+        .filter(Boolean)
+    )
   ];
 
   const fileMimeType = file.type;
