@@ -118,7 +118,7 @@ By default, the component comes with basic styling. However, you can customise t
 | `files-dropzone-dragenter` | Emitted on `dragenter` event. The event is not emitted if `disabled` attribute is set. | - |
 | `files-dropzone-dragover` | Emitted on `dragover` event. The event is not emitted if `disabled` attribute is set. | - |
 | `files-dropzone-dragleave` | Emitted on `dragleave` event. The event is not emitted if `disabled` attribute is set. | - |
-| `files-dropzone-error` | Emitted if there is any error in the process of reading dropped files or directories. | `{error: any}` |
+| `files-dropzone-error` | Emitted if there is any error in the process of reading dropped files or directories. | `{error: unknown, code: 'FILE_DIALOG_OPEN_FAILED' \| 'FILE_INPUT_CHANGE_FAILED' \| 'DROP_EVENT_PROCESSING_FAILED' \| 'UNKNOWN_ERROR'}` |
 
 ## Usage example
 
