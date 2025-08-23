@@ -5,8 +5,6 @@ const componentUrl = isLocalhost ? '../../dist/files-dropzone.js' : '../lib/file
 try {
   const { FilesDropzone } = await import(componentUrl);
   FilesDropzone.defineCustomElement();
-  console.log(FilesDropzone.ERROR_CODES);
-  console.log(FilesDropzone.REJECTION_CODES);
 } catch (err) {
   console.error(err);
 }

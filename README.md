@@ -108,17 +108,26 @@ By default, the component comes with basic styling. However, you can customise t
 
 <sup>1</sup> Instance methods are only available after the component has been defined. To ensure the component is defined, you can use `whenDefined` method of the `CustomElementRegistry` interface, eg `customElements.whenDefined('files-dropzone').then(() => { /* call methods here */ });`
 
+### Static Properties
+
+Below are static properties exposed on the `FilesDropzone` class for consumer reference.
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| `ERROR_CODES` | Object | Static object of stable error identifiers used in `files-dropzone-error`. Properties: `FILE_DIALOG_OPEN_FAILED`, `FILE_INPUT_CHANGE_FAILED`, `DROP_EVENT_PROCESSING_FAILED`, `UNKNOWN_ERROR`. |
+| `REJECTION_CODES` | Object | Static object of stable identifiers used for file-rejection reasons. Properties : `TOO_MANY_FILES`, `FILE_TOO_LARGE`, `FILE_TOO_SMALL`, `INVALID_MIME_TYPE`. |
+
 ### Events
 
 | Name | Description | Event Detail |
 | ---- | ----------- | ------------ |
-| `files-dropzone-drop` | Emitted when one or more files are selected, either by using the native file dialog or dropping files in the dropzone area. The event is emitted regardless if the dropped files are accepted or rejected. Files are accepted or rejected based on the `accept`, `max-files`, `max-size`, `min-size` and `multiple` attributes. | `{acceptedFiles: Array<File>, rejectedFiles: Array<{file: File, errors: Array<{code: 'TOO_MANY_FILES' \| 'FILE_TOO_LARGE' \| FILE_TOO_SMALL \| 'INVALID_MIME_TYPE', message: string}>}>}` |
+| `files-dropzone-drop` | Emitted when one or more files are selected, either by using the native file dialog or dropping files in the dropzone area. The event is emitted regardless if the dropped files are accepted or rejected. Files are accepted or rejected based on the `accept`, `max-files`, `max-size`, `min-size` and `multiple` attributes. | `{acceptedFiles: Array<File>, rejectedFiles: Array<{file: File, errors: Array<{code: FilesDropzoneRejectionCode, message: string}>}>}` |
 | `files-dropzone-drop-accepted` | Emitted when one or more dropped files are accepted. If no files are accepted, the event is not emitted at all. | `{acceptedFiles: Array<File>}` |
-| `files-dropzone-drop-rejected` | Emitted when one or more dropped files are rejected. If no files are rejected, the event is not emitted at all. | `{rejectedFiles: Array<{file: File, errors: Array<{code: 'TOO_MANY_FILES' \| 'FILE_TOO_LARGE' \| FILE_TOO_SMALL \| 'INVALID_MIME_TYPE', message: string}>}>}` |
+| `files-dropzone-drop-rejected` | Emitted when one or more dropped files are rejected. If no files are rejected, the event is not emitted at all. | `{rejectedFiles: Array<{file: File, errors: Array<{code: FilesDropzoneRejectionCode, message: string}>}>}` |
 | `files-dropzone-dragenter` | Emitted on `dragenter` event. The event is not emitted if `disabled` attribute is set. | - |
 | `files-dropzone-dragover` | Emitted on `dragover` event. The event is not emitted if `disabled` attribute is set. | - |
 | `files-dropzone-dragleave` | Emitted on `dragleave` event. The event is not emitted if `disabled` attribute is set. | - |
-| `files-dropzone-error` | Emitted if there is any error in the process of reading dropped files or directories. | `{error: unknown, code: 'FILE_DIALOG_OPEN_FAILED' \| 'FILE_INPUT_CHANGE_FAILED' \| 'DROP_EVENT_PROCESSING_FAILED' \| 'UNKNOWN_ERROR'}` |
+| `files-dropzone-error` | Emitted if there is any error in the process of reading dropped files or directories. | `{error: unknown, code: FilesDropzoneErrorCode}` |
 
 ## Usage example
 

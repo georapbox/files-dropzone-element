@@ -660,8 +660,6 @@ class FilesDropzone extends HTMLElement {
       return;
     }
 
-    console.log(navigator.userActivation.isActive);
-
     try {
       this.#fileInput.showPicker();
     } catch (err) {
