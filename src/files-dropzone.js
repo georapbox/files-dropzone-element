@@ -7,17 +7,35 @@
  * @typedef {T | null} Nullable
  */
 
+/**
+ * Stable identifier for error codes used in the `files-dropzone-error` event.
+ *
+ * @typedef {typeof FilesDropzone.ERROR_CODES[keyof typeof FilesDropzone.ERROR_CODES]} FilesDropzoneErrorCode
+ */
+
+/**
+ * The detail payload for the `files-dropzone-error` event.
+ *
+ * @typedef {Object} FilesDropzoneErrorDetail
+ * @property {FilesDropzoneErrorCode} code - Stable identifier for the type of error that occurred.
+ * @property {unknown} error - The underlying error object or value that triggered the event.
+ */
+
+/**
+ * Stable identifier for rejection codes used in the various drop-related events.
+ *
+ * @typedef {typeof FilesDropzone.REJECTION_CODES[keyof typeof FilesDropzone.REJECTION_CODES]} FilesDropzoneRejectionCode
+ */
+
 import { isValidFile } from './utils/is-valid-file.js';
 import { getFilesFromEvent } from './utils/files-selector.js';
 
+const css = String.raw;
+const html = String.raw;
 const COMPONENT_NAME = 'files-dropzone';
-const TOO_MANY_FILES = 'TOO_MANY_FILES';
-const FILE_TOO_LARGE = 'FILE_TOO_LARGE';
-const FILE_TOO_SMALL = 'FILE_TOO_SMALL';
-const INVALID_MIME_TYPE = 'INVALID_MIME_TYPE';
 const template = document.createElement('template');
 
-const styles = /* css */ `
+const styles = css`
   *,
   *::before,
   *::after {
@@ -42,7 +60,7 @@ const styles = /* css */ `
     --dropzone-body-color: #3f3f46;
     --dropzone-body-color-dragover: var(--dropzone-body-color);
     --dropzone-body-color-hover: var(--dropzone-body-color-dragover);
-    --dropzone-focus-shadow-rgb: 49,132,253;
+    --dropzone-focus-shadow-rgb: 49, 132, 253;
     --dropzone-focus-box-shadow: 0 0 0 0.25rem rgba(var(--dropzone-focus-shadow-rgb), 0.5);
     --transition-duration: 0.2s; /* for backwards compatibility */
     --dropzone-transition-duration: var(--transition-duration);
@@ -59,7 +77,11 @@ const styles = /* css */ `
     color: var(--dropzone-body-color);
     text-align: center;
     cursor: pointer;
-    transition: border var(--dropzone-transition-duration) ease-in-out, background-color var(--dropzone-transition-duration) ease-in-out, color var(--dropzone-transition-duration) ease-in-out, box-shadow var(--dropzone-transition-duration) ease-in-out;
+    transition:
+      border var(--dropzone-transition-duration) ease-in-out,
+      background-color var(--dropzone-transition-duration) ease-in-out,
+      color var(--dropzone-transition-duration) ease-in-out,
+      box-shadow var(--dropzone-transition-duration) ease-in-out;
   }
 
   :host(:not([no-style])[disabled]) .dropzone {
@@ -88,15 +110,15 @@ const styles = /* css */ `
   }
 `;
 
-template.innerHTML = /* html */ `
+template.innerHTML = html`
   <style>
     ${styles}
   </style>
 
-  <input type="file" id="file-input" hidden>
+  <input type="file" id="file-input" hidden />
 
   <div part="dropzone" class="dropzone" id="dropzone" tabindex="0" role="button" aria-disabled="false">
-    <slot>Drag 'n' drop files here, or click to select files</slot>
+    <slot><span>Drag 'n' drop files here, or click to select files</span></slot>
   </div>
 `;
 
@@ -157,6 +179,28 @@ template.innerHTML = /* html */ `
  * @method openFileDialog - Instance method. Opens the file dialog programmatically.
  */
 class FilesDropzone extends HTMLElement {
+  /**
+   * Central list of error codes used in drop error event.
+   * @readonly
+   */
+  static ERROR_CODES = /** @type {const} */ ({
+    FILE_DIALOG_OPEN_FAILED: 'FILE_DIALOG_OPEN_FAILED',
+    FILE_INPUT_CHANGE_FAILED: 'FILE_INPUT_CHANGE_FAILED',
+    DROP_EVENT_PROCESSING_FAILED: 'DROP_EVENT_PROCESSING_FAILED',
+    UNKNOWN_ERROR: 'UNKNOWN_ERROR'
+  });
+
+  /**
+   * Central list of rejection codes for files that are rejected during the drop process.
+   * @readonly
+   */
+  static REJECTION_CODES = /** @type {const} */ ({
+    TOO_MANY_FILES: 'TOO_MANY_FILES',
+    FILE_TOO_LARGE: 'FILE_TOO_LARGE',
+    FILE_TOO_SMALL: 'FILE_TOO_SMALL',
+    INVALID_MIME_TYPE: 'INVALID_MIME_TYPE'
+  });
+
   /** @type {Nullable<HTMLInputElement>} */
   #fileInput = null;
 
@@ -373,6 +417,40 @@ class FilesDropzone extends HTMLElement {
   }
 
   /**
+   * Emit a custom event with the given name and detail.
+   *
+   * @template D
+   * @param {string} name - The name of the event.
+   * @param {D} [detail] - The detail payload of the event.
+   * @param {CustomEventInit<D>} [init] - Override the default event initialization options.
+   * @returns {boolean} - Returns false if at least one event listener called `preventDefault()`, otherwise true.
+   */
+  #emitEvent(name, detail, init) {
+    const options = {
+      bubbles: true,
+      composed: true,
+      cancelable: false,
+      ...init,
+      detail
+    };
+    const evt = new CustomEvent(`${COMPONENT_NAME}-${name}`, options);
+    return this.dispatchEvent(evt);
+  }
+
+  /**
+   * Emit a standardized error event with typed detail.
+   *
+   * @param {FilesDropzoneErrorCode} code - Stable identifier for the type of error that occurred.
+   * @param {unknown} error - The underlying error that triggered the event.
+   */
+  #emitErrorEvent(code, error) {
+    /** @type {FilesDropzoneErrorDetail} */
+    const detail = { code, error };
+
+    this.#emitEvent('error', detail);
+  }
+
+  /**
    * Handles the change event of the file input.
    *
    * @param {*} evt - The event object.
@@ -380,14 +458,8 @@ class FilesDropzone extends HTMLElement {
   #handleFileInputChange = async evt => {
     try {
       this.#handleFilesSelect(await getFilesFromEvent(evt));
-    } catch (error) {
-      this.dispatchEvent(
-        new CustomEvent(`${COMPONENT_NAME}-error`, {
-          bubbles: true,
-          composed: true,
-          detail: { error }
-        })
-      );
+    } catch (err) {
+      this.#emitErrorEvent(FilesDropzone.ERROR_CODES.FILE_INPUT_CHANGE_FAILED, err);
     }
   };
 
@@ -399,12 +471,7 @@ class FilesDropzone extends HTMLElement {
       return;
     }
 
-    this.dispatchEvent(
-      new Event(`${COMPONENT_NAME}-dragenter`, {
-        bubbles: true,
-        composed: true
-      })
-    );
+    this.#emitEvent('dragenter');
   };
 
   /**
@@ -427,12 +494,7 @@ class FilesDropzone extends HTMLElement {
       this.#dropzoneEl.part.add('dropzone--dragover');
     }
 
-    this.dispatchEvent(
-      new Event(`${COMPONENT_NAME}-dragover`, {
-        bubbles: true,
-        composed: true
-      })
-    );
+    this.#emitEvent('dragover');
   };
 
   /**
@@ -448,12 +510,7 @@ class FilesDropzone extends HTMLElement {
       this.#dropzoneEl.part.remove('dropzone--dragover');
     }
 
-    this.dispatchEvent(
-      new Event(`${COMPONENT_NAME}-dragleave`, {
-        bubbles: true,
-        composed: true
-      })
-    );
+    this.#emitEvent('dragleave');
   };
 
   /**
@@ -475,14 +532,8 @@ class FilesDropzone extends HTMLElement {
 
     try {
       this.#handleFilesSelect(await getFilesFromEvent(evt));
-    } catch (error) {
-      this.dispatchEvent(
-        new CustomEvent(`${COMPONENT_NAME}-error`, {
-          bubbles: true,
-          composed: true,
-          detail: { error }
-        })
-      );
+    } catch (err) {
+      this.#emitErrorEvent(FilesDropzone.ERROR_CODES.DROP_EVENT_PROCESSING_FAILED, err);
     }
   };
 
@@ -494,7 +545,7 @@ class FilesDropzone extends HTMLElement {
       return;
     }
 
-    this.#fileInput?.click();
+    this.openFileDialog();
   };
 
   /**
@@ -508,7 +559,7 @@ class FilesDropzone extends HTMLElement {
     }
 
     if (evt.key === ' ' || evt.key === 'Enter') {
-      this.#fileInput?.click();
+      this.openFileDialog();
     }
   };
 
@@ -533,7 +584,7 @@ class FilesDropzone extends HTMLElement {
           file,
           errors: [
             {
-              code: TOO_MANY_FILES,
+              code: FilesDropzone.REJECTION_CODES.TOO_MANY_FILES,
               message: `Too many files selected. Only 1 file is allowed.`
             }
           ]
@@ -547,7 +598,7 @@ class FilesDropzone extends HTMLElement {
           file,
           errors: [
             {
-              code: TOO_MANY_FILES,
+              code: FilesDropzone.REJECTION_CODES.TOO_MANY_FILES,
               message: `Too many files selected. Only ${this.maxFiles} ${this.maxFiles > 1 ? 'files are' : 'file is'} allowed.`
             }
           ]
@@ -568,21 +619,21 @@ class FilesDropzone extends HTMLElement {
 
           if (!fileHasValidType) {
             errors.push({
-              code: INVALID_MIME_TYPE,
+              code: FilesDropzone.REJECTION_CODES.INVALID_MIME_TYPE,
               message: `File type "${file.type}" is not accepted.`
             });
           }
 
           if (fileExceedsMaxSize) {
             errors.push({
-              code: FILE_TOO_LARGE,
+              code: FilesDropzone.REJECTION_CODES.FILE_TOO_LARGE,
               message: `File size ${file.size} exceeds the maximum size of ${this.maxSize}.`
             });
           }
 
           if (fileIsSmallerThanMinSize) {
             errors.push({
-              code: FILE_TOO_SMALL,
+              code: FilesDropzone.REJECTION_CODES.FILE_TOO_SMALL,
               message: `File size ${file.size} is smaller than the minimum size of ${this.minSize}.`
             });
           }
@@ -592,39 +643,14 @@ class FilesDropzone extends HTMLElement {
       }
     }
 
-    this.dispatchEvent(
-      new CustomEvent(`${COMPONENT_NAME}-drop`, {
-        bubbles: true,
-        composed: true,
-        detail: {
-          acceptedFiles,
-          rejectedFiles
-        }
-      })
-    );
+    this.#emitEvent('drop', { acceptedFiles, rejectedFiles });
 
     if (acceptedFiles.length > 0) {
-      this.dispatchEvent(
-        new CustomEvent(`${COMPONENT_NAME}-drop-accepted`, {
-          bubbles: true,
-          composed: true,
-          detail: {
-            acceptedFiles
-          }
-        })
-      );
+      this.#emitEvent('drop-accepted', { acceptedFiles });
     }
 
     if (rejectedFiles.length > 0) {
-      this.dispatchEvent(
-        new CustomEvent(`${COMPONENT_NAME}-drop-rejected`, {
-          bubbles: true,
-          composed: true,
-          detail: {
-            rejectedFiles
-          }
-        })
-      );
+      this.#emitEvent('drop-rejected', { rejectedFiles });
     }
 
     if (this.#fileInput) {
@@ -636,11 +662,15 @@ class FilesDropzone extends HTMLElement {
    * Opens the file dialog programmatically.
    */
   openFileDialog() {
-    if (this.disabled) {
+    if (this.disabled || !this.#fileInput) {
       return;
     }
 
-    this.#fileInput?.click();
+    try {
+      this.#fileInput.showPicker();
+    } catch (err) {
+      this.#emitErrorEvent(FilesDropzone.ERROR_CODES.FILE_DIALOG_OPEN_FAILED, err);
+    }
   }
 
   /**

@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## v2.1.0 (2025-08-24)
+
+### Changed
+
+- Switch file dialog invocation to `HTMLInputElement.showPicker()` (replaces `.click()`).
+
+### Added
+
+- Emit `files-dropzone-error` when opening the file dialog fails (e.g., without a user activation gesture).
+- Include a code field (stable error identifier) in the `files-dropzone-error` event detail.
+- Expose `ERROR_CODES` and `REJECTION_CODES` as static properties on `FilesDropzone` class for consumer reference.
+
+### Fixed
+
+- On Firefox Android, clicking directly on default slotted text did not open the file dialog (`NotAllowedError`). The default slot content is now wrapped in a `<span>` element to ensure consistent user activation across browsers.
+
+### Maintenance
+
+- Centralize custom event dispatch in a helper method to reduce code duplication.
+- Update development dependencies.
+
 ## v2.0.1 (2024-08-22)
 
 - Replace parcel with esbuild for bundling.
