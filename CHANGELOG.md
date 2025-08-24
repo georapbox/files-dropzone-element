@@ -12,6 +12,10 @@
 - Include a code field (stable error identifier) in the `files-dropzone-error` event detail.
 - Expose `ERROR_CODES` and `REJECTION_CODES` as static properties on `FilesDropzone` class for consumer reference.
 
+### Fixed
+
+- On Firefox Android, clicking directly on default slotted text did not open the file dialog (`NotAllowedError`). The default slot content is now wrapped in a `<span>` element to ensure consistent user activation across browsers.
+
 ### Maintenance
 
 - Centralize custom event dispatch in a helper method to reduce code duplication.

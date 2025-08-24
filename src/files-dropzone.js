@@ -118,7 +118,7 @@ template.innerHTML = html`
   <input type="file" id="file-input" hidden />
 
   <div part="dropzone" class="dropzone" id="dropzone" tabindex="0" role="button" aria-disabled="false">
-    <slot>Drag 'n' drop files here, or click to select files</slot>
+    <slot><span>Drag 'n' drop files here, or click to select files</span></slot>
   </div>
 `;
 
