@@ -8,7 +8,7 @@
  */
 
 /**
- * A machine-readable error code.
+ * Stable identifier for error codes used in the `files-dropzone-error` event.
  *
  * @typedef {typeof FilesDropzone.ERROR_CODES[keyof typeof FilesDropzone.ERROR_CODES]} FilesDropzoneErrorCode
  */
@@ -17,12 +17,12 @@
  * The detail payload for the `files-dropzone-error` event.
  *
  * @typedef {Object} FilesDropzoneErrorDetail
- * @property {FilesDropzoneErrorCode} code - A machine-readable error code.
+ * @property {FilesDropzoneErrorCode} code - Stable identifier for the type of error that occurred.
  * @property {unknown} error - The underlying error object or value that triggered the event.
  */
 
 /**
- * Rejection code for individual files.
+ * Stable identifier for rejection codes used in the various drop-related events.
  *
  * @typedef {typeof FilesDropzone.REJECTION_CODES[keyof typeof FilesDropzone.REJECTION_CODES]} FilesDropzoneRejectionCode
  */
@@ -30,10 +30,12 @@
 import { isValidFile } from './utils/is-valid-file.js';
 import { getFilesFromEvent } from './utils/files-selector.js';
 
+const css = String.raw;
+const html = String.raw;
 const COMPONENT_NAME = 'files-dropzone';
 const template = document.createElement('template');
 
-const styles = /* css */ `
+const styles = css`
   *,
   *::before,
   *::after {
@@ -58,7 +60,7 @@ const styles = /* css */ `
     --dropzone-body-color: #3f3f46;
     --dropzone-body-color-dragover: var(--dropzone-body-color);
     --dropzone-body-color-hover: var(--dropzone-body-color-dragover);
-    --dropzone-focus-shadow-rgb: 49,132,253;
+    --dropzone-focus-shadow-rgb: 49, 132, 253;
     --dropzone-focus-box-shadow: 0 0 0 0.25rem rgba(var(--dropzone-focus-shadow-rgb), 0.5);
     --transition-duration: 0.2s; /* for backwards compatibility */
     --dropzone-transition-duration: var(--transition-duration);
@@ -75,7 +77,11 @@ const styles = /* css */ `
     color: var(--dropzone-body-color);
     text-align: center;
     cursor: pointer;
-    transition: border var(--dropzone-transition-duration) ease-in-out, background-color var(--dropzone-transition-duration) ease-in-out, color var(--dropzone-transition-duration) ease-in-out, box-shadow var(--dropzone-transition-duration) ease-in-out;
+    transition:
+      border var(--dropzone-transition-duration) ease-in-out,
+      background-color var(--dropzone-transition-duration) ease-in-out,
+      color var(--dropzone-transition-duration) ease-in-out,
+      box-shadow var(--dropzone-transition-duration) ease-in-out;
   }
 
   :host(:not([no-style])[disabled]) .dropzone {
@@ -104,12 +110,12 @@ const styles = /* css */ `
   }
 `;
 
-template.innerHTML = /* html */ `
+template.innerHTML = html`
   <style>
     ${styles}
   </style>
 
-  <input type="file" id="file-input" hidden>
+  <input type="file" id="file-input" hidden />
 
   <div part="dropzone" class="dropzone" id="dropzone" tabindex="0" role="button" aria-disabled="false">
     <slot>Drag 'n' drop files here, or click to select files</slot>
@@ -174,7 +180,7 @@ template.innerHTML = /* html */ `
  */
 class FilesDropzone extends HTMLElement {
   /**
-   * Central list of error codes dispatched by the `files-dropzone-error` event.
+   * Central list of error codes used in drop error event.
    * @readonly
    */
   static ERROR_CODES = /** @type {const} */ ({
@@ -434,7 +440,7 @@ class FilesDropzone extends HTMLElement {
   /**
    * Emit a standardized error event with typed detail.
    *
-   * @param {FilesDropzoneErrorCode} code - A machine-readable error code.
+   * @param {FilesDropzoneErrorCode} code - Stable identifier for the type of error that occurred.
    * @param {unknown} error - The underlying error that triggered the event.
    */
   #emitErrorEvent(code, error) {

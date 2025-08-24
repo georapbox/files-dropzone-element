@@ -114,8 +114,8 @@ Below are static properties exposed on the `FilesDropzone` class for consumer re
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| `ERROR_CODES` | Object | Static object of stable error identifiers used in `files-dropzone-error`. Properties: `FILE_DIALOG_OPEN_FAILED`, `FILE_INPUT_CHANGE_FAILED`, `DROP_EVENT_PROCESSING_FAILED`, `UNKNOWN_ERROR`. |
-| `REJECTION_CODES` | Object | Static object of stable identifiers used for file-rejection reasons. Properties : `TOO_MANY_FILES`, `FILE_TOO_LARGE`, `FILE_TOO_SMALL`, `INVALID_MIME_TYPE`. |
+| `ERROR_CODES` | Object | Static object of stable identifiers used in drop error event. Properties: `FILE_DIALOG_OPEN_FAILED`, `FILE_INPUT_CHANGE_FAILED`, `DROP_EVENT_PROCESSING_FAILED`, `UNKNOWN_ERROR`. |
+| `REJECTION_CODES` | Object | Static object of stable identifiers used for file rejection reasons. Properties : `TOO_MANY_FILES`, `FILE_TOO_LARGE`, `FILE_TOO_SMALL`, `INVALID_MIME_TYPE`. |
 
 ### Events
 
