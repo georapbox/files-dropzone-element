@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v2.1.1 (2025-08-26)
+
+### Fixed
+
+- Restored compatibility with browsers that do not support `HTMLInputElement.showPicker()` by falling back to programmatically clicking the hidden file input element.
+
 ## v2.1.0 (2025-08-24)
 
 ### Changed

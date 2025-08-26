@@ -1,6 +1,6 @@
 {
   "name": "@georapbox/files-dropzone-element",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "A custom element that creates a drag and drop zone for files",
   "main": "dist/files-dropzone.js",
   "module": "dist/files-dropzone.js",
