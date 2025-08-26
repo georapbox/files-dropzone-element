@@ -666,11 +666,23 @@ class FilesDropzone extends HTMLElement {
       return;
     }
 
-    try {
-      this.#fileInput.showPicker();
-    } catch (err) {
-      this.#emitErrorEvent(FilesDropzone.ERROR_CODES.FILE_DIALOG_OPEN_FAILED, err);
+    // In modern browsers, use the showPicker() method if available.
+    // This way we are able to detect if the file dialog was blocked by the browser
+    // (e.g. if the method was called outside a user gesture event).
+    if ('showPicker' in HTMLInputElement.prototype && typeof this.#fileInput.showPicker === 'function') {
+      try {
+        this.#fileInput.showPicker();
+      } catch (err) {
+        this.#emitErrorEvent(FilesDropzone.ERROR_CODES.FILE_DIALOG_OPEN_FAILED, err);
+      }
+      return;
     }
+
+    // Fallback for browsers that do not support showPicker().
+    // This may not work if the method is called outside a user gesture event.
+    // In such cases, the browser may block the file dialog from opening but
+    // most likely it won't throw an error rather just a warning in the console.
+    this.#fileInput.click();
   }
 
   /**
