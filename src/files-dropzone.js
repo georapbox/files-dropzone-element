@@ -137,14 +137,14 @@ template.innerHTML = html`
  * @property {boolean} autoFocus - Automatically focuses the dropzone when it's connected to the DOM.
  * @property {boolean} noStyle - Prevents the dropzone from applying any styling.
  *
- * @attribute {string} accept - Reflects the accept property.
- * @attribute {boolean} disabled - Reflects the disabled property.
- * @attribute {number} max-files - Reflects the maxFiles property.
- * @attribute {number} max-size - Reflects the maxSize property.
- * @attribute {number} min-size - Reflects the minSize property.
- * @attribute {boolean} multiple - Reflects the multiple property.
- * @attribute {boolean} auto-focus - Reflects the autoFocus property.
- * @attribute {boolean} no-style - Reflects the noStyle property.
+ * @attribute {string} accept - A comma-separated list of unique file type specifiers describing file types to allow.
+ * @attribute {boolean} disabled - Determines whether the dropzone is disabled.
+ * @attribute {number} max-files - The maximum number of files allowed to be dropped.
+ * @attribute {number} max-size - The maximum file size allowed in bytes.
+ * @attribute {number} min-size - The minimum file size allowed in bytes.
+ * @attribute {boolean} multiple - Allows multiple files to be dropped.
+ * @attribute {boolean} auto-focus - Automatically focuses the dropzone when it's connected to the DOM.
+ * @attribute {boolean} no-style - Prevents the dropzone from applying any styling.
  *
  * @slot - The default slot content of the dropzone.
  *
@@ -293,7 +293,8 @@ class FilesDropzone extends HTMLElement {
 
   /**
    * @type {string} - A comma-separated list of unique file type specifiers describing file types to allow.
-   * @attribute accept - Reflects the accept property.
+   * @attribute accept
+   * @default ''
    */
   get accept() {
     return this.getAttribute('accept') || '';
@@ -305,8 +306,8 @@ class FilesDropzone extends HTMLElement {
 
   /**
    * @type {boolean} - Determines whether the dropzone is disabled.
+   * @attribute disabled
    * @default false
-   * @attribute disabled - Reflects the disabled property.
    */
   get disabled() {
     return this.hasAttribute('disabled');
@@ -318,8 +319,8 @@ class FilesDropzone extends HTMLElement {
 
   /**
    * @type {number} - The maximum number of files allowed to be dropped.
+   * @attribute max-files
    * @default Infinity
-   * @attribute max-files - Reflects the maxFiles property.
    */
   get maxFiles() {
     const num = Number(this.getAttribute('max-files')) || 0;
@@ -337,8 +338,8 @@ class FilesDropzone extends HTMLElement {
 
   /**
    * @type {number} - The maximum file size allowed in bytes.
+   * @attribute max-size
    * @default Infinity
-   * @attribute max-size - Reflects the maxSize property.
    */
   get maxSize() {
     const value = this.getAttribute('max-size');
@@ -358,8 +359,8 @@ class FilesDropzone extends HTMLElement {
 
   /**
    * @type {number} - The minimum file size allowed in bytes.
+   * @attribute min-size
    * @default 0
-   * @attribute min-size - Reflects the minSize property.
    */
   get minSize() {
     const value = this.getAttribute('min-size');
@@ -379,8 +380,8 @@ class FilesDropzone extends HTMLElement {
 
   /**
    * @type {boolean} - Allows multiple files to be dropped.
+   * @attribute multiple
    * @default false
-   * @attribute multiple - Reflects the multiple property.
    */
   get multiple() {
     return this.hasAttribute('multiple');
@@ -392,8 +393,8 @@ class FilesDropzone extends HTMLElement {
 
   /**
    * @type {boolean} - Automatically focuses the dropzone when it's connected to the DOM.
+   * @attribute auto-focus
    * @default false
-   * @attribute auto-focus - Reflects the autoFocus property.
    */
   get autoFocus() {
     return this.hasAttribute('auto-focus');
@@ -405,8 +406,8 @@ class FilesDropzone extends HTMLElement {
 
   /**
    * @type {boolean} - Prevents the dropzone from applying any styling.
+   * @attribute no-style
    * @default false
-   * @attribute no-style - Reflects the noStyle property.
    */
   get noStyle() {
     return this.hasAttribute('no-style');
