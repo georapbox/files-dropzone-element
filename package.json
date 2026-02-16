@@ -1,12 +1,13 @@
 {
   "name": "@georapbox/files-dropzone-element",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "A custom element that creates a drag and drop zone for files",
   "main": "dist/files-dropzone.js",
   "module": "dist/files-dropzone.js",
   "unpkg": "dist/files-dropzone.js",
   "type": "module",
   "types": "dist/files-dropzone.d.ts",
+  "customElements": "dist/custom-elements.json",
   "files": [
     "/src",
     "/dist"
@@ -24,8 +25,9 @@
     "start": "npm-run-all --parallel \"serve:dev -- {1}\" dev",
     "build:esbuild": "node ./scripts/build.mjs",
     "build": "npm-run-all clean build:esbuild",
+    "analyze": "custom-elements-manifest analyze",
     "clean": "rimraf dist",
-    "prepublishOnly": "npm-run-all clean lint test build types"
+    "prepublishOnly": "npm-run-all clean lint test build types analyze"
   },
   "keywords": [
     "custom element",
@@ -46,6 +48,7 @@
   },
   "homepage": "https://github.com/georapbox/files-dropzone-element#readme",
   "devDependencies": {
+    "@custom-elements-manifest/analyzer": "~0.11.0",
     "@eslint/js": "~9.34.0",
     "@esm-bundle/chai": "~4.3.4",
     "@open-wc/testing": "~4.0.0",
