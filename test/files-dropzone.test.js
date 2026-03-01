@@ -7,6 +7,7 @@ FilesDropzone.defineCustomElement();
 describe('files-dropzone', () => {
   afterEach(() => {
     fixtureCleanup();
+    sinon.restore();
   });
 
   describe('accessibility', () => {
@@ -343,7 +344,7 @@ describe('files-dropzone', () => {
       const spy = sinon.spy();
       el.addEventListener('files-dropzone-dragenter', spy);
       dropzone.dispatchEvent(new DragEvent('dragenter'));
-      expect(spy).to.have.been.calledOnce;
+      sinon.assert.calledOnce(spy);
     });
 
     it('it does not fire files-dropzone-dragenter event when dragenter event is fired and disabled is set', async () => {
@@ -352,7 +353,7 @@ describe('files-dropzone', () => {
       const spy = sinon.spy();
       el.addEventListener('files-dropzone-dragenter', spy);
       dropzone.dispatchEvent(new DragEvent('dragenter'));
-      expect(spy).to.not.have.been.called;
+      sinon.assert.notCalled(spy);
     });
 
     // files-dropzone-dragover
@@ -362,7 +363,7 @@ describe('files-dropzone', () => {
       const spy = sinon.spy();
       el.addEventListener('files-dropzone-dragover', spy);
       dropzone.dispatchEvent(new DragEvent('dragover', { dataTransfer: new DataTransfer() }));
-      expect(spy).to.have.been.calledOnce;
+      sinon.assert.calledOnce(spy);
     });
 
     it('it does not fire files-dropzone-dragover event when dragover event is fired and disabled is set', async () => {
@@ -371,7 +372,7 @@ describe('files-dropzone', () => {
       const spy = sinon.spy();
       el.addEventListener('files-dropzone-dragover', spy);
       dropzone.dispatchEvent(new DragEvent('dragover', { dataTransfer: new DataTransfer() }));
-      expect(spy).to.not.have.been.called;
+      sinon.assert.notCalled(spy);
     });
 
     // files-dropzone-dragleave
@@ -381,7 +382,7 @@ describe('files-dropzone', () => {
       const spy = sinon.spy();
       el.addEventListener('files-dropzone-dragleave', spy);
       dropzone.dispatchEvent(new DragEvent('dragleave'));
-      expect(spy).to.have.been.calledOnce;
+      sinon.assert.calledOnce(spy);
     });
 
     it('it does not fire files-dropzone-dragleave event when dragleave event is fired and disabled is set', async () => {
@@ -390,7 +391,7 @@ describe('files-dropzone', () => {
       const spy = sinon.spy();
       el.addEventListener('files-dropzone-dragleave', spy);
       dropzone.dispatchEvent(new DragEvent('dragleave'));
-      expect(spy).to.not.have.been.called;
+      sinon.assert.notCalled(spy);
     });
   });
 });
