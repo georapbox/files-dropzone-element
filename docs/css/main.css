@@ -1,5 +1,4 @@
 :root {
-  --body-max-width: 1024px;
   --success-text: #146c43;
   --danger-text: #b02a37;
 }
@@ -136,12 +135,29 @@ form input[type="checkbox"] {
   color: var(--danger-text);
 }
 
+.dropped-files__file-size {
+  color: var(--text-main);
+}
+
 .dropped-files__list-item::marker {
   color: var(--text-main);
 }
 
 .dropped-files__list-item:nth-child(odd) {
   background-color: var(--background);
+}
+
+.dropped-files__errors {
+  list-style-type: disc;
+  margin: 0.25rem 0 0;
+  padding-left: 1.25rem;
+  color: var(--text-main);
+  font-size: 0.8rem;
+  opacity: 0.9;
+}
+
+.dropped-files__errors li {
+  padding-block: 0.1rem;
 }
 
 .dropped-files__show-all {

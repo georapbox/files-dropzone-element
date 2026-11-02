@@ -4,7 +4,7 @@ const componentUrl = isLocalhost ? '../../dist/files-dropzone.js' : '../lib/file
 
 try {
   const { FilesDropzone } = await import(componentUrl);
-  FilesDropzone.defineCustomElement();
+  FilesDropzone.define();
 } catch (err) {
   console.error(err);
 }
@@ -23,7 +23,7 @@ function createCodePreview(dropzone) {
   return dropzone.outerHTML.replace(/=""/g, '');
 }
 
-function createFilesList(files, status = 'accepted') {
+function createFilesList(files, status) {
   if (!files.length) {
     return;
   }
@@ -46,9 +46,31 @@ function createFilesList(files, status = 'accepted') {
 
     const listItem = Object.assign(document.createElement('li'), {
       className: `dropped-files__list-item dropped-files__list-item--${status}`,
-      hidden: index >= INITIAL_FILES_COUNT,
-      innerHTML: /* html */ `${file.name} <span style="color: var(--text-main);">- ${file.size} bytes<span>`
+      hidden: index >= INITIAL_FILES_COUNT
     });
+
+    const fileInfo = document.createElement('div');
+    fileInfo.append(document.createTextNode(file.name));
+
+    const fileSize = document.createElement('span');
+    fileSize.className = 'dropped-files__file-size';
+    fileSize.textContent = ` - ${file.size} bytes`;
+
+    fileInfo.appendChild(fileSize);
+    listItem.appendChild(fileInfo);
+
+    if (status === 'rejected') {
+      const errorsList = document.createElement('ul');
+      errorsList.className = 'dropped-files__errors';
+
+      item.errors.forEach(({ message }) => {
+        const errorItem = document.createElement('li');
+        errorItem.textContent = message;
+        errorsList.appendChild(errorItem);
+      });
+
+      listItem.appendChild(errorsList);
+    }
 
     list.appendChild(listItem);
   });
@@ -101,8 +123,8 @@ form.addEventListener('input', evt => {
   window.hljs.highlightElement(codePreview);
 });
 
-document.addEventListener('files-dropzone-drop', evt => {
-  console.log('files-dropzone-drop ->', evt.detail);
+document.addEventListener('dropzone-drop', evt => {
+  console.log('dropzone-drop ->', evt.detail);
 
   const { acceptedFiles, rejectedFiles } = evt.detail;
   const acceptedFilesList = createFilesList(acceptedFiles, 'accepted');
@@ -119,8 +141,8 @@ document.addEventListener('files-dropzone-drop', evt => {
   }
 });
 
-document.addEventListener('files-dropzone-error', evt => {
-  console.log('files-dropzone-error ->', evt.detail.error);
+document.addEventListener('dropzone-error', evt => {
+  console.log('dropzone-error ->', evt.detail.error);
 });
 
 openFileDialogBtn.addEventListener('click', () => {
