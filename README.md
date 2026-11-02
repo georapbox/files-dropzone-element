@@ -9,42 +9,134 @@
 
 A custom element that creates a drag and drop zone for files.
 
-Note that the element does not provide any functionality for uploading files. Once files are dropped, you are free to process them however you like. 
+> [!NOTE]
+> The element does not provide any functionality for uploading files.
+> Once files are dropped, you are free to process them however you like. 
 
 [API documentation](#api) &bull; [Demo][demo]
 
-## Install
+## Usage
+
+### Installation
 
 ```sh
 $ npm install --save @georapbox/files-dropzone-element
 ```
 
-## Usage
+### Importing the component
 
-### Script
+By default, the package exports the element class without registering it. This lets the application decide when the custom element is defined.
 
-```js
-import { FilesDropzone } from './node_modules/@georapbox/files-dropzone-element/dist/files-dropzone.js';
-
-// Manually define the element.
-FilesDropzone.defineCustomElement();
-```
-
-Alternatively, you can import the automatically defined custom element.
+#### Manual definition
 
 ```js
-import './node_modules/@georapbox/files-dropzone-element/dist/files-dropzone-defined.js';
+import { FilesDropzone } from '@georapbox/files-dropzone-element';
+
+// Define using the default tag name
+FilesDropzone.define();
 ```
 
-### Markup
+#### Auto-defined (convenience)
+
+If you don't need control over registration, you can import the pre-defined build which immediately registers `<files-dropzone>`.
+
+```js
+import '@georapbox/files-dropzone-element/define';
+```
+
+### Using the component in your HTML
 
 ```html
 <files-dropzone accept="image/*,.txt,application/pdf" multiple></files-dropzone>
 ```
 
-### Style
+### Component styling
 
 By default, the component comes with basic styling. However, you can customise the styles of the various elements of the component using either [CSS Parts](#css-parts) or [CSS Custom Properties](#css-custom-properties).
+
+### Complete example
+
+This example demonstrates how to customize the dropzone's appearance and handle accepted and rejected files.
+
+#### Markup
+
+```html
+<files-dropzone accept="image/png,image/jpeg" multiple>
+  <span>Drag 'n' drop files here, or click to select files</span>
+  <small>Accepted file types: <code>png</code>, <code>jpg</code></small>
+</files-dropzone>
+
+<h3>Accepted files</h3>
+<ul id="accepted-files"></ul>
+
+<h3>Rejected files</h3>
+<ul id="rejected-files"></ul>
+```
+
+#### Styling
+
+Customize the component using CSS custom properties and the `dropzone` CSS part.
+
+```css
+files-dropzone {
+  --dropzone-border-color: #dbdbdb;
+  --dropzone-border-color-dragover: #0096bfab;
+  --dropzone-background-color: #f7f7f7;
+  --dropzone-background-color-dragover: #efefef;
+  --dropzone-body-color: #363636;
+  --dropzone-body-color-dragover: #363636;
+}
+
+files-dropzone::part(dropzone) {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  files-dropzone {
+    --dropzone-border-color: #526980;
+    --dropzone-border-color-dragover: #0096bfab;
+    --dropzone-background-color: #1a242f;
+    --dropzone-background-color-dragover: #161f27;
+    --dropzone-body-color: #dbdbdb;
+    --dropzone-body-color-dragover: #dbdbdb;
+  }
+}
+```
+
+### Handling events
+
+Listen for the `dropzone-drop` event to access accepted and rejected files.
+
+```js
+import { FilesDropzone } from 'https://unpkg.com/@georapbox/files-dropzone-element';
+
+FilesDropzone.define();
+
+const drozone = document.querySelector('files-dropzone');
+const acceptedFilesList = document.getElementById('accepted-files');
+const rejectedFilesList = document.getElementById('rejected-files');
+
+dropzone.addEventListener('dropzone-drop', evt => {
+  const { acceptedFiles, rejectedFiles } = evt.detail;
+
+  acceptedFilesList.replaceChildren();
+  rejectedFilesList.replaceChildren();
+
+  acceptedFiles.forEach(file => {
+    const li = document.createElement('li');
+    li.textContent = `${file.name} - ${file.size} bytes`;
+    acceptedFilesList.appendChild(li);
+  });
+
+  rejectedFiles.forEach(({ file, errors }) => {
+    const li = document.createElement('li');
+    li.textContent = `${file.name} - ${file.size} bytes (${errors.map(error => error.message).join(', ')})`;
+    rejectedFilesList.appendChild(li);
+  });
+});
+```
 
 ## API
 
@@ -103,10 +195,10 @@ By default, the component comes with basic styling. However, you can customise t
 
 | Name | Type | Description | Arguments |
 | ---- | ---- | ----------- | --------- |
-| `defineCustomElement` | Static | Defines/registers the custom element with the name provided. If no name is provided, the default name is used. The method checks if the element is already defined, hence will skip trying to redefine it. | elementName='files-dropzone' |
-| `openFileDialog`<sup>1</sup> | Instance | Opens the native file dialog programmatically. The method will fail silently if the dropzone is disabled. Note that most browsers require a direct user interaction with the document, to open the file dialog, for security reasons. Therefore, if you are trying to call this method asynchronously, there's a good chance it's going to be blocked by the browser. For example in Safari 15.x, invoking this method inside a `setTimeout` with more that 1000ms delay, the dialog will not open. | - |
+| `define` | Static | Registers the custom element with the browser's CustomElementRegistry unless it has already been defined. | `tagName='files-dropzone'` |
+| `openFileDialog` | Instance | Opens the native file dialog programmatically. The method will fail silently if the dropzone is disabled. Note that most browsers require a direct user interaction with the document, to open the file dialog, for security reasons. Therefore, if you are trying to call this method asynchronously, there's a good chance it's going to be blocked by the browser. For example in Safari 15.x, invoking this method inside a `setTimeout` with more that 1000ms delay, the dialog will not open. | - |
 
-<sup>1</sup> Instance methods are only available after the component has been defined. To ensure the component is defined, you can use `whenDefined` method of the `CustomElementRegistry` interface, eg `customElements.whenDefined('files-dropzone').then(() => { /* call methods here */ });`
+Instance methods are only available after the custom element has been defined. Use [`customElements.whenDefined()`](https://developer.mozilla.org/docs/Web/API/CustomElementRegistry/whenDefined) to ensure the element is registered before calling these methods.
 
 ### Static Properties
 
@@ -119,93 +211,15 @@ Below are static properties exposed on the `FilesDropzone` class for consumer re
 
 ### Events
 
-| Name | Description | Event Detail |
-| ---- | ----------- | ------------ |
-| `files-dropzone-drop` | Emitted when one or more files are selected, either by using the native file dialog or dropping files in the dropzone area. The event is emitted regardless if the dropped files are accepted or rejected. Files are accepted or rejected based on the `accept`, `max-files`, `max-size`, `min-size` and `multiple` attributes. | `{acceptedFiles: Array<File>, rejectedFiles: Array<{file: File, errors: Array<{code: FilesDropzoneRejectionCode, message: string}>}>}` |
-| `files-dropzone-drop-accepted` | Emitted when one or more dropped files are accepted. If no files are accepted, the event is not emitted at all. | `{acceptedFiles: Array<File>}` |
-| `files-dropzone-drop-rejected` | Emitted when one or more dropped files are rejected. If no files are rejected, the event is not emitted at all. | `{rejectedFiles: Array<{file: File, errors: Array<{code: FilesDropzoneRejectionCode, message: string}>}>}` |
-| `files-dropzone-dragenter` | Emitted on `dragenter` event. The event is not emitted if `disabled` attribute is set. | - |
-| `files-dropzone-dragover` | Emitted on `dragover` event. The event is not emitted if `disabled` attribute is set. | - |
-| `files-dropzone-dragleave` | Emitted on `dragleave` event. The event is not emitted if `disabled` attribute is set. | - |
-| `files-dropzone-error` | Emitted if there is any error in the process of reading dropped files or directories. | `{error: unknown, code: FilesDropzoneErrorCode}` |
-
-## Usage example
-
-Below is a basic usage example of the custom element that also demonstrates styles customization.
-
-```html
-<head>
-  <style>
-    files-dropzone {
-      --dropzone-border-color: #dbdbdb;
-      --dropzone-border-color-dragover: #0096bfab;
-      --dropzone-background-color: #f7f7f7;
-      --dropzone-background-color-dragover: #efefef;
-      --dropzone-body-color: #363636;
-      --dropzone-body-color-dragover: #363636;
-    }
-
-    files-dropzone::part(dropzone) {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      files-dropzone {
-        --dropzone-border-color: #526980;
-        --dropzone-border-color-dragover: #0096bfab;
-        --dropzone-background-color: #1a242f;
-        --dropzone-background-color-dragover: #161f27;
-        --dropzone-body-color: #dbdbdb;
-        --dropzone-body-color-dragover: #dbdbdb;
-      }
-    }
-  </style>
-</head>
-
-<body>
-  <files-dropzone accept="image/png,image/jpg" multiple>
-    <span>Drag 'n' drop files here, or click to select files</span>
-    <small>Accepted file types: <code>png</code>, <code>jpg</code></small>
-  </files-dropzone>
-
-  <h3>Accepted files</h3>
-  <ul id="accepted-files"></ul>
-
-  <h3>Rejected files</h3>
-  <ul id="rejected-files"></ul>
-
-  <script type="module">
-    import { FilesDropzone } from 'https://unpkg.com/@georapbox/files-dropzone-element';
-
-    FilesDropzone.defineCustomElement();
-
-    const drozone = document.querySelector('files-dropzone');
-    const acceptedFilesList = document.getElementById('accepted-files');
-    const rejectedFilesList = document.getElementById('rejected-files');
-
-    dropzone.addEventListener('files-dropzone-drop', evt => {
-      const { acceptedFiles, rejectedFiles } = evt.detail;
-
-      acceptedFilesList.replaceChildren();
-      rejectedFilesList.replaceChildren();
-
-      acceptedFiles.forEach(file => {
-        const li = document.createElement('li');
-        li.textContent = `${file.name} - ${file.size} bytes`;
-        acceptedFilesList.appendChild(li);
-      });
-
-      rejectedFiles.forEach(file => {
-        const li = document.createElement('li');
-        li.textContent = `${file.name} - ${file.size} bytes`;
-        rejectedFilesList.appendChild(li);
-      });
-    });
-  </script>
-</body>  
-```
+| Name | Type | Description | Event Detail |
+| ---- | ---- | ----------- | ------------ |
+| `dropzone-drop` | CustomEvent | Dispatched when one or more files are selected, either by using the native file dialog or dropping files in the dropzone area. The event is emitted regardless if the dropped files are accepted or rejected. Files are accepted or rejected based on the `accept`, `max-files`, `max-size`, `min-size` and `multiple` attributes. | `{acceptedFiles: Array<File>, rejectedFiles: Array<{file: File, errors: Array<{code: FilesDropzoneRejectionCode, message: string}>}>}` |
+| `dropzone-drop-accepted` | CustomEvent | Dispatched when one or more dropped files are accepted. If no files are accepted, the event is not emitted at all. | `{acceptedFiles: Array<File>}` |
+| `dropzone-drop-rejected` | CustomEvent | Dispatched when one or more dropped files are rejected. If no files are rejected, the event is not emitted at all. | `{rejectedFiles: Array<{file: File, errors: Array<{code: FilesDropzoneRejectionCode, message: string}>}>}` |
+| `dropzone-dragenter` | Event | Dispatched on `dragenter` event. The event is not emitted if `disabled` attribute is set. | - |
+| `dropzone-dragover` | Event | Dispatched on `dragover` event. The event is not emitted if `disabled` attribute is set. | - |
+| `dropzone-dragleave` | Event | Dispatched on `dragleave` event. The event is not emitted if `disabled` attribute is set. | - |
+| `dropzone-error` | CustomEvent | Dispatched if there is any error in the process of reading dropped files or directories. | `{error: unknown, code: FilesDropzoneErrorCode}` |
 
 ## Changelog
 
@@ -215,7 +229,7 @@ For API updates and breaking changes, check the [CHANGELOG][changelog].
 
 ### Prerequisites
 
-The project requires `Node.js` and `npm` to be installed on your environment. Preferrably, use [nvm](https://github.com/nvm-sh/nvm) Node Version Manager and use the version of Node.js specified in the `.nvmrc` file by running `nvm use`.
+The project requires `Node.js` and `npm` to be installed on your environment. Preferably, use [nvm](https://github.com/nvm-sh/nvm) Node Version Manager and use the version of Node.js specified in the `.nvmrc` file by running `nvm use`.
 
 ### Install dependencies
 

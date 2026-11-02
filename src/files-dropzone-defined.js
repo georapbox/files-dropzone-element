@@ -1,5 +1,5 @@
 import { FilesDropzone } from './files-dropzone.js';
 
-FilesDropzone.defineCustomElement();
+FilesDropzone.define();
 
 export { FilesDropzone };
