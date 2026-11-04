@@ -46,13 +46,15 @@ import '@georapbox/files-dropzone-element/define';
 
 ### Using the component in your HTML
 
+Once registered, you can use the <files-dropzone> element in your HTML:
+
 ```html
 <files-dropzone accept="image/*,.txt,application/pdf" multiple></files-dropzone>
 ```
 
 ### Component styling
 
-By default, the component comes with basic styling. However, you can customise the styles of the various elements of the component using either [CSS Parts](#css-parts) or [CSS Custom Properties](#css-custom-properties).
+The component comes with default styling that can be customized using [CSS Parts](#css-parts) and [CSS Custom Properties](#css-custom-properties).
 
 ### Complete example
 
