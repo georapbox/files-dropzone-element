@@ -2,7 +2,7 @@
  * @georapbox/files-dropzone-element
  * A custom element that creates a drag and drop zone for files
  *
- * @version 3.0.0
+ * @version 3.0.1
  * @homepage https://github.com/georapbox/files-dropzone-element#readme
  * @author George Raptis <georapbox@gmail.com>
  * @license MIT
