@@ -1,7 +1,7 @@
 import { expect } from '@open-wc/testing';
-import { isValidFile } from '../src/utils/is-valid-file.js';
+import { isValidFile } from '../src/is-valid-file.js';
 
-describe('files-dropzone/utils/is-valid-file', () => {
+describe('files-dropzone/is-valid-file', () => {
   it('file is valid if no file type specifiers are provided', async () => {
     const file = new File(['foo'], 'foo.txt', {
       type: 'text/plain'

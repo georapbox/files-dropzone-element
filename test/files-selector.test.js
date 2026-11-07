@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { getFilesFromEvent } from '../src/utils/files-selector.js';
+import { getFilesFromEvent } from '../src/files-selector.js';
 
 function createFile(name, size, type) {
   const file = new File([], name, { type });
@@ -44,7 +44,7 @@ function createFileList(files = []) {
   };
 }
 
-describe('files-dropzone/utils/files-selector', () => {
+describe('files-dropzone/files-selector', () => {
   it('should return an empty array if no files are selected', async () => {
     const event = createDataTransferWithFiles([]);
     expect(await getFilesFromEvent(event)).to.be.empty;

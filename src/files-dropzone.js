@@ -20,8 +20,8 @@
  * @typedef {typeof FilesDropzone.REJECTION_CODES[keyof typeof FilesDropzone.REJECTION_CODES]} FilesDropzoneRejectionCode
  */
 
-import { isValidFile } from './utils/is-valid-file.js';
-import { getFilesFromEvent } from './utils/files-selector.js';
+import { isValidFile } from './is-valid-file.js';
+import { getFilesFromEvent } from './files-selector.js';
 
 const css = String.raw;
 const html = String.raw;
