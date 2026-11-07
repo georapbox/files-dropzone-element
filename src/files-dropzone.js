@@ -1,20 +1,13 @@
 // @ts-check
 
 /**
- * Represents a value that may be of type T, or null.
- *
- * @template T
- * @typedef {T | null} Nullable
- */
-
-/**
- * Stable identifier for error codes used in the `files-dropzone-error` event.
+ * Stable identifier for error codes used in the `dropzone-error` event.
  *
  * @typedef {typeof FilesDropzone.ERROR_CODES[keyof typeof FilesDropzone.ERROR_CODES]} FilesDropzoneErrorCode
  */
 
 /**
- * The detail payload for the `files-dropzone-error` event.
+ * The detail payload for the `dropzone-error` event.
  *
  * @typedef {Object} FilesDropzoneErrorDetail
  * @property {FilesDropzoneErrorCode} code - Stable identifier for the type of error that occurred.
@@ -27,12 +20,11 @@
  * @typedef {typeof FilesDropzone.REJECTION_CODES[keyof typeof FilesDropzone.REJECTION_CODES]} FilesDropzoneRejectionCode
  */
 
-import { isValidFile } from './utils/is-valid-file.js';
-import { getFilesFromEvent } from './utils/files-selector.js';
+import { isValidFile } from './is-valid-file.js';
+import { getFilesFromEvent } from './files-selector.js';
 
 const css = String.raw;
 const html = String.raw;
-const COMPONENT_NAME = 'files-dropzone';
 const template = document.createElement('template');
 
 const styles = css`
@@ -126,7 +118,7 @@ template.innerHTML = html`
  * @summary A custom element that allows users to drag and drop files into it.
  * @documentation https://github.com/georapbox/files-dropzone-element
  *
- * @tagname files-dropzone - This is the default tag name, unless overridden by the `defineCustomElement` method.
+ * @tagname files-dropzone - This is the default tag name, unless overridden by the `define` method.
  *
  * @property {string} accept - A comma-separated list of unique file type specifiers describing file types to allow.
  * @property {boolean} disabled - Determines whether the dropzone is disabled.
@@ -167,15 +159,15 @@ template.innerHTML = html`
  * @cssproperty --dropzone-focus-box-shadow - The box shadow of the dropzone when focused.
  * @cssproperty --dropzone-transition-duration - The transition's duration for the dropzone area.
  *
- * @event files-dropzone-drop - Fired when files are dropped.
- * @event files-dropzone-drop-accepted - Fired when files dropped files are accepted.
- * @event files-dropzone-drop-rejected - Fired when files dropped files are rejected.
- * @event files-dropzone-dragenter - Fired when files are dragged into the dropzone.
- * @event files-dropzone-dragover - Fired when files are dragged over the dropzone.
- * @event files-dropzone-dragleave - Fired when files are dragged out of the dropzone.
- * @event files-dropzone-error - Fired when there is any error in the process of reading dropped files or directories.
+ * @event dropzone-drop - Dispatched when files are dropped.
+ * @event dropzone-drop-accepted - Dispatched when files dropped files are accepted.
+ * @event dropzone-drop-rejected - Dispatched when files dropped files are rejected.
+ * @event dropzone-dragenter - Dispatched when files are dragged into the dropzone.
+ * @event dropzone-dragover - Dispatched when files are dragged over the dropzone.
+ * @event dropzone-dragleave - Dispatched when files are dragged out of the dropzone.
+ * @event dropzone-error - Dispatched when there is any error in the process of reading dropped files or directories.
  *
- * @method defineCustomElement - Static method. Defines a custom element with the given name.
+ * @method define - Static method. Registers the custom element with the browser's CustomElementRegistry unless it has already been defined.
  * @method openFileDialog - Instance method. Opens the file dialog programmatically.
  */
 class FilesDropzone extends HTMLElement {
@@ -201,10 +193,10 @@ class FilesDropzone extends HTMLElement {
     INVALID_MIME_TYPE: 'INVALID_MIME_TYPE'
   });
 
-  /** @type {Nullable<HTMLInputElement>} */
+  /** @type {HTMLInputElement | null} */
   #fileInput = null;
 
-  /** @type {Nullable<HTMLElement>} */
+  /** @type {HTMLElement | null} */
   #dropzoneEl = null;
 
   constructor() {
@@ -216,7 +208,7 @@ class FilesDropzone extends HTMLElement {
     }
 
     if (this.shadowRoot) {
-      this.#fileInput = /** @type {Nullable<HTMLInputElement>} */ (this.shadowRoot.getElementById('file-input'));
+      this.#fileInput = /** @type {HTMLInputElement | null} */ (this.shadowRoot.getElementById('file-input'));
       this.#dropzoneEl = this.shadowRoot.getElementById('dropzone');
     }
   }
@@ -418,37 +410,19 @@ class FilesDropzone extends HTMLElement {
   }
 
   /**
-   * Emit a custom event with the given name and detail.
+   * Dispatches an event, using CustomEvent when detail is provided.
    *
-   * @template D
-   * @param {string} name - The name of the event.
-   * @param {D} [detail] - The detail payload of the event.
-   * @param {CustomEventInit<D>} [init] - Override the default event initialization options.
-   * @returns {boolean} - Returns false if at least one event listener called `preventDefault()`, otherwise true.
+   * @template T
+   * @param {string} type - The event type.
+   * @param {T} [detail] - Optional event detail.
+   * @param {{ cancelable?: boolean }} [options] - Event options.
+   * @returns {boolean} Whether the event was not canceled.
    */
-  #emitEvent(name, detail, init) {
-    const options = {
-      bubbles: true,
-      composed: true,
-      cancelable: false,
-      ...init,
-      detail
-    };
-    const evt = new CustomEvent(`${COMPONENT_NAME}-${name}`, options);
-    return this.dispatchEvent(evt);
-  }
+  #emit(type, detail, { cancelable = false } = {}) {
+    const options = { bubbles: true, composed: true, cancelable };
+    const event = detail === undefined ? new Event(type, options) : new CustomEvent(type, { ...options, detail });
 
-  /**
-   * Emit a standardized error event with typed detail.
-   *
-   * @param {FilesDropzoneErrorCode} code - Stable identifier for the type of error that occurred.
-   * @param {unknown} error - The underlying error that triggered the event.
-   */
-  #emitErrorEvent(code, error) {
-    /** @type {FilesDropzoneErrorDetail} */
-    const detail = { code, error };
-
-    this.#emitEvent('error', detail);
+    return this.dispatchEvent(event);
   }
 
   /**
@@ -460,7 +434,10 @@ class FilesDropzone extends HTMLElement {
     try {
       this.#handleFilesSelect(await getFilesFromEvent(evt));
     } catch (err) {
-      this.#emitErrorEvent(FilesDropzone.ERROR_CODES.FILE_INPUT_CHANGE_FAILED, err);
+      this.#emit('dropzone-error', {
+        code: FilesDropzone.ERROR_CODES.FILE_INPUT_CHANGE_FAILED,
+        error: err
+      });
     }
   };
 
@@ -472,7 +449,7 @@ class FilesDropzone extends HTMLElement {
       return;
     }
 
-    this.#emitEvent('dragenter');
+    this.#emit('dropzone-dragenter');
   };
 
   /**
@@ -495,7 +472,7 @@ class FilesDropzone extends HTMLElement {
       this.#dropzoneEl.part.add('dropzone--dragover');
     }
 
-    this.#emitEvent('dragover');
+    this.#emit('dropzone-dragover');
   };
 
   /**
@@ -511,7 +488,7 @@ class FilesDropzone extends HTMLElement {
       this.#dropzoneEl.part.remove('dropzone--dragover');
     }
 
-    this.#emitEvent('dragleave');
+    this.#emit('dropzone-dragleave');
   };
 
   /**
@@ -534,7 +511,10 @@ class FilesDropzone extends HTMLElement {
     try {
       this.#handleFilesSelect(await getFilesFromEvent(evt));
     } catch (err) {
-      this.#emitErrorEvent(FilesDropzone.ERROR_CODES.DROP_EVENT_PROCESSING_FAILED, err);
+      this.#emit('dropzone-error', {
+        code: FilesDropzone.ERROR_CODES.DROP_EVENT_PROCESSING_FAILED,
+        error: err
+      });
     }
   };
 
@@ -644,14 +624,14 @@ class FilesDropzone extends HTMLElement {
       }
     }
 
-    this.#emitEvent('drop', { acceptedFiles, rejectedFiles });
+    this.#emit('dropzone-drop', { acceptedFiles, rejectedFiles });
 
     if (acceptedFiles.length > 0) {
-      this.#emitEvent('drop-accepted', { acceptedFiles });
+      this.#emit('dropzone-drop-accepted', { acceptedFiles });
     }
 
     if (rejectedFiles.length > 0) {
-      this.#emitEvent('drop-rejected', { rejectedFiles });
+      this.#emit('dropzone-drop-rejected', { rejectedFiles });
     }
 
     if (this.#fileInput) {
@@ -674,7 +654,10 @@ class FilesDropzone extends HTMLElement {
       try {
         this.#fileInput.showPicker();
       } catch (err) {
-        this.#emitErrorEvent(FilesDropzone.ERROR_CODES.FILE_DIALOG_OPEN_FAILED, err);
+        this.#emit('dropzone-error', {
+          code: FilesDropzone.ERROR_CODES.FILE_DIALOG_OPEN_FAILED,
+          error: err
+        });
       }
       return;
     }
@@ -696,10 +679,9 @@ class FilesDropzone extends HTMLElement {
    * @param {'accept' | 'disabled' | 'maxFiles' | 'maxSize' | 'minSize' | 'multiple' | 'autoFocus' | 'noStyle'} prop - The property name to upgrade.
    */
   #upgradeProperty(prop) {
-    /** @type {any} */
-    const instance = this;
+    const instance = /** @type {HTMLElement & Record<string, unknown>} */ (this);
 
-    if (Object.prototype.hasOwnProperty.call(instance, prop)) {
+    if (Object.hasOwn(instance, prop)) {
       const value = instance[prop];
       delete instance[prop];
       instance[prop] = value;
@@ -707,18 +689,16 @@ class FilesDropzone extends HTMLElement {
   }
 
   /**
-   * Defines a custom element with the given name.
-   * The name must contain a dash (-).
+   * Registers the custom element with the browser's CustomElementRegistry unless
+   * it has already been defined.
    *
-   * @param {string} [elementName='files-dropzone'] - The name of the custom element.
-   * @example
-   *
-   * FilesDropzone.defineCustomElement('my-dropzone');
+   * @param {string} [tagName='files-dropzone'] - The tag name to use for the custom element.
    */
-  static defineCustomElement(elementName = COMPONENT_NAME) {
-    if (typeof window !== 'undefined' && !window.customElements.get(elementName)) {
-      window.customElements.define(elementName, FilesDropzone);
+  static define(tagName = 'files-dropzone') {
+    if (typeof window === 'undefined' || window.customElements.get(tagName)) {
+      return;
     }
+    window.customElements.define(tagName, FilesDropzone);
   }
 }
 

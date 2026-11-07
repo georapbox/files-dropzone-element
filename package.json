@@ -1,30 +1,38 @@
 {
   "name": "@georapbox/files-dropzone-element",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "description": "A custom element that creates a drag and drop zone for files",
-  "main": "dist/files-dropzone.js",
-  "module": "dist/files-dropzone.js",
-  "unpkg": "dist/files-dropzone.js",
   "type": "module",
+  "main": "dist/files-dropzone.js",
+  "unpkg": "dist/files-dropzone.js",
   "types": "dist/files-dropzone.d.ts",
   "customElements": "dist/custom-elements.json",
-  "files": [
-    "/src",
-    "/dist"
-  ],
+  "exports": {
+    ".": {
+      "types": "./dist/files-dropzone.d.ts",
+      "import": "./dist/files-dropzone.js"
+    },
+    "./define": {
+      "types": "./dist/files-dropzone.d.ts",
+      "import": "./dist/files-dropzone-defined.js"
+    },
+    "./custom-elements.json": "./dist/custom-elements.json"
+  },
   "scripts": {
-    "lint": "eslint",
-    "format": "prettier --ignore-unknown --write .",
+    "start": "npm-run-all --parallel \"serve:dev -- {1}\" dev",
+    "dev": "npm-run-all clean dev:esbuild",
+    "dev:esbuild": "node ./scripts/dev.mjs",
+    "serve:dev": "web-dev-server --node-resolve --open /docs/ --watch",
+    "build": "npm-run-all clean build:esbuild",
+    "build:esbuild": "node ./scripts/build.mjs",
+    "build:docs": "npm-run-all build build:docs:copy",
+    "build:docs:copy": "node ./scripts/copy-build-to-docs.mjs",
     "test": "web-test-runner",
     "test:watch": "npm run test -- --watch",
     "test:coverage": "npm run test -- --coverage",
+    "lint": "eslint",
+    "format": "prettier --ignore-unknown --write .",
     "types": "tsc --project tsconfig.json",
-    "dev:esbuild": "node ./scripts/dev.mjs",
-    "dev": "npm-run-all clean dev:esbuild",
-    "serve:dev": "web-dev-server --node-resolve --open /docs/ --watch",
-    "start": "npm-run-all --parallel \"serve:dev -- {1}\" dev",
-    "build:esbuild": "node ./scripts/build.mjs",
-    "build": "npm-run-all clean build:esbuild",
     "analyze": "custom-elements-manifest analyze",
     "clean": "rimraf dist",
     "prepublishOnly": "npm-run-all clean lint test build types analyze"
@@ -49,23 +57,34 @@
   "homepage": "https://github.com/georapbox/files-dropzone-element#readme",
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "~0.11.0",
-    "@eslint/js": "~9.34.0",
-    "@esm-bundle/chai": "~4.3.4",
-    "@open-wc/testing": "~4.0.0",
-    "@web/dev-server": "~0.4.6",
-    "@web/test-runner": "~0.20.2",
-    "@web/test-runner-playwright": "~0.11.0",
-    "esbuild": "~0.25.9",
-    "eslint": "~9.34.0",
-    "eslint-plugin-wc": "~3.0.1",
-    "globals": "~16.3.0",
+    "@eslint/js": "~10.0.1",
+    "@esm-bundle/chai": "~4.3.4-fix.0",
+    "@open-wc/testing": "~5.0.0",
+    "@types/node": "~26.6.5",
+    "@web/dev-server": "~1.0.0",
+    "@web/test-runner": "~1.0.0",
+    "@web/test-runner-playwright": "~1.0.0",
+    "esbuild": "~0.28.2",
+    "eslint": "~10.14.0",
+    "eslint-plugin-wc": "~3.1.0",
+    "globals": "~17.13.0",
     "npm-run-all": "~4.1.5",
-    "prettier": "~3.6.2",
-    "rimraf": "~6.0.1",
-    "sinon": "~21.0.0",
-    "typescript": "~5.9.2"
+    "playwright": "~1.64.1",
+    "prettier": "~3.9.10",
+    "rimraf": "~6.1.3",
+    "sinon": "~22.1.0",
+    "typescript": "~7.0.2"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "engines": {
+    "node": ">=24",
+    "npm": ">=11.17.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "fsevents@2.3.2": true,
+    "rs-module-lexer@2.6.0": true
   }
 }
