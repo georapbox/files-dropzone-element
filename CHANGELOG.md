@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.1] - 2026-11-07
+
+### Fixed
+
+- **Package Contents**: Included `src` and `dist` directories in the published npm package.
+
 ## [3.0.0] - 2026-11-07
 
 ### Breaking Changes
@@ -133,7 +139,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Initial Release**: First release of the project.
 
-[Unreleased]: https://github.com/georapbox/files-dropzone-element/compare/v3.0.0...HEAD
+[Unreleased]: https://github.com/georapbox/files-dropzone-element/compare/v3.0.1...HEAD
+[3.0.1]: https://github.com/georapbox/files-dropzone-element/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/georapbox/files-dropzone-element/compare/v2.2.0...v3.0.0
 [2.2.0]: https://github.com/georapbox/files-dropzone-element/compare/v2.1.1...v2.2.0
 [2.1.1]: https://github.com/georapbox/files-dropzone-element/compare/v2.1.0...v2.1.1

@@ -1,6 +1,6 @@
 {
   "name": "@georapbox/files-dropzone-element",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A custom element that creates a drag and drop zone for files",
   "type": "module",
   "main": "dist/files-dropzone.js",
@@ -18,6 +18,10 @@
     },
     "./custom-elements.json": "./dist/custom-elements.json"
   },
+  "files": [
+    "/src",
+    "/dist"
+  ],
   "scripts": {
     "start": "npm-run-all --parallel \"serve:dev -- {1}\" dev",
     "dev": "npm-run-all clean dev:esbuild",
