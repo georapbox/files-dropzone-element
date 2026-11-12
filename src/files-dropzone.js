@@ -115,28 +115,12 @@ template.innerHTML = html`
 `;
 
 /**
- * @summary A custom element that allows users to drag and drop files into it.
+ * A custom element that allows users to drag and drop files into it.
+ *
  * @documentation https://github.com/georapbox/files-dropzone-element
  *
- * @tagname files-dropzone - This is the default tag name, unless overridden by the `define` method.
- *
- * @property {string} accept - A comma-separated list of unique file type specifiers describing file types to allow.
- * @property {boolean} disabled - Determines whether the dropzone is disabled.
- * @property {number} maxFiles - The maximum number of files allowed to be dropped.
- * @property {number} maxSize - The maximum file size allowed in bytes.
- * @property {number} minSize - The minimum file size allowed in bytes.
- * @property {boolean} multiple - Allows multiple files to be dropped.
- * @property {boolean} autoFocus - Automatically focuses the dropzone when it's connected to the DOM.
- * @property {boolean} noStyle - Prevents the dropzone from applying any styling.
- *
- * @attribute {string} accept - A comma-separated list of unique file type specifiers describing file types to allow.
- * @attribute {boolean} disabled - Determines whether the dropzone is disabled.
- * @attribute {number} max-files - The maximum number of files allowed to be dropped.
- * @attribute {number} max-size - The maximum file size allowed in bytes.
- * @attribute {number} min-size - The minimum file size allowed in bytes.
- * @attribute {boolean} multiple - Allows multiple files to be dropped.
- * @attribute {boolean} auto-focus - Automatically focuses the dropzone when it's connected to the DOM.
- * @attribute {boolean} no-style - Prevents the dropzone from applying any styling.
+ * @tagname files-dropzone
+ * @extends HTMLElement
  *
  * @slot - The default slot content of the dropzone.
  *
@@ -166,9 +150,6 @@ template.innerHTML = html`
  * @event dropzone-dragover - Dispatched when files are dragged over the dropzone.
  * @event dropzone-dragleave - Dispatched when files are dragged out of the dropzone.
  * @event dropzone-error - Dispatched when there is any error in the process of reading dropped files or directories.
- *
- * @method define - Static method. Registers the custom element with the browser's CustomElementRegistry unless it has already been defined.
- * @method openFileDialog - Instance method. Opens the file dialog programmatically.
  */
 class FilesDropzone extends HTMLElement {
   /**
@@ -286,6 +267,7 @@ class FilesDropzone extends HTMLElement {
   /**
    * @type {string} - A comma-separated list of unique file type specifiers describing file types to allow.
    * @attribute accept
+   * @reflect
    * @default ''
    */
   get accept() {
@@ -299,6 +281,7 @@ class FilesDropzone extends HTMLElement {
   /**
    * @type {boolean} - Determines whether the dropzone is disabled.
    * @attribute disabled
+   * @reflect
    * @default false
    */
   get disabled() {
@@ -312,6 +295,7 @@ class FilesDropzone extends HTMLElement {
   /**
    * @type {number} - The maximum number of files allowed to be dropped.
    * @attribute max-files
+   * @reflect
    * @default Infinity
    */
   get maxFiles() {
@@ -331,6 +315,7 @@ class FilesDropzone extends HTMLElement {
   /**
    * @type {number} - The maximum file size allowed in bytes.
    * @attribute max-size
+   * @reflect
    * @default Infinity
    */
   get maxSize() {
@@ -352,6 +337,7 @@ class FilesDropzone extends HTMLElement {
   /**
    * @type {number} - The minimum file size allowed in bytes.
    * @attribute min-size
+   * @reflect
    * @default 0
    */
   get minSize() {
@@ -373,6 +359,7 @@ class FilesDropzone extends HTMLElement {
   /**
    * @type {boolean} - Allows multiple files to be dropped.
    * @attribute multiple
+   * @reflect
    * @default false
    */
   get multiple() {
@@ -386,6 +373,7 @@ class FilesDropzone extends HTMLElement {
   /**
    * @type {boolean} - Automatically focuses the dropzone when it's connected to the DOM.
    * @attribute auto-focus
+   * @reflect
    * @default false
    */
   get autoFocus() {
@@ -399,6 +387,7 @@ class FilesDropzone extends HTMLElement {
   /**
    * @type {boolean} - Prevents the dropzone from applying any styling.
    * @attribute no-style
+   * @reflect
    * @default false
    */
   get noStyle() {
@@ -695,10 +684,13 @@ class FilesDropzone extends HTMLElement {
    * @param {string} [tagName='files-dropzone'] - The tag name to use for the custom element.
    */
   static define(tagName = 'files-dropzone') {
-    if (typeof window === 'undefined' || window.customElements.get(tagName)) {
+    const registry = globalThis.customElements;
+
+    if (!registry || registry.get(tagName)) {
       return;
     }
-    window.customElements.define(tagName, FilesDropzone);
+
+    registry.define(tagName, FilesDropzone);
   }
 }
 

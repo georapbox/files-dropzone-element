@@ -2,12 +2,8 @@ const url = window.location.href;
 const isLocalhost = url.includes('127.0.0.1') || url.includes('localhost');
 const componentUrl = isLocalhost ? '../../dist/files-dropzone.js' : '../lib/files-dropzone.js';
 
-try {
-  const { FilesDropzone } = await import(componentUrl);
-  FilesDropzone.define();
-} catch (err) {
-  console.error(err);
-}
+const { FilesDropzone } = await import(componentUrl);
+FilesDropzone.define();
 
 const droppedFilesList = document.getElementById('droppedFiles');
 const codePreview = document.getElementById('codePreview');
