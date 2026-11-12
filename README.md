@@ -15,52 +15,52 @@ A custom element that creates a drag and drop zone for files.
 
 [API documentation](#api) &bull; [Demo][demo]
 
-## Usage
-
-### Installation
+## Installation
 
 ```sh
 $ npm install --save @georapbox/files-dropzone-element
 ```
 
-### Importing the component
+## Registration
 
-By default, the package exports the element class without registering it. This lets the application decide when the custom element is defined.
+By default, the package exports the element class without registering it.
+This lets the application decide when the custom element is defined.
 
-#### Manual definition
+### Manual registration
+
+Import the `FilesDropzone` class and call its static `define()` method:
 
 ```js
 import { FilesDropzone } from '@georapbox/files-dropzone-element';
 
-// Define using the default tag name
 FilesDropzone.define();
 ```
 
-#### Auto-defined (convenience)
+### Automatic registration
 
-If you don't need control over registration, you can import the pre-defined build which immediately registers `<files-dropzone>`.
+If you don't need control over registration, import the convenience entry point:
 
 ```js
 import '@georapbox/files-dropzone-element/define';
 ```
 
-### Using the component in your HTML
+## Usage
 
-Once registered, you can use the <files-dropzone> element in your HTML:
+Once registered, use the custom element in your HTML:
 
 ```html
 <files-dropzone accept="image/*,.txt,application/pdf" multiple></files-dropzone>
 ```
 
-### Component styling
+## Styling
 
-The component comes with default styling that can be customized using [CSS Parts](#css-parts) and [CSS Custom Properties](#css-custom-properties).
+The component comes with default styling that can be customized using [CSS parts](#css-parts) and [CSS custom properties](#css-custom-properties).
 
 ### Complete example
 
 This example demonstrates how to customize the dropzone's appearance and handle accepted and rejected files.
 
-#### Markup
+#### HTML
 
 ```html
 <files-dropzone accept="image/png,image/jpeg" multiple>
@@ -75,7 +75,7 @@ This example demonstrates how to customize the dropzone's appearance and handle 
 <ul id="rejected-files"></ul>
 ```
 
-#### Styling
+#### CSS
 
 Customize the component using CSS custom properties and the `dropzone` CSS part.
 
@@ -107,7 +107,7 @@ files-dropzone::part(dropzone) {
 }
 ```
 
-### Handling events
+#### JavaScript
 
 Listen for the `dropzone-drop` event to access accepted and rejected files.
 
@@ -142,17 +142,18 @@ dropzone.addEventListener('dropzone-drop', evt => {
 
 ## API
 
-### Properties
-| Name | Reflects | Type | Required | Default | Description |
-| ---- | -------- | ---- | -------- | ------- | ----------- |
-| `accept`<sup>1</sup> | ✓ | String | - | `null` | A string containing one or more of unique file type specifiers, separated by commas. Files that do not match one of the accepted file type specifiers, will be rejected. |
-| `disabled` | ✓ | Boolean | - | `false` | Determines whether the dropzone is disabled. If `true`, the dropzone will be disabled and the user will not be able to select files. |
-| `maxFiles`<br>*`max-files`* | ✓ | Number | - | `Infinity` | Maximum accepted number of files. Note that this property has effect only when `multiple` is `true`. If its value is set to `0` or any negative number, it will allow any number of files. If the number of dropped files is greater than the value set, all of the files will be rejected to avoid making unsafe assumptions on which files to accept. |
-| `maxSize`<br>*`max-size`* | ✓ | Number | - | `Infinity` | Maximum file size (in bytes). |
-| `minSize`<br>*`min-size`* | ✓ | Number | - | `0` | Minimum file size (in bytes). |
-| `multiple` | ✓ | Boolean | - | `false` | If `true`, allows drag 'n' drop (or selection from the file dialog) of multiple files. If set to `false` and many files are dropped, all of them will be rejected to avoid making unsafe assumptions on which files to accept. |
-| `autoFocus`<br>*`auto-focus`* | ✓ | Boolean | - | `false` | If `true`, the dropzone will be focused when the component is rendered. It has no effect if `disabled` property is set to `true`. |
-| `noStyle`<br>*`no-style`* | ✓ | Boolean | - | `false` | If `true`, it will remove all default styling. It can be useful in cases you want to style the component's parts from scratch. Note that the available [CSS Custom Properties](#css-custom-properties) can still be used. |
+### Properties and attributes
+
+| Property / Attribute | Type | Default | Description |
+| -------------------- | ---- | ------- | ----------- |
+| `accept`<sup>1</sup> | String | `null` | A string containing one or more of unique file type specifiers, separated by commas. Files that do not match one of the accepted file type specifiers, will be rejected. |
+| `disabled` | Boolean | `false` | Determines whether the dropzone is disabled. If `true`, the dropzone will be disabled and the user will not be able to select files. |
+| `maxFiles` / `max-files` | Number | `Infinity` | Maximum accepted number of files. Note that this property has effect only when `multiple` is `true`. If its value is set to `0` or any negative number, it will allow any number of files. If the number of dropped files is greater than the value set, all of the files will be rejected to avoid making unsafe assumptions on which files to accept. |
+| `maxSize` / `max-size` | Number | `Infinity` | Maximum file size (in bytes). |
+| `minSize` / `min-size` | Number | `0` | Minimum file size (in bytes). |
+| `multiple` | Boolean | `false` | If `true`, allows drag 'n' drop (or selection from the file dialog) of multiple files. If set to `false` and many files are dropped, all of them will be rejected to avoid making unsafe assumptions on which files to accept. |
+| `autoFocus` / `auto-focus` | Boolean | `false` | If `true`, the dropzone will be focused when the component is rendered. It has no effect if `disabled` property is set to `true`. |
+| `noStyle` / `no-style` | Boolean | `false` | If `true`, it will remove all default styling. It can be useful in cases you want to style the component's parts from scratch. Note that the available [CSS Custom Properties](#css-custom-properties) can still be used. |
 
 <sup>1</sup> Each unique file type specifier may take one of the following forms:
 - A valid case-insensitive filename extension, starting with a period (".") character. For example: `.jpg`, `.pdf`, or `.doc`.
@@ -160,20 +161,22 @@ dropzone.addEventListener('dropzone-drop', evt => {
 - A string to match any file of a specific type. For example: `image/*` for image files, `audio/*` for audio files, etc.
 - Any comination of the above. For example: `image/*,.docx,application/pdf`
 
+All properties are reflected through their corresponding HTML attributes. When only one name is listed, the property and attribute share the same name.
+
 ### Slots
 
 | Name | Description |
 | ---- | ----------- |
 | (default) | Un-named slot to override the default content of the dropzone area. |
 
-### CSS Parts
+### CSS parts
 
 | Name | Description |
 | ---- | ----------- |
 | `dropzone` | The dropzone area. |
 | `dropzone--dragover` | The state of the dropzone when dragging over it. |
 
-### CSS Custom Properties
+### CSS custom properties
 
 | Name | Description | Default |
 | ---- | ----------- | ------- |
@@ -202,7 +205,7 @@ dropzone.addEventListener('dropzone-drop', evt => {
 
 Instance methods are only available after the custom element has been defined. Use [`customElements.whenDefined()`](https://developer.mozilla.org/docs/Web/API/CustomElementRegistry/whenDefined) to ensure the element is registered before calling these methods.
 
-### Static Properties
+### Static properties
 
 Below are static properties exposed on the `FilesDropzone` class for consumer reference.
 
@@ -272,6 +275,24 @@ Create a production build by running the following command.
 
 ```sh
 npm run build
+```
+
+### Git hooks
+
+This repository includes a pre-commit hook that runs linting and formatting checks before each commit.
+
+To enable the hook, run the following command from the repository root:
+
+```sh
+git config --local core.hooksPath .githooks
+```
+
+This configuration only needs to be applied once per clone and does not affect other repositories.
+
+To disable the hook, run:
+
+```sh
+git config --local --unset core.hooksPath
 ```
 
 ## License
