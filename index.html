@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>&lt;files-dropzone&gt;</title>
+  <meta name="description" content="A custom element that creates a drag and drop zone for files">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="stylesheet" href="lib/highlight/highlight-github.css">
+  <link rel="stylesheet" href="css/water.css">
+  <link rel="stylesheet" href="css/main.css">
+  <script src="lib/highlight/highlight.min.js" defer></script>
+  <script type="module" src="js/main.js"></script>
+</head>
+<body class="no-js">
+  <script>document.body.classList.remove('no-js');</script>
+
+  <main class="container">
+    <noscript>
+      <div class="noscript-banner">This demo requires JavaScript to work.</div>
+    </noscript>
+
+    <h1>&lt;files-dropzone&gt;</h1>
+
+    <div class="component-description">
+      <p>A custom element that creates a drag and drop zone for files.</p>
+      <p><a href="https://github.com/georapbox/files-dropzone-element" target="_blank" rel="noreferrer noopener">Source code &amp; documentation</a></p>
+    </div>
+
+    <h2 data-hide="no-js">Demo</h2>
+
+    <p data-hide="no-js">
+      <small><em>This is just a demo dropzone. Dropped files are not uploaded anywhere.</em></small>
+    </p>
+
+    <div class="dropzone-container" data-hide="no-js">
+      <files-dropzone></files-dropzone>
+    </div>
+
+    <details data-hide="no-js" open>
+      <summary>Dropped files</summary>
+
+      <p class="console-info">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-info-lg" viewBox="0 0 16 16">
+          <path d="m9.708 6.075-3.024.379-.108.502.595.108c.387.093.464.232.38.619l-.975 4.577c-.255 1.183.14 1.74 1.067 1.74.72 0 1.554-.332 1.933-.789l.116-.549c-.263.232-.65.325-.905.325-.363 0-.494-.255-.402-.704l1.323-6.208Zm.091-2.755a1.32 1.32 0 1 1-2.64 0 1.32 1.32 0 0 1 2.64 0Z"/>
+        </svg>
+        <em>Open the browser's console to watch emitted events with more info of the dropped files.</em>
+      </p>
+
+      <div class="dropped-files" id="droppedFiles"></div>
+    </details>
+
+    <details data-hide="no-js" open>
+      <summary>Customize component</summary>
+
+      <pre><code class="code-preview" id="codePreview"></code></pre>
+
+      <form autocomplete="off">
+        <fieldset>
+          <legend>Attributes</legend>
+
+          <div class="form-row">
+            <div class="form-col">
+              <label for="accept">accept</label>
+              <input type="text" id="accept" name="accept" list="acceptDatalist" placeholder="eg. image/*,.txt,application/pdf" data-attr>
+
+              <datalist id="acceptDatalist">
+                <option value="application/*"></option>
+                <option value="text/*"></option>
+                <option value="image/*"></option>
+                <option value="audio/*"></option>
+                <option value="video/*"></option>
+                <option value=".txt"></option>
+                <option value=".png"></option>
+                <option value=".jpg"></option>
+                <option value=".mp3"></option>
+                <option value=".mp4"></option>
+                <option value=".pdf"></option>
+                <option value=".html"></option>
+                <option value=".css"></option>
+              </datalist>
+            </div>
+
+            <div class="form-col">
+              <label for="max-files">max-files</label>
+              <input type="number" id="max-files" name="max-files" min="1" step="1" data-attr>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-col">
+              <label for="max-size">max-size (bytes)</label>
+              <input type="number" id="max-size" name="max-size" min="0" step="1024" data-attr>
+            </div>
+
+            <div class="form-col">
+              <label for="min-size">min-size (bytes)</label>
+              <input type="number" id="min-size" name="min-size" min="0" step="1024" data-attr>
+            </div>
+          </div>
+
+          <div class="form-row" style="gap: 1rem;">
+            <div>
+              <input type="checkbox" id="disabled" name="disabled" data-attr>
+              <label for="disabled">disabled</label>
+            </div>
+
+            <div>
+              <input type="checkbox" id="multiple" name="multiple" data-attr>
+              <label for="multiple">multiple</label>
+            </div>
+
+            <div>
+              <input type="checkbox" id="no-style" name="no-style" data-attr>
+              <label for="no-style">no-style</label>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Slots</legend>
+
+          <div class="form-row">
+            <div class="form-col">
+              <label for="slot">Default slot</label>
+              <input type="text" id="slot" name="slot" data-slot="default">
+              <p style="margin: 0;"><small><em>For the demo purposes, the slot is plain text. However, in reality you can use any valid HTML.</em></small></p>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+
+      <button type="button" id="openFileDialogBtn" class="open-file-dialog-btn">
+        Open file dialog programmatically
+      </button>
+    </details>
+
+    <h2>License</h2>
+    <p>Licensed under the <a href="https://github.com/georapbox/files-dropzone-element/blob/main/LICENSE" target="_blank" rel="noreferrer noopener">The MIT License (MIT)</a></p>
+  </main>
+</body>
+</html>
