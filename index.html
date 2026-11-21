@@ -14,9 +14,7 @@
   <script src="lib/highlight/highlight.min.js" defer></script>
   <script type="module" src="js/main.js"></script>
 </head>
-<body class="no-js">
-  <script>document.body.classList.remove('no-js');</script>
-
+<body>
   <main class="container">
     <noscript>
       <div class="noscript-banner">This demo requires JavaScript to work.</div>
@@ -29,30 +27,32 @@
       <p><a href="https://github.com/georapbox/files-dropzone-element" target="_blank" rel="noreferrer noopener">Source code &amp; documentation</a></p>
     </div>
 
-    <h2 data-hide="no-js">Demo</h2>
+    <h2>Demo</h2>
 
-    <p data-hide="no-js">
+    <p>
       <small><em>This is just a demo dropzone. Dropped files are not uploaded anywhere.</em></small>
     </p>
 
-    <div class="dropzone-container" data-hide="no-js">
-      <files-dropzone></files-dropzone>
-    </div>
+    <browser-window url="https://github.com/georapbox/files-dropzone-element" icon>
+      <div class="dropzone-container">
+        <files-dropzone></files-dropzone>
+      </div>
+    </browser-window>
 
-    <details data-hide="no-js" open>
+    <details open>
       <summary>Dropped files</summary>
 
       <p class="console-info">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-info-lg" viewBox="0 0 16 16">
           <path d="m9.708 6.075-3.024.379-.108.502.595.108c.387.093.464.232.38.619l-.975 4.577c-.255 1.183.14 1.74 1.067 1.74.72 0 1.554-.332 1.933-.789l.116-.549c-.263.232-.65.325-.905.325-.363 0-.494-.255-.402-.704l1.323-6.208Zm.091-2.755a1.32 1.32 0 1 1-2.64 0 1.32 1.32 0 0 1 2.64 0Z"/>
         </svg>
-        <em>Open the browser's console to watch emitted events with more info of the dropped files.</em>
+        <em>Open your browser's developer console to view the emitted events and inspect additional details about the dropped files.</em>
       </p>
 
       <div class="dropped-files" id="droppedFiles"></div>
     </details>
 
-    <details data-hide="no-js" open>
+    <details open>
       <summary>Customize component</summary>
 
       <pre><code class="code-preview" id="codePreview"></code></pre>
@@ -125,7 +125,7 @@
           <div class="form-row">
             <div class="form-col">
               <label for="slot">Default slot</label>
-              <input type="text" id="slot" name="slot" data-slot="default">
+              <input type="text" id="slot" name="slot" data-slot="default" maxlength="300">
               <p style="margin: 0;"><small><em>For the demo purposes, the slot is plain text. However, in reality you can use any valid HTML.</em></small></p>
             </div>
           </div>
