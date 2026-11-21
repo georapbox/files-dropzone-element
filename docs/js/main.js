@@ -1,3 +1,5 @@
+import '../lib/browser-window.js';
+
 const isLocal = ['localhost', '127.0.0.1'].includes(location.hostname);
 const basePath = isLocal ? '../..' : '..';
 const componentUrl = `${basePath}/dist/files-dropzone.js`;

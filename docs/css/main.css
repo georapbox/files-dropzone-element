@@ -38,16 +38,27 @@
   color: #000000;
 }
 
-.no-js [data-hide="no-js"] {
-  display: none !important;
-}
-
 .component-description p {
   margin: 0 0 0.5rem 0;
 }
 
 .component-description p:last-child {
   margin-bottom: 0;
+}
+
+browser-window {
+  --bw-background: var(--background-alt);
+  display: block;
+  text-align: center;
+}
+
+browser-window::part(base) {
+  border-color: transparent;
+  border-radius: var(--border-radius);
+}
+
+browser-window::part(title) {
+  border-radius: var(--border-radius);
 }
 
 .form-row {
@@ -174,6 +185,8 @@ form input[type="checkbox"] {
 
 .dropzone-container {
   min-height: 154.4px;
+  background-color: var(--background-alt);
+  border-radius: var(--border-radius);
 }
 
 files-dropzone::not(:defined) {
