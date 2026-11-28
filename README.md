@@ -18,7 +18,7 @@ A custom element that creates a drag and drop zone for files.
 ## Installation
 
 ```sh
-$ npm install --save @georapbox/files-dropzone-element
+npm install @georapbox/files-dropzone-element
 ```
 
 ## Registration
@@ -262,7 +262,13 @@ npm run lint
 
 ### Testing
 
-Run the tests by running any of the following commands.
+The tests use Playwright to run in real browsers. Install the required browser binaries if they are not already installed:
+
+```sh
+npx playwright install
+```
+
+Run the tests using any of the following commands:
 
 ```sh
 npm test
